@@ -1,12 +1,12 @@
 <html>
 <head>
-<title>PHP-Test</title>
+<title>EDGE TEST</title>
 </head>
 <body>
 <?php 
 
-echo '<p>Hallo Welt</p>'; 
-echo '<p>I am running in Microsoft Edge</p>'
+echo '<p>Hallo Edge</p>'; 
+echo '<p>I am running in bloody Microsoft Edge</p>'
 
 ?>
  </body>
