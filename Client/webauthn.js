@@ -2,9 +2,20 @@
 
 // Editor's draft of spec at https://w3c.github.io/webauthn/#api
 
-navigator.authentication = navigator.authentication || (function () {
+//Falls es das Objekt schon gibt, wird dieses dem navigator.authentication variable links zugewiesen
+//und sonst wird mit der Funktion eines gebaut.
 
-	const webauthnDB = (function() {
+navigator.authentication = navigator.authentication || (function () { 
+	//Hier wird alles weitere aufgerufen. Die .authentication Eigenschaft ist eigentlich eine Funktion die aufgerufen wird und beinhaltet
+	//den ganzen Code dieses Files.
+	
+	console.log("webauthn.js aufgerufen");
+
+	/*die webauthnDB als Konstante ist eigentlich eine Funktion, die bis und mit Z.120 alles ausführt, weil sie instantiert wird und
+	damit auch die Funktion die ihr zugewiesen wurde ausführt*/
+	const webauthnDB = (function() { 
+		console.log("Funktion der webauthnDB Variable aufgerufen");
+		
 		const WEBAUTHN_DB_VERSION = 1;
 		const WEBAUTHN_DB_NAME = "_webauthn";
 		const WEBAUTHN_ID_TABLE = "identities";
@@ -12,14 +23,19 @@ navigator.authentication = navigator.authentication || (function () {
 		var db = null;
 		var initPromise = null;
 
+		/*Die Funktion initDB() wird nicht jedes Mal aufgerufen. die Funktion Oben der webauthnDB ruft die einzelnen
+		Funktionen wie initDB() und store() nicht einfach automatisch auf*/
+		
 		function initDB() {
+			console.log("Enter InitDB()");
             /* to remove database, use window.indexedDB.deleteDatabase('_webauthn'); */
 			return new Promise(function(resolve,reject) {
+				//Hier steht was die Funktion machen soll, die das Promise zurückgibt
 				var req = indexedDB.open(WEBAUTHN_DB_NAME,WEBAUTHN_DB_VERSION);
 				req.onupgradeneeded = function() {
 					// new database - set up store
 					db = req.result;
-					var store = db.createObjectStore(WEBAUTHN_ID_TABLE, { keyPath: "id"});
+					var store = db.createObjectStore(WEBAUTHN_ID_TABLE, { keyPath: "id"}); //es wird ein Objekt erstellt, welches mit der id abgefüllt wird
 				};
 				req.onsuccess = function() {
 					db = req.result;
@@ -29,9 +45,10 @@ navigator.authentication = navigator.authentication || (function () {
 					reject(e);
 				};
 			});
-		}
+		} //END OF INIT DB
 
 		function store(id,data) {
+			console.log("Enter store()");
 			if(!initPromise) { initPromise = initDB(); }
 			return initPromise.then(function() { doStore(id,data) });
 		}
@@ -39,6 +56,7 @@ navigator.authentication = navigator.authentication || (function () {
 		function doStore(id,data) {
 			if(!db) throw "DB not initialised";
 			return new Promise(function(resolve,reject) {
+				//Hier steht was die Funktion machen soll, die das Promise zurückgibt
 				var tx = db.transaction(WEBAUTHN_ID_TABLE,"readwrite");
 				var store = tx.objectStore(WEBAUTHN_ID_TABLE);
 				store.put({id:id,data:data});
@@ -52,6 +70,7 @@ navigator.authentication = navigator.authentication || (function () {
 		}
 
 		function getAll() {
+			console.log("getAll called");
 			if(!initPromise) { initPromise = initDB(); }
 			return initPromise.then(doGetAll);
 		}
@@ -77,13 +96,24 @@ navigator.authentication = navigator.authentication || (function () {
 				};
 			});
 		}
-
+		/*Das return hier wird sicher immer ausgeführt. Zurück kommt ein Objekt mit den Eigenschaften store und getAll
+		die man dan aufrufen kann über Objekt.store, wobei das Objekt hier webauthnDB ist. store und getAll verweisen auf die 
+		Funktionen mit den Namen. Warum keine Parameter?
+		*/
+		console.log("Jetzt kommt das return");
 		return {
-			store: store,
+			key1: "test",
+			store: store, 
 			getAll: getAll
 		};
-	}());
-
+		Console.log("const intialisieren abgeschlossen");
+	} // ENDE VON const webauthnDB = (function() { - dann müsste von hier an das webauthnDB Objekt stehen?
+		
+	() //Wozu ist das?
+	); //Das ')' ist die Schlussklammer von (function() { - abgekürzt sähe das so aus: const webauthnDB = (function() {doStuff} );
+	
+	webauthnDB.store("4", "jdvijijijij");
+	
     function makeCredential(accountInfo, cryptoParams, attestChallenge, options) {
 		var acct = {rpDisplayName: accountInfo.rpDisplayName, userDisplayName: accountInfo.displayName};
 		var params = [];
@@ -158,7 +188,9 @@ navigator.authentication = navigator.authentication || (function () {
     }
 
     return {
+    	
         makeCredential: makeCredential,
-        getAssertion: getAssertion
+        getAssertion: getAssertion,
+        
     };
 }());

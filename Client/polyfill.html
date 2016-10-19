@@ -2,25 +2,47 @@
 <html>
 <head>
 <title>Web Authentication polyfill test</title>
-<script src="webauthn.js"></script>
+<!-- Eingebundene Skripte werden geladen und direkt ausgeführt -->
+<script src="webauthn.js"></script> 
+
 <script language="javascript">
 const credAlgorithm = "RSASSA-PKCS1-v1_5";
+
 function loaded() {
+	
     document.getElementById('credID').value = localStorage["id"] ? localStorage["id"] : "";
     document.getElementById('publicKey').value = localStorage["publickey"] ? localStorage["publickey"] : "";
+    
+    /* Testing mit Objektliteralen */
+    
+    var accountInfo = {
+    		  rpDisplayName: "lebowski.ch",
+    		  displayName: "Fabian Schwab"
+    		};
+    
 }
+
 function make() {
 	console.log("make has started")
+	
+	//Agrument 'accountinfo' (Type:MSAccountInfo) als Parameter für die makeCredential Methode
+	//
 	var userAccountInformation = {
 	  rpDisplayName: "Test Site",
-	  displayName: "Adrian Bateman"
+	  displayName: "Adrian Bateman",
+	  //FS:
+	  accoutnName: "u114415"
 	};
+	
+	
+	
 	var cryptoParams = [
 	  { 
 	    type: "ScopedCred",
 	    algorithm: credAlgorithm,
 	  }
 	];
+	
 	// Note: The following call will cause the authenticator to display UI.
 	navigator.authentication.makeCredential(userAccountInformation, cryptoParams).then(function (result) {
 		var id = result.credential.id;
@@ -93,7 +115,8 @@ function verifyMSFidoSignature(clientData,authenticatorData,signature,publicKey)
 	<button onclick="make()">Make</button> <button onclick="verify()">Verify</button> <button onclick="verifyWithID()">Verify with ID</button>
 
 	<div>
-	  <input type="text" size="80" id="credID"><br><input type="text" size="120" id="publicKey">
+	  Credential ID:<input type="text" size="80" id="credID"><br>
+	  Public Key:<input type="text" size="120" id="publicKey">
 	</div>
 </body>
 </html>
