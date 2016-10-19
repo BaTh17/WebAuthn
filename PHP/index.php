@@ -1,11 +1,11 @@
 <html>
 <head>
-<title>EDGE TEST</title>
+<title>INDEX.PHP</title>
 </head>
 <body>
 <?php 
 
-echo '<p>Hallo Edge</p>'; 
+echo '<p>Hallo INDEX.PHP</p>'; 
 echo '<p>I am running in bloody Microsoft Edge</p>'
 
 ?>

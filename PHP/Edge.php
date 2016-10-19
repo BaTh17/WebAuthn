@@ -1,12 +1,15 @@
 <html>
 <head>
-<title>PHP-Test</title>
+<title>EDGE.PHP</title>
 </head>
 <body>
 <?php 
 
-echo '<p>Hallo Welt</p>'; 
-echo '<p>I am running in Microsoft Edge</p>'
+echo '<p>EDGE.PHP</p>'; 
+echo '<p>I am running in Microsoft Edge</p>';
+
+$name = "Fabian";
+
 
 ?>
  </body>

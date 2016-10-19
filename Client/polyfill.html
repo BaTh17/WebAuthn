@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Web Authentication polyfill test</title>
+<script src="webauthn.js"></script>
+<script language="javascript">
+const credAlgorithm = "RSASSA-PKCS1-v1_5";
+function loaded() {
+    document.getElementById('credID').value = localStorage["id"] ? localStorage["id"] : "";
+    document.getElementById('publicKey').value = localStorage["publickey"] ? localStorage["publickey"] : "";
+}
+function make() {
+	console.log("make has started")
+	var userAccountInformation = {
+	  rpDisplayName: "Test Site",
+	  displayName: "Adrian Bateman"
+	};
+	var cryptoParams = [
+	  { 
+	    type: "ScopedCred",
+	    algorithm: credAlgorithm,
+	  }
+	];
+	// Note: The following call will cause the authenticator to display UI.
+	navigator.authentication.makeCredential(userAccountInformation, cryptoParams).then(function (result) {
+		var id = result.credential.id;
+		var publicKey = result.publicKey;
+	    localStorage["id"] = document.getElementById('credID').value = id;
+	    localStorage["publickey"] = document.getElementById('publicKey').value = JSON.stringify(publicKey);
+	}).catch(function (err) {
+	    // No acceptable authenticator or user refused consent. Handle appropriately.
+	    alert(err);
+	});
+}
+function parseBase64(s) {
+    s = s.replace(/-/g, "+").replace(/_/g, "/").replace(/\s/g, '');  
+    return new Uint8Array(Array.prototype.map.call(atob(s), function (c) { return c.charCodeAt(0) }));  
+}
+function concatUint8Array(a1,a2) {
+	var d = new Uint8Array(a1.length + a2.length);
+	d.set(a1);
+	d.set(a2,a1.length);
+	return d;
+}
+function verify() {
+	var id;
+    const challenge = "challenge-string"; // this would normally come from the server 
+	navigator.authentication.getAssertion(challenge).then(function(assertion) {
+		id = assertion.credential.id;
+        return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
+            assertion.signature,document.getElementById('publicKey').value);
+	})
+	.then(function(result) {
+		alert("ID=" + id + "\r\n" + result);
+	})
+	.catch(function(err) {
+		alert(err);
+	});
+}
+function verifyWithID() {
+	var id = document.getElementById('credID').value;
+    const challenge = "challenge-string"; // this would normally come from the server 
+    var allowList = [{type:"ScopedCred",id:id}];
+	navigator.authentication.getAssertion(challenge,{allowList}).then(function(assertion) {
+		id = assertion.credential.id;
+        return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
+            assertion.signature,document.getElementById('publicKey').value);
+	})
+	.then(function(result) {
+		alert("ID=" + id + "\r\n" + result);
+	})
+	.catch(function(err) {
+		alert(err);
+	});
+}
+function verifyMSFidoSignature(clientData,authenticatorData,signature,publicKey) {
+    var hash;
+    // the server would have to validate that the clientData contained the same challenge
+    // that was generated on the server for the getAssertion call
+	return crypto.subtle.digest("SHA-256",parseBase64(clientData))
+	.then(function(h) {
+		hash = new Uint8Array(h);
+	    return crypto.subtle.importKey("jwk",JSON.parse(publicKey),credAlgorithm,false,["verify"]);
+	})
+	.then(function(key) {
+		return crypto.subtle.verify({name:credAlgorithm, hash: { name: "SHA-256" }},
+			key,parseBase64(signature),concatUint8Array(parseBase64(authenticatorData),hash));
+	});
+}
+</script>
+</head>
+<body onLoad="loaded()">
+	<button onclick="make()">Make</button> <button onclick="verify()">Verify</button> <button onclick="verifyWithID()">Verify with ID</button>
+
+	<div>
+	  <input type="text" size="80" id="credID"><br><input type="text" size="120" id="publicKey">
+	</div>
+</body>
+</html>
