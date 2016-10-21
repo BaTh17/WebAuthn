@@ -36,63 +36,27 @@ navigator.authentication = navigator.authentication || (function () { // geht
 		 * store() nicht einfach automatisch auf
 		 */
 		
-		function initDB() {
-			console.log("Enter InitDB()");
-            /*
-			 * to remove database, use
-			 * window.indexedDB.deleteDatabase('_webauthn');
-			 */
-			
-			return new Promise(function(resolve,reject) {
-				// Hier steht was die Funktion machen soll, die das Promise
-				// zurückgibt
-				var req = indexedDB.open(WEBAUTHN_DB_NAME,WEBAUTHN_DB_VERSION); // =Anlagen
-																				// der
-																				// Datenbank
-																				// mit
-																				// Name
-																				// und
-																				// Versionsnummer
-				req.onupgradeneeded = function() { // wird auf das Request
-													// Objekt das upgradeneeded
-													// Event gefeuert gibt man
-													// hier an was gemacht
-													// werden soll
-					// new database - set up store
-					db = req.result; // this.result oder hie req.result ist
-										// die eigentliche DB
-					var store = db.createObjectStore(WEBAUTHN_ID_TABLE, { keyPath: "id"}); // Es
-																							// wird
-																							// ein
-																							// Object
-																							// Store
-																							// (=eine
-																							// Tabelle)
-																							// in
-																							// der
-																							// DB
-																							// angelegt.
-																							// Die
-																							// Einträge
-																							// werden
-																							// mit
-																							// einer
-																							// ID
-																							// versehen
-																							// und
-																							// inkrementiert
-				};
-				req.onsuccess = function() {
-					db = req.result; // db der Variable db zugewiesen
-					resolve();
-				};
-				req.onerror = function(e) {
-					reject(e);
-				};
-			});
-		} // END OF INIT DB
-
-		
+			function initDB() {
+	            /* to remove database, use window.indexedDB.deleteDatabase('_webauthn'); */
+				return new Promise(function(resolve,reject) {
+					var req = indexedDB.open(WEBAUTHN_DB_NAME,WEBAUTHN_DB_VERSION);
+					// wird auf das Request Objekt das upgradeneeded Event gefeuert gibt man hier an was gemacht werden soll
+					req.onupgradeneeded = function() {
+						// new database - set up store
+						db = req.result; // this.result oder hier req.result ist die eigentliche DB
+						
+						/* Es wird ein ObjectStore (~eine Tabelle) in der DB angelegt. Die Einträge werden mit einer ID versehen */
+						var store = db.createObjectStore(WEBAUTHN_ID_TABLE, { keyPath: "id"});
+					};
+					req.onsuccess = function() {
+						db = req.result;// db der Variable db zugewiesen
+						resolve();
+					};
+					req.onerror = function(e) {
+						reject(e);
+					};
+				});
+			}
 		
 		function store(id,data) {
 			console.log("Enter store()");
@@ -161,19 +125,10 @@ navigator.authentication = navigator.authentication || (function () { // geht
 		};
 		Console.log("const intialisieren abgeschlossen");
 		
-	} // ENDE VON const webauthnDB = (function() { - dann müsste von hier an
-		// das webauthnDB Objekt stehen?
+	} // ENDE VON const webauthnDB = (function() { 
 
-	() // Wozu ist das? => Siehe unten: "Funktion ausführen"
-	); // Das ')' ist die Schlussklammer von (function() { - abgekürzt sähe das
-		// so aus: const webauthnDB = (function() {doStuff} );
-	
-	// webauthnDB.store("4", "jdvijijijij");
-	
-	
-	
-	
-	
+	()); // Das ')' ist die Schlussklammer von (function() { - abgekürzt sähe das so aus: const webauthnDB = (function() {doStuff} );
+
 	
 	// Ebene: navigator.authentication || (function () - d.h. makeCredential ist
 	// oberste Ebene in der "mainfunction"
@@ -197,17 +152,25 @@ navigator.authentication = navigator.authentication || (function () { // geht
 				params[i] = cryptoParams[i];
 			}
 		}
-		
+		//die makeCredential Methode im webauthn.js ruft ihrerseits die msCredentials.makeCredential auf und arbeitet mit dem zurückgegebenen
+		//Credentialobjekt (cred). Die ID aus dem Credentialobjekt (=>MSAssertion / ScopedCredentialInfo https://developer.microsoft.com/en-us/microsoft-edge/platform/documentation/dev-guide/device/web-authentication/
+		//wird zusammen mit den accountInfos in die indexedDB geschrieben. Die storeFunktion des webauthnDB Objektes gibt ein Promise zurück, aber ohne Value,
+		//deshalb returnieren wir nach dem call der Storefunktion das gefreezte Objekt.
         return msCredentials.makeCredential(acct, params).then(function (cred) {
 			if (cred.type === "FIDO_2_0") {
-				var result = Object.freeze({
+				var result = Object.freeze({ //mit Object.freeze wird unveränderbar gemacht. Die Methode gibt ein unveränderliches Objekt zurück
 					credential: {type: "ScopedCred", id: cred.id},
 					publicKey: JSON.parse(cred.publicKey),
 					attestation: cred.attestation
 				});
+				console.log("hier zeige ich das von der msCredentials.makeCredential Methode retournierte Credentialobjekt (MSAssertion / Scoped Crential) an:");
+				console.log(result);
+				console.log("Algorithmus des Schlüsselpaares ist: "+result.publicKey.alg);
 				return webauthnDB.store(result.credential.id,accountInfo).then(function() 
 						{ return result; });
-			} else {
+			} 
+			
+			else {
 				return cred;
 			}
 		});
