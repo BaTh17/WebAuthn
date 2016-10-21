@@ -5,15 +5,14 @@
 //Falls es das Objekt schon gibt, wird dieses dem navigator.authentication variable links zugewiesen
 //und sonst wird mit der Funktion eines gebaut.
 
-navigator.authentication = navigator.authentication || (function () { 
-	//Hier wird alles weitere aufgerufen. Die .authentication Eigenschaft ist eigentlich eine Funktion die aufgerufen wird und beinhaltet
-	//den ganzen Code dieses Files.
-	
+navigator.authentication = navigator.authentication || (function () { //geht bis zu unterst 
 	console.log("webauthn.js aufgerufen");
-
-	/*die webauthnDB als Konstante ist eigentlich eine Funktion, die bis und mit Z.120 alles ausführt, weil sie instantiert wird und
+	/*die webauthnDB als Konstante ist eigentlich eine Funktion, die bis und mit Z.109 alles ausführt, weil sie instantiert wird und
 	damit auch die Funktion die ihr zugewiesen wurde ausführt*/
-	const webauthnDB = (function() { 
+	
+
+	const webauthnDB = (function() { //Weil er bei einer Konstante ev. einen String erwartet
+		
 		console.log("Funktion der webauthnDB Variable aufgerufen");
 		
 		const WEBAUTHN_DB_VERSION = 1;
@@ -35,7 +34,7 @@ navigator.authentication = navigator.authentication || (function () {
 				req.onupgradeneeded = function() {
 					// new database - set up store
 					db = req.result;
-					var store = db.createObjectStore(WEBAUTHN_ID_TABLE, { keyPath: "id"}); //es wird ein Objekt erstellt, welches mit der id abgefüllt wird
+					var store = db.createObjectStore(WEBAUTHN_ID_TABLE, { keyPath: "id"}); 
 				};
 				req.onsuccess = function() {
 					db = req.result;
@@ -54,6 +53,7 @@ navigator.authentication = navigator.authentication || (function () {
 		}
 
 		function doStore(id,data) {
+			console.log("doStore aufgerufen, mit ID:  "+id+" und data: "+data)
 			if(!db) throw "DB not initialised";
 			return new Promise(function(resolve,reject) {
 				//Hier steht was die Funktion machen soll, die das Promise zurückgibt
@@ -107,22 +107,34 @@ navigator.authentication = navigator.authentication || (function () {
 			getAll: getAll
 		};
 		Console.log("const intialisieren abgeschlossen");
-	} // ENDE VON const webauthnDB = (function() { - dann müsste von hier an das webauthnDB Objekt stehen?
 		
+	} // ENDE VON const webauthnDB = (function() { - dann müsste von hier an das webauthnDB Objekt stehen?
+
 	() //Wozu ist das?
 	); //Das ')' ist die Schlussklammer von (function() { - abgekürzt sähe das so aus: const webauthnDB = (function() {doStuff} );
 	
-	webauthnDB.store("4", "jdvijijijij");
+	//webauthnDB.store("4", "jdvijijijij");
 	
+	
+	
+	
+	
+	
+	//Ebene: navigator.authentication || (function () - d.h. makeCredential ist oberste Ebene in der "mainfunction"
     function makeCredential(accountInfo, cryptoParams, attestChallenge, options) {
+    	alert("uhuhu");
+  
+    	//Aus welchem Grund kann ich hier kein console.log("test") verwenden?
+    	
 		var acct = {rpDisplayName: accountInfo.rpDisplayName, userDisplayName: accountInfo.displayName};
 		var params = [];
-		var i;
+		var i;	
 		
 		if (accountInfo.name) { acct.accountName = accountInfo.name; }
 		if (accountInfo.id) { acct.userId = accountInfo.id; }
 		if (accountInfo.imageUri) { acct.accountImageUri = accountInfo.imageUri; }
 
+		//Durchsuchen nach den mitgegebenen Cryptoparametern nach einem FIDO Paar
 		for ( i = 0; i < cryptoParams.length; i++ ) {
 			if ( cryptoParams[i].type === 'ScopedCred' ) {
 				params[i] = { type: 'FIDO_2_0', algorithm: cryptoParams[i].algorithm };
@@ -130,19 +142,26 @@ navigator.authentication = navigator.authentication || (function () {
 				params[i] = cryptoParams[i];
 			}
 		}
-        return msCredentials.makeCredential(acct, params).then(function (cred) {
+		
+		
+		//Zurückgeben von
+        return msCredentials.makeCredential(acct, params).then(function (cred) { //make Kredential liefert ein promise objekt zurück, welches "cred" benannt wird
 			if (cred.type === "FIDO_2_0") {
 				var result = Object.freeze({
 					credential: {type: "ScopedCred", id: cred.id},
 					publicKey: JSON.parse(cred.publicKey),
 					attestation: cred.attestation
 				});
-				return webauthnDB.store(result.credential.id,accountInfo).then(function() { return result; });
+				return webauthnDB.store(result.credential.id,accountInfo).then(function() 
+						{ return result; });
 			} else {
 				return cred;
 			}
 		});
-    }
+    } //END of makeCredential
+    
+    
+    
 
     function getCredList(allowlist) {
 		var credList = [];

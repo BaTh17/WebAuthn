@@ -12,7 +12,7 @@ function loaded() {
 	
     document.getElementById('credID').value = localStorage["id"] ? localStorage["id"] : "";
     document.getElementById('publicKey').value = localStorage["publickey"] ? localStorage["publickey"] : "";
-    
+
     /* Testing mit Objektliteralen */
     
     var accountInfo = {
@@ -34,8 +34,6 @@ function make() {
 	  accoutnName: "u114415"
 	};
 	
-	
-	
 	var cryptoParams = [
 	  { 
 	    type: "ScopedCred",
@@ -53,7 +51,11 @@ function make() {
 	    // No acceptable authenticator or user refused consent. Handle appropriately.
 	    alert(err);
 	});
-}
+} //END OF MAKE
+
+
+
+
 function parseBase64(s) {
     s = s.replace(/-/g, "+").replace(/_/g, "/").replace(/\s/g, '');  
     return new Uint8Array(Array.prototype.map.call(atob(s), function (c) { return c.charCodeAt(0) }));  
@@ -64,6 +66,10 @@ function concatUint8Array(a1,a2) {
 	d.set(a2,a1.length);
 	return d;
 }
+
+
+
+
 function verify() {
 	var id;
     const challenge = "challenge-string"; // this would normally come from the server 
@@ -79,6 +85,12 @@ function verify() {
 		alert(err);
 	});
 }
+
+
+
+
+
+
 function verifyWithID() {
 	var id = document.getElementById('credID').value;
     const challenge = "challenge-string"; // this would normally come from the server 
@@ -95,6 +107,11 @@ function verifyWithID() {
 		alert(err);
 	});
 }
+
+
+
+
+
 function verifyMSFidoSignature(clientData,authenticatorData,signature,publicKey) {
     var hash;
     // the server would have to validate that the clientData contained the same challenge
