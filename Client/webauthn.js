@@ -6,11 +6,8 @@
 // variable links zugewiesen
 // und sonst wird mit der Funktion eines gebaut.
 
-navigator.authentication = navigator.authentication || (function () { // geht
-																		// bis
-																		// zu
-																		// unterst
-	console.log("webauthn.js aufgerufen");
+navigator.authentication = navigator.authentication || (function () {
+
 	/*
 	 * die webauthnDB als Konstante ist eigentlich eine Funktion, die bis und
 	 * mit Z.109 alles ausführt, weil sie instantiert wird und damit auch die
@@ -18,8 +15,7 @@ navigator.authentication = navigator.authentication || (function () { // geht
 	 */
 	
 
-	const webauthnDB = (function() { // Weil er bei einer Konstante ev. einen
-										// String erwartet
+	const webauthnDB = (function() {
 		
 		console.log("Funktion der webauthnDB Variable aufgerufen");
 		
@@ -67,7 +63,7 @@ navigator.authentication = navigator.authentication || (function () { // geht
 		}
 
 		function doStore(id,data) {
-			console.log("doStore aufgerufen, mit ID:  "+id+" und data: "+data)
+			console.log("doStore aufgerufen, mit ID:  "+id+" und data: "+data.rpDisplayName); //Wobei Data accoutninfo ist
 			if(!db) throw "DB not initialised";
 			return new Promise(function(resolve,reject) {
 				// Hier steht was die Funktion machen soll, die das Promise
@@ -85,7 +81,6 @@ navigator.authentication = navigator.authentication || (function () { // geht
 		}
 
 		function getAll() {
-			console.log("getAll called");
 			if(!initPromise) { initPromise = initDB(); }
 			return initPromise.then(doGetAll);
 		}
@@ -117,13 +112,12 @@ navigator.authentication = navigator.authentication || (function () { // geht
 		 * Objekt.store, wobei das Objekt hier webauthnDB ist. store und getAll
 		 * verweisen auf die Funktionen mit den Namen. Warum keine Parameter?
 		 */
-		console.log("Jetzt kommt das return");
+
 		return {
 			key1: "test",
 			store: store, 
 			getAll: getAll
 		};
-		Console.log("const intialisieren abgeschlossen");
 		
 	} // ENDE VON const webauthnDB = (function() { 
 
@@ -140,7 +134,7 @@ navigator.authentication = navigator.authentication || (function () { // geht
 		
 		if (accountInfo.name) { acct.accountName = accountInfo.name; }
 		
-		console.log("Existiert das überhaupt? "+accountInfo.id);
+//		console.log("Existiert das überhaupt? "+accountInfo.id); //Nein
 		if (accountInfo.id) { acct.userId = accountInfo.id; }
 		if (accountInfo.imageUri) { acct.accountImageUri = accountInfo.imageUri; }
 
@@ -165,9 +159,9 @@ navigator.authentication = navigator.authentication || (function () { // geht
 					publicKey: JSON.parse(cred.publicKey),
 					attestation: cred.attestation
 				});
-				console.log("hier zeige ich das von der msCredentials.makeCredential Methode retournierte Credentialobjekt (MSAssertion / Scoped Crential) an:");
-				console.log(result);
-				console.log("Algorithmus des Schlüsselpaares ist: "+result.publicKey.alg);
+//				console.log("hier zeige ich das von der msCredentials.makeCredential Methode retournierte Credentialobjekt (MSAssertion / Scoped Crential) an:");
+//				console.log(result);
+
 				return webauthnDB.store(result.credential.id,accountInfo).then(function() 
 						{ return result; });
 			} 
@@ -196,8 +190,8 @@ navigator.authentication = navigator.authentication || (function () { // geht
     			resolve(credList); //Wird das Promise erfüllt, wird die credList mit den ID's zurückgegeben
 			});
     	} 
-    	
-    	else { //Ist das die Alternative, wenn keine Optionen mitgegeben werden, dass er in die indexDB schauen geht?? 
+    	//Wenn keine Optionen mitgegeben werden, geht er in die IndexedDB schauen, wo er die ID's abgelegt hat
+    	else {
     		return webauthnDB.getAll().then(function(list) {
     			list.forEach(item => credList.push({ type: 'FIDO_2_0', id: item.id })); 
     			return credList; //Bekommt man dann die credList aufbereitet durch die Einträge in der indexedDB zurück?
@@ -206,7 +200,10 @@ navigator.authentication = navigator.authentication || (function () { // geht
     }
 
     function getAssertion(challenge, options) {
+    	console.log("getAssertion has been called");
+    	
         var allowlist = options ? options.allowList : undefined; //wenn options gesetzt sind, wird der Variable allowlist der Wert options.allowList zugewiesen
+		console.log("allowlist ist undefined: "+allowlist);  //Das kommt noch vor Eingabe des PINs
 		
         return getCredList(allowlist).then(function(credList) { //Wird das Promise erfüllt, wurde eine credList aufbereitet mit ID's die dem Client bekannt sind
 			var filter = { accept: credList }; 
@@ -215,19 +212,44 @@ navigator.authentication = navigator.authentication || (function () { // geht
 			if (options && options.extensions && options.extensions["webauthn_txAuthSimple"]) { sigParams = { userPrompt: options.extensions["webauthn_txAuthSimple"] }; }
 			
 			//Hier nun der Call der MSLibrary: Sollte das nicht gehen, wenn wir für einen User die credentialID's bereits als CredList mitgeben?
+			
+			/*
+			 * Von getCredList(allowlist) kommt die credList zurück: 
+			 * Ein Array mit Objekten: { type: 'FIDO_2_0', id: item.id } - //MSCrdentialSpec
+			 * Gespeichert ist dies nun im var filter = {accept:credList} und wird der MSCredentials.getAssertion geschickt
+			 * ES MUSS dabei ein accept-Object sein (das auf ein Array(?) zeigt.
+			 */
+			console.log("credList ist: "+credList);
 	        return msCredentials.getAssertion(challenge, filter, sigParams).then(function (sig) {
+	        	console.log("msCredentials.getAssertion called!");
+	        	//Jetzt ist die Frage, was msCreentials.getAssertion mit dem filterObjekt {accept:credList[]} macht.....
+	        	
 				if (sig.type === "FIDO_2_0"){
+					console.log("sig.type == FIDO_2_0!");
+					console.log("CHECKE ALLE DATEN:")
+					console.log("Returnierte Signature-ID ist: "+sig.id);
+					
+					console.log(sig.signature.clientData);
+							console.log(sig.signature.authnrData);
+									console.log(sig.signature.signature);
+					
 					return Object.freeze({
-						credential: {type: "ScopedCred", id: sig.id},
+						credential: {type: "ScopedCred", id: sig.id}, //Signature ID = Cred.ID wie man sie beim makeCredential() erhält?
 						clientData: sig.signature.clientData,
 						authenticatorData: sig.signature.authnrData,
 						signature: sig.signature.signature
 					});
+					
 				} else {
+					console.log("bin im Else der getAssertion");
 					return sig;
 				}
+				   
 			});
-		});
+	        
+	       
+		}); 
+  
     }
 
     return {

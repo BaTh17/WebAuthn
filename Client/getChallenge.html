@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>CHALLENGE-SIGNING.PHP | get challenge from server:</title>
+<!-- Eingebundene Skripte werden geladen und direkt ausgeführt -->
+<script src="webauthn.js"></script> 
+</head>
+<body>
+
+<p> Die Seite kam vom Server zurück .. ~ challenge.php?[ARRAY:allowList] und ruft getAssertion(challenge,{allowList}) auf.</p>
+<p> Challenge die daherkommt ist "123456" und die allowList (dummy: var = allowList) (alle ausgelesenen Key Identifier auf dem Server) sieht so aus: <br>
+[ 	{type:"ScopedCred",id:41D3A51D-896D-48BE-B688-E4331F16B451"},<br>
+	{type:"ScopedCred",id:DA271568-4918-4A05-9C3C-998D605DD314"},<br>
+	{type:"ScopedCred",id:A866D3E1-1876-4015-AF76-12F1F2F00E38"}	]
+</p>
+<script>
+
+
+
+
+function buildAssertion() {
+
+// 	var allowList = [{type:"ScopedCred", id:'41D3A51D-896D-48BE-B688-E4331F16B451'},
+// 	                  {type:"ScopedCred", id :'DA271568-4918-4A05-9C3C-998D605DD314'},
+// 	                  {type:"ScopedCred", id :'A866D3E1-1876-4015-AF76-12F1F2F00E38'}];
+	var challenge = "123456";
+	var allowList = [{type:"ScopedCred",id:'41D3A51D-896D-48BE-B688-E4331F16B451'}];
+	     
+    //Hier kommt die "option" - Variable der getAssertion zum Zug: => ({allowLost})
+    // options.allowList wird dann ausgelesen. Deshalb ist das hier auch {allowList} d.h. ein Objekt-> Objekt.allowList verwenden
+	navigator.authentication.getAssertion(challenge,{allowList}).then(function(assertion) {
+		var id = assertion.credential.id;
+		console.log("Assertion erstellt. Gleiche ID wie credential.id beim makeCredential (also einer der drei Keys oben)...?" +assertion.credential.id);
+		console.log("Send Assertion to Server: DONE");
+		
+		/*ASSERTION OBJEKT:
+			
+		*/
+	});
+
+// 	.then(function(result) { //Hier möchte ich reinkommen: ID:xxxxx RESULT HABE ICH NICHT!
+// 		alert("ID=" + id + "\r\n" + result);
+// 	})
+// 	.catch(function(err) {
+// 		console.log("CATCH OF ERROR")
+// 		alert(err);
+// 	});
+}
+
+function verifyOnServer() {
+    return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
+            assertion.signature,document.getElementById('publicKey').value);
+}
+
+</script>
+
+<button onclick="buildAssertion()">Build Assertion and Send to Server</button>
+
+</body>
+</html>

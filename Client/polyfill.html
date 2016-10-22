@@ -66,7 +66,17 @@ function verify() {
     const challenge = "challenge-string"; // this would normally come from the server 
 	navigator.authentication.getAssertion(challenge).then(function(assertion) {
 		id = assertion.credential.id;
-        return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
+		console.log("Bekomme nun eine Assertion zurück, deren Credential ID mit der Signature ID von 233,6 identisch sein müsste:");
+		console.log("Problematisch nun verifyMSFidoSignature call mit der Key ID: "+document.getElementById('publicKey').value);
+		console.log("assertion.clientData umfasst: "+assertion.clientData);
+        
+		/*
+		Das korrekte publicKey Objekt wird gefunden, in dem im einfachen Fall hier aus dem Public Key Feld gelesen wird,
+		oder wenn sowas nicht existiert, 
+		function verifyMSFidoSignature(clientData,authenticatorData,signature,publicKey)
+		*/
+		
+		return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData, //Das schlägt eventuell fehl, weil mit dem Wert aus dem Public Key ein Mismatch da ist
             assertion.signature,document.getElementById('publicKey').value);
 	})
 	.then(function(result) {
@@ -86,10 +96,12 @@ function verifyWithID() {
 	var id = document.getElementById('credID').value;
     const challenge = "challenge-string"; // this would normally come from the server 
     var allowList = [{type:"ScopedCred",id:id}];
+    
+    //Hier kommt die "option" - Variable der getAssertion zum Zug: => ({allowLost})
 	navigator.authentication.getAssertion(challenge,{allowList}).then(function(assertion) {
 		id = assertion.credential.id;
-        return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
-            assertion.signature,document.getElementById('publicKey').value);
+//         return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
+//             assertion.signature,document.getElementById('publicKey').value);
 	})
 	.then(function(result) {
 		alert("ID=" + id + "\r\n" + result);
@@ -100,6 +112,19 @@ function verifyWithID() {
 }
 
 
+/*
+ * verifyMSFidoSignature-Funktion, aufgerufen vom verify()
+ * Argumente: 
+	 > clientData = assertion.clientData = sig.signature.clientData, wobei sig=Assertion Objekt von msCredentials.getAssertion ist
+	 Im Moment sind im clientData Objekt die UTF/JSON encodierten Daten der Challenge und dem (optionalen) Userprompt
+	 
+	 > publicKey ist das ganze publicKey Objekt mit alg, kty, n etc.
+	 		 
+ * 
+ 
+ 
+ * VERIFIZIERT WIRD MIT DEM PUBLIC KEY!
+ */
 
 
 
@@ -108,15 +133,19 @@ function verifyMSFidoSignature(clientData,authenticatorData,signature,publicKey)
     // the server would have to validate that the clientData contained the same challenge
     // that was generated on the server for the getAssertion call
 	return crypto.subtle.digest("SHA-256",parseBase64(clientData))
-	.then(function(h) {
+	.then(function(h) { //bekomme B64decodierte ClientData zurück (h), womit ich nun ein Int8 Array mache und 
 		hash = new Uint8Array(h);
-	    return crypto.subtle.importKey("jwk",JSON.parse(publicKey),credAlgorithm,false,["verify"]);
+	    return crypto.subtle.importKey("jwk",JSON.parse(publicKey),credAlgorithm,false,["verify"]); //das macht einen Jason Web Key draus
 	})
-	.then(function(key) {
-		return crypto.subtle.verify({name:credAlgorithm, hash: { name: "SHA-256" }},
+	.then(function(key) { //Mit dem JWK wird nun verifiziert 
+		return crypto.subtle.verify({name:credAlgorithm, hash: { name: "SHA-256" }}, 
 			key,parseBase64(signature),concatUint8Array(parseBase64(authenticatorData),hash));
 	});
 }
+ 
+ 
+ 
+ 
 </script>
 </head>
 <body onLoad="loaded()">
