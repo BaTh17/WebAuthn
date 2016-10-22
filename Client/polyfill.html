@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Web Authentication polyfill test</title>
+<title></title>
 <!-- Eingebundene Skripte werden geladen und direkt ausgeführt -->
 <script src="webauthn.js"></script> 
 
@@ -13,20 +13,11 @@ function loaded() {
     document.getElementById('credID').value = localStorage["id"] ? localStorage["id"] : "";
     document.getElementById('publicKey').value = localStorage["publickey"] ? localStorage["publickey"] : "";
 
-    /* Testing mit Objektliteralen */
-    
-    var accountInfo = {
-    		  rpDisplayName: "lebowski.ch",
-    		  displayName: "Fabian Schwab"
-    		};
-    
 }
 
 function make() {
-	console.log("make has started")
 	
 	//Agrument 'accountinfo' (Type:MSAccountInfo) als Parameter für die makeCredential Methode
-	//
 	var userAccountInformation = {
 	  rpDisplayName: "Test Site",
 	  displayName: "Adrian Bateman",
