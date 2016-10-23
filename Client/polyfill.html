@@ -109,14 +109,15 @@ function verifyWithID() {
     //Hier kommt die "option" - Variable der getAssertion zum Zug: => ({allowLost})
 	navigator.authentication.getAssertion(challenge,{allowList}).then(function(assertion) {
 		id = assertion.credential.id;
-//         return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
-//             assertion.signature,document.getElementById('publicKey').value);
+         return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
+             assertion.signature,document.getElementById('publicKey').value);
 	})
 	.then(function(result) {
 		alert("ID=" + id + "\r\n" + result);
 	})
 	.catch(function(err) {
-		alert(err);
+		
+		alert("WHAT?:" +err);
 	});
 }
 
