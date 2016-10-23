@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<p> Die Seite kam vom Server zurück .. ~ challenge.php?[ARRAY:allowList] und ruft getAssertion(challenge,{allowList}) auf.</p>
+<p> Die Seite kam vom Server zurück .. ~ challenge.php?<br>Es wird getAssertion(challenge,{allowList}) aufgerufen.</p>
 <p> Challenge die daherkommt ist "123456" und die allowList (dummy: var = allowList) (alle ausgelesenen Key Identifier auf dem Server) sieht so aus: <br>
 [ 	{type:"ScopedCred",id:41D3A51D-896D-48BE-B688-E4331F16B451"},<br>
 	{type:"ScopedCred",id:DA271568-4918-4A05-9C3C-998D605DD314"},<br>
@@ -17,6 +17,10 @@
 <script>
 
 
+/*
+ Aufruf der getAssertion. Zurück wird ein Assertionobjekt ein Promise vom Typ MSAssertion geliefert.
+ 
+ */
 
 
 function buildAssertion() {
@@ -32,25 +36,41 @@ function buildAssertion() {
 	navigator.authentication.getAssertion(challenge,{allowList}).then(function(assertion) {
 		var id = assertion.credential.id;
 		console.log("Assertion erstellt. Gleiche ID wie credential.id beim makeCredential (also einer der drei Keys oben)...?" +assertion.credential.id);
+		console.log("Assertion Objekt: "+ JSON.stringify(assertion));
 		console.log("Send Assertion to Server: DONE");
 		
 		/*ASSERTION OBJEKT:
-			
+			{
+			"credential":{"type":"ScopedCred","id":"41D3A51D-896D-48BE-B688-E4331F16B451"},
+			"clientData":"ew0KCSJjaGFsbGVuZ2UiIDogIjEyMzQ1NiINCn0A",
+			"authenticatorData":"AQAAAAA",
+			"signature":"AdDj3hB..........."
+			}
 		*/
+	})
+	.catch(function(err) {
+		alert(err);
 	});
-
-// 	.then(function(result) { //Hier möchte ich reinkommen: ID:xxxxx RESULT HABE ICH NICHT!
-// 		alert("ID=" + id + "\r\n" + result);
-// 	})
-// 	.catch(function(err) {
-// 		console.log("CATCH OF ERROR")
-// 		alert(err);
-// 	});
+    /*Im Gegensatz zur verify() Funktion im polyfill wird beim buildAssertion() nicht auch gleich der Check mit verifyMSFidoSignature gemacht,
+	weshalb die then(function(result) und .catch(function(err) hier nicht vorhanden sind
+	*/
 }
 
+//Diese Funktion brauchen wir Clientseitig nicht, das machen wir auf dem Server. Hier nur zur Prüfung ob alles korrekt ist.
 function verifyOnServer() {
     return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
-            assertion.signature,document.getElementById('publicKey').value);
+            assertion.signature,document.getElementById('publicKey').value)
+    
+	.then(function(result) {
+		alert("ID=" + id + "\r\n" + result);
+	})
+	/*
+	Ohne Komma hängt man ans Ende der .then Funktion gleich .catch an: promise.catch(onRejected)
+	Das entspricht genau promise.then(undefined, onRejected) | catch also wenn Promse Rejected wird. https://davidwalsh.name/promises
+	*/
+	.catch(function(err) { //catch schliess direkt an }) vom .then(function(result){ an
+		alert(err);
+	});
 }
 
 </script>
