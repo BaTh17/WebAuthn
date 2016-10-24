@@ -19,7 +19,7 @@ echo 'Betriebsystem:
 echo 'Type in your username: <br><br> <input type="text" size="30" id="userNameInput"><br><br><br>
 				<button id="loginButton" onclick="login()">Login</button>';
 
-echo 'Browserversion: <script>
+echo '<p id="para1">Browserversion:</p> <script>
 
 if(window.navigator.userAgent.indexOf("Edge") > -1)
 	document.write("Verwendeter Browser ist Microsoft Edge.<br>");
@@ -27,12 +27,17 @@ if(window.navigator.userAgent.indexOf("Edge") > -1)
 else {
 
 document.write("Kein Edge, bitte Browser wechseln.<br>");
-		document.getElementById("loginButton").disabled = true;
+		
+var elem = document.getElementById("loginButton");
+ elem.parentElement.removeChild(elem);
+var elem2 = document.getElementById("para1");
+ elem2.parentElement.removeChild(elem2);	
+		
 
 }
 
 </script><br>';
 
-?>
+?> 
  </body>
 </html>
