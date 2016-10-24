@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Web Authentication polyfill test</title>
+<title></title>
 <!-- Eingebundene Skripte werden geladen und direkt ausgeführt -->
 <script src="webauthn.js"></script> 
 
@@ -12,29 +12,18 @@ function loaded() {
 	
     document.getElementById('credID').value = localStorage["id"] ? localStorage["id"] : "";
     document.getElementById('publicKey').value = localStorage["publickey"] ? localStorage["publickey"] : "";
-    
-    /* Testing mit Objektliteralen */
-    
-    var accountInfo = {
-    		  rpDisplayName: "lebowski.ch",
-    		  displayName: "Fabian Schwab"
-    		};
-    
+
 }
 
 function make() {
-	console.log("make has started")
 	
 	//Agrument 'accountinfo' (Type:MSAccountInfo) als Parameter für die makeCredential Methode
-	//
 	var userAccountInformation = {
 	  rpDisplayName: "Test Site",
 	  displayName: "Adrian Bateman",
 	  //FS:
 	  accoutnName: "u114415"
 	};
-	
-	
 	
 	var cryptoParams = [
 	  { 
@@ -53,7 +42,11 @@ function make() {
 	    // No acceptable authenticator or user refused consent. Handle appropriately.
 	    alert(err);
 	});
-}
+} //END OF MAKE
+
+
+
+
 function parseBase64(s) {
     s = s.replace(/-/g, "+").replace(/_/g, "/").replace(/\s/g, '');  
     return new Uint8Array(Array.prototype.map.call(atob(s), function (c) { return c.charCodeAt(0) }));  
@@ -64,51 +57,105 @@ function concatUint8Array(a1,a2) {
 	d.set(a2,a1.length);
 	return d;
 }
+
+
+
+
 function verify() {
 	var id;
     const challenge = "challenge-string"; // this would normally come from the server 
 	navigator.authentication.getAssertion(challenge).then(function(assertion) {
 		id = assertion.credential.id;
-        return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
+		console.log("Bekomme nun eine Assertion zurück, deren Credential ID mit der Signature ID von 233,6 identisch sein müsste:");
+		console.log("Problematisch nun verifyMSFidoSignature call mit der Key ID: "+document.getElementById('publicKey').value);
+		console.log("assertion.clientData umfasst: "+assertion.clientData);
+        
+		/*
+		Das korrekte publicKey Objekt wird gefunden, in dem im einfachen Fall hier aus dem Public Key Feld gelesen wird,
+
+		verifyMSFidoSignature() gibt als letzten Return das Resultat von "return crypto.subtle.verify" zurück.
+		Dieser Return gibt ein Promise für einen boolean Value zurück, was im result gespeichert und genutzt wird.
+		*/
+		
+		return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData, 
             assertion.signature,document.getElementById('publicKey').value);
-	})
+	}) 	//diese Klammer schliesst then(function(assertion) { von oben ab. WEITER: 
+			/*
+			Weil innerhalb von then(function(assertion)  return verifyMSFidoSignature(assertion.clientData.... aufgerufen wird und diese Funktion ebenfalls ein Promise zurückgibt,
+			ist dieses Promiseobjekt das, was aus (function(assertion) resultiert und wird nach dem "})" (3 Zeilen gegen oben) mit .then gehandelt.
+			*/
 	.then(function(result) {
 		alert("ID=" + id + "\r\n" + result);
 	})
-	.catch(function(err) {
+	/*
+	Ohne Komma hängt man ans Ende der .then Funktion gleich .catch an: promise.catch(onRejected)
+	Das entspricht genau promise.then(undefined, onRejected) | catch also wenn Promse Rejected wird. https://davidwalsh.name/promises
+	*/
+	.catch(function(err) { //catch schliess direkt an }) vom .then(function(result){ an
 		alert(err);
 	});
 }
+
+
+
+
+
+
 function verifyWithID() {
 	var id = document.getElementById('credID').value;
     const challenge = "challenge-string"; // this would normally come from the server 
     var allowList = [{type:"ScopedCred",id:id}];
+    
+    //Hier kommt die "option" - Variable der getAssertion zum Zug: => ({allowLost})
 	navigator.authentication.getAssertion(challenge,{allowList}).then(function(assertion) {
 		id = assertion.credential.id;
-        return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
-            assertion.signature,document.getElementById('publicKey').value);
+         return verifyMSFidoSignature(assertion.clientData,assertion.authenticatorData,
+             assertion.signature,document.getElementById('publicKey').value);
 	})
 	.then(function(result) {
 		alert("ID=" + id + "\r\n" + result);
 	})
 	.catch(function(err) {
-		alert(err);
+		
+		alert("WHAT?:" +err);
 	});
 }
+
+
+/*
+ * verifyMSFidoSignature-Funktion, aufgerufen vom verify()
+ * Argumente: 
+	 > clientData = assertion.clientData = sig.signature.clientData, wobei sig=Assertion Objekt von msCredentials.getAssertion ist
+	 Im Moment sind im clientData Objekt die UTF/JSON encodierten Daten der Challenge und dem (optionalen) Userprompt
+	 
+	 > publicKey ist das ganze publicKey Objekt mit alg, kty, n etc.
+	 		 
+ * 
+ 
+ 
+ * VERIFIZIERT WIRD MIT DEM PUBLIC KEY!
+ */
+
+
+
 function verifyMSFidoSignature(clientData,authenticatorData,signature,publicKey) {
     var hash;
     // the server would have to validate that the clientData contained the same challenge
     // that was generated on the server for the getAssertion call
 	return crypto.subtle.digest("SHA-256",parseBase64(clientData))
-	.then(function(h) {
+	.then(function(h) { //bekomme B64decodierte ClientData zurück (h), womit ich nun ein Int8 Array mache und 
 		hash = new Uint8Array(h);
-	    return crypto.subtle.importKey("jwk",JSON.parse(publicKey),credAlgorithm,false,["verify"]);
+	    return crypto.subtle.importKey("jwk",JSON.parse(publicKey),credAlgorithm,false,["verify"]); //das macht einen Jason Web Key draus
 	})
-	.then(function(key) {
-		return crypto.subtle.verify({name:credAlgorithm, hash: { name: "SHA-256" }},
+	.then(function(key) { //Mit dem JWK wird nun verifiziert 
+		return crypto.subtle.verify({name:credAlgorithm, hash: { name: "SHA-256" }}, //Returns a Promise of a boolean value (https://developer.mozilla.org/de/docs/Web/API/SubtleCrypto)
 			key,parseBase64(signature),concatUint8Array(parseBase64(authenticatorData),hash));
 	});
 }
+ 
+ 
+ 
+ 
 </script>
 </head>
 <body onLoad="loaded()">
