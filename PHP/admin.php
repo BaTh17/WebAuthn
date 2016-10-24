@@ -50,13 +50,18 @@ else {
 $usersSQL = "SELECT * FROM WF_USER";
 
 
-//get Policy
+//get Policy ( 0,1,2)
+
+// create Policy (dropdown)
 
 
 //get Keys from WF_USERS
+//input ( string USERNAME)
+// return True / false
 
 
-//check Password (default)
+// checkPassword (default)
+// 
 
 
 //get Public KEy from USER (NAME)
