@@ -8,20 +8,34 @@
 
 
 //Eventuell später brauchen:
-function login(data){
-	console.log("login called");
+function login(){
+
+	var username = document.getElementById("userNameInput").value;
+	
+	
 		  xmlhttp = new XMLHttpRequest();
-		  //Call wenn korrekt übergeben
+		  var params = "username="+username;
+		  console.log("übermitteln von: "+params);
+		  		  
+		  //Events für Response
 		  xmlhttp.onreadystatechange = function () {
 		    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-		      alert('Username wurde übertragen');
+		      console.log(xmlhttp.responseText);
 		    }
+		    
+		    else if (xmlhttp.status === 401) {
+		    	document.getElementById('status').innerHTML = "wrong username or password"; 
+			    }
+		    
 		  };
 		 //user = document.getElementById("userNameInput").value;
-		 
-		  console.log("username: "+user);
-		  xmlhttp.open("POST", "../PHP/login.php");
-		  xmlhttp.send(data);
+
+		  xmlhttp.open("POST", "../PHP/login.php", true);
+		  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		  xmlhttp.setRequestHeader("Content-length", params.length);
+		  xmlhttp.setRequestHeader("Connection", "close");
+		  
+		  xmlhttp.send(params);
 }
 
 </script>
@@ -29,14 +43,16 @@ function login(data){
 
 </head>
 <body>
-<!-- <input type="text" size="30" id="userNameInput"><br> -->
+<input type="text" size="30" id="userNameInput"><br>
 
-<form method="POST" action="../PHP/login.php">
-	Benutzername <input id="username" name="username" pattern="^[a-z0-9]{4,20}$" 
-	title="Der Benutzername muss aus kleinen Buchstaben(a-z) und/oder Ziffern(0-9) bestehen und 4-20 Zeichen lang sein">
-	<button>Login</button>
-</form>
-<!-- 	<button id='loginButton' onclick="login()">Login</button> -->
+<!-- <form method="POST" action="../PHP/login.php"> -->
+<!-- 	Benutzername <input id="username" name="username" pattern="^[a-z0-9]{4,20}$"  -->
+<!-- 	title="Der Benutzername muss aus kleinen Buchstaben(a-z) und/oder Ziffern(0-9) bestehen und 4-20 Zeichen lang sein"> -->
+<!-- 	<button>Login</button> -->
+<!-- </form> -->
+
+<button id='loginButton' onclick="login()">Login</button>
+<p id='status'><p>
 
 <script>
 
