@@ -3,32 +3,44 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
+
+<script type="text/javascript">
+
+
+//Eventuell später brauchen:
+function login(data){
+	console.log("login called");
+		  xmlhttp = new XMLHttpRequest();
+		  //Call wenn korrekt übergeben
+		  xmlhttp.onreadystatechange = function () {
+		    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+		      alert('Username wurde übertragen');
+		    }
+		  };
+		 //user = document.getElementById("userNameInput").value;
+		 
+		  console.log("username: "+user);
+		  xmlhttp.open("POST", "../PHP/login.php");
+		  xmlhttp.send(data);
+}
+
+</script>
+
+
 </head>
 <body>
-<input type="text" size="30" id="userNameInput"><br>
+<!-- <input type="text" size="30" id="userNameInput"><br> -->
 
-<button id='loginButton' onclick="login()">Login</button>
+<form method="POST" action="../PHP/login.php">
+	Benutzername <input id="username" name="username" pattern="^[a-z0-9]{4,20}$" 
+	title="Der Benutzername muss aus kleinen Buchstaben(a-z) und/oder Ziffern(0-9) bestehen und 4-20 Zeichen lang sein">
+	<button>Login</button>
+</form>
+<!-- 	<button id='loginButton' onclick="login()">Login</button> -->
 
 <script>
 
-if(window.navigator.userAgent.indexOf("Edge") > -1)
-	document.write("Verwendeter Browser ist Microsoft Edge.<br>");
 
-else { 
-	
-	document.getElementById('loginButton').disabled = true;
-document.write("Kein Edge, bitte Browser wechseln.<br>");
-}
-
-if((navigator.appVersion.indexOf("Windows NT 10.0")) > -1) 
-	document.write("Windows 10");
-
-</script><br>
-
-
-
-	
 </script>
-
 </body>
 </html>
