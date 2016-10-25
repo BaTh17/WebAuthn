@@ -23,8 +23,6 @@ function makeCredentials() {
 function postAjaxCall(params, url) {
 	
 	xmlhttp = new XMLHttpRequest();
-	 console.log("übermitteln von: "+params);
-	 
 	 
 	  //Events für Response
 	  xmlhttp.onreadystatechange = function () {
@@ -33,12 +31,14 @@ function postAjaxCall(params, url) {
 	      console.log(xmlhttp.responseText);
 	      //forward to login.php mit bestehendem Session Cookie wo ich mitgeben und Server dadurch weiss, dase es user gibt
 	      window.location = '../PHP/login.php';
-	      
 	    }
 	    
 	    else if (xmlhttp.status === 401) {
 	    	document.getElementById('status').innerHTML = "wrong username"; 
-		    }  
+		    }
+	    else if (xmlhttp.status === 202) {
+	    	document.getElementById('status').innerHTML = "Für den Benutzer ist die Policy 1 oder 2 aktiv, aber es sind keine Keys auf dem Server vorhanden"; 
+	    }
 	}
 	
 	  xmlhttp.open("POST", url, true);

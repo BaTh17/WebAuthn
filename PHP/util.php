@@ -7,7 +7,7 @@
  */
 function checkUsername($username) {
 
-	if($username=="schf" || $username=="tscm") 
+	if($username=="schf" || $username=="tscm" || $username =="hello") 
 		return true;
 	else 
 		return false;
@@ -59,6 +59,12 @@ function checkKeys($username) {
 	
 	if($username=="schf")
 		return true;
+	
+	if($username=="tscm")
+		return true;
+	
+	if($username=="hello")
+		return false;
 	
 	else
 		return false;

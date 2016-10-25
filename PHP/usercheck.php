@@ -9,19 +9,29 @@ if(!isset($_POST['username'])) {
 
 //D.h. ein username wurde übermittelt, der jetzt gecheckt wird.
 else {
+	
 	$username = $_POST['username'];
+	
 	if(checkUsername($username)) {
 		
 		//start session
 		session_start();
 		
+		$policy = $_SESSION['policy'] = getPolicy($username);
+		$userHasKeys = $_SESSION['PKeys'] = checkKeys($username);
 		
-		$_SESSION['policy'] = getPolicy($username); //get Policy
 		$_SESSION['username'] = $username;
-		$_SESSION['PKeys'] = checkKeys($username);
 		
+		if(!$userHasKeys && $policy) {
+			$responseStatus = '202 Accepted';
+			$responseText = 'User OK, aber es existieren keine Keys...';
+		}
+		
+		
+		else {
 		$responseStatus = '200 OK';
 		$responseText = 'User OK, forwarding...';
+		}
 			
 	}
 			
