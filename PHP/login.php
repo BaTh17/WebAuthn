@@ -1,25 +1,58 @@
 <?php
+require_once('util.php');
 
-if(!isset($_POST['username'])) {
-	$responseStatus = '401 Bad Request';
-	$responseText = 'Anfrage erhält keinen Nutzernamen';
+session_start();
+
+//von welcome.php übergeben
+$username =  $_SESSION['username'];
+$policy =  $_SESSION['policy'];
+
+echo "Active Policy: "+$policy;
+
+//Bei PW Check
+
+
+/*
+ * Auf Keys gecheckt. wenn das true wäre, könnte man die Challenge schicken,
+ * mit dem Risiko, dass keiner der ID's passt. Dann würde man JavaScript seitig die makeCredential Methode aufrufen.
+ * 
+ * Wenn false:
+ * 	1 (2FA): 	PW Eingabe und Meldung dass keine Keys + Button um Credentials zu generieren.
+ * 	2 (HELLO):	Meldung dass keine Keys + Button um Credentials zu generieren
+ */
+$keys = $_SESSION['PKeys']; 
+
+
+
+$pwCode = "
+		
+<div>
+Enter your password: <br><input type='text' size='30' id='pwInput'><br>
+<button id='pwButton' onclick='checkPW()'>Check PW</button>
+</div>
+		
+	
+";
+
+echo "<script src='../Client/utils.js'></script> ";
+
+//Je nach dem welche Policy für den Benutzer aktiv ist, wird der ReturnString zusammengebaut:
+
+
+if($policy == 0 || 1) {
+	
+	echo $pwCode;
+	
 }
 
-//D.h. ein username wurde übermittelt, der jetzt gecheckt wird.
 else {
-	if(util::checkUser ($username)) {
-		$responseStatus = '200 OK';
-		$responseText = 'Credentials OK, forwarding...';
-	}
-			
-	else {
-		$responseStatus = '401 Bad Request';
-		$responseText = 'Username oder Passwort falsch';
-	}
+	echo "Passwordless is active";
 }
 
-header($_SERVER['SERVER_PROTOCOL'].' '.$responseStatus);
-header('Content-type: text/html; charset=utf-8');
-echo $responseText;
 
+echo "<p id='pwState'></p><br>username: $username";
+
+
+
+	
 ?>

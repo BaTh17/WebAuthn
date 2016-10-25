@@ -6,53 +6,76 @@
 
 <script type="text/javascript">
 
-
-//Eventuell später brauchen:
-function login(){
-
-	var username = document.getElementById("userNameInput").value;
+function postAjaxCall(params, url) {
 	
-	
-		  xmlhttp = new XMLHttpRequest();
-		  var params = "username="+username;
-		  console.log("übermitteln von: "+params);
-		  		  
-		  //Events für Response
-		  xmlhttp.onreadystatechange = function () {
-		    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-		      console.log(xmlhttp.responseText);
-		    }
-		    
-		    else if (xmlhttp.status === 401) {
-		    	document.getElementById('status').innerHTML = "wrong username or password"; 
-			    }
-		    
-		  };
-		 //user = document.getElementById("userNameInput").value;
-
-		  xmlhttp.open("POST", "../PHP/login.php", true);
-		  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		  xmlhttp.setRequestHeader("Content-length", params.length);
-		  xmlhttp.setRequestHeader("Connection", "close");
+	xmlhttp = new XMLHttpRequest();
+	 console.log("übermitteln von: "+params);
+	 
+	 
+	  //Events für Response
+	  xmlhttp.onreadystatechange = function () {
 		  
-		  xmlhttp.send(params);
+	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+	      console.log(xmlhttp.responseText);
+	      //forward to login.php mit bestehendem Session Cookie wo ich mitgeben und Server dadurch weiss, dase es user gibt
+	      window.location = '../PHP/login.php';
+	      
+	    }
+	    
+	    else if (xmlhttp.status === 401) {
+	    	document.getElementById('status').innerHTML = "wrong username or password"; 
+		    }  
+	}
+	
+	  xmlhttp.open("POST", url, true);
+	  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	  xmlhttp.setRequestHeader("Content-length", params.length);
+	  xmlhttp.setRequestHeader("Connection", "close");
+	  xmlhttp.send(params);
+}
+
+
+function login(){
+	var username = document.getElementById("userNameInput").value;
+	var params = "username="+username;
+	postAjaxCall(params, "../PHP/usercheck.php");
+ }
+
+
+function checkPW(){
+
+	var pw = document.getElementById("pwInput").value;
+	var params = "username="+username;
+	postAjaxCall(params, "../PHP/usercheck.php");
 }
 
 </script>
 
 
 </head>
+
+
+
 <body>
 <input type="text" size="30" id="userNameInput"><br>
-
-<!-- <form method="POST" action="../PHP/login.php"> -->
-<!-- 	Benutzername <input id="username" name="username" pattern="^[a-z0-9]{4,20}$"  -->
-<!-- 	title="Der Benutzername muss aus kleinen Buchstaben(a-z) und/oder Ziffern(0-9) bestehen und 4-20 Zeichen lang sein"> -->
-<!-- 	<button>Login</button> -->
-<!-- </form> -->
-
 <button id='loginButton' onclick="login()">Login</button>
 <p id='status'><p>
+
+
+<br><br><br><br><br><br>
+
+
+<div>
+
+Enter your password: <br><input type="text" size="30" id="pwInput"><br>
+<button id='pwButton' onclick="checkPW()">Check PW</button>
+
+</div>
+
+
+
+
+
 
 <script>
 
