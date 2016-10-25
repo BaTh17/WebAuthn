@@ -7,7 +7,7 @@
  */
 function checkUsername($username) {
 
-	if($username=="schf") 
+	if($username=="schf" || $username=="tscm") 
 		return true;
 	else 
 		return false;
@@ -22,6 +22,8 @@ function checkUsername($username) {
 
 function checkPW($username, $pw) {
 	if($username=="schf" && $pw=="test")
+		return true;
+	if($username=="tscm" && $pw=="test")
 		return true;
 	
 	else
@@ -39,9 +41,12 @@ function getPolicy($username) {
 	//returnieren der Policy des Users - vorher nochmals überprüfen ob es ihn gibt:
 	
 	if($username=="schf")
-		return 1;
-	else 
 		return 0;
+	if($username=="tscm")
+		return 1;
+	if($username=="hello")
+		return 2;
+
 	
 }
 

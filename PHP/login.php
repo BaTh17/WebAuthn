@@ -31,13 +31,18 @@ Enter your password: <br><input type='text' size='30' id='pwInput'><br>
 <button id='pwButton' onclick='checkPW()'>Check PW</button>
 </div>
 		
-	
 ";
+
+$passwordless = "
+		
+		";
 
 echo "<script src='../Client/utils.js'></script> ";
 
-//Je nach dem welche Policy für den Benutzer aktiv ist, wird der ReturnString zusammengebaut:
-
+/*
+ * Je nach dem welche Policy für den Benutzer aktiv ist, wird der ReturnString zusammengebaut.
+ * Bei 2 wird direkt die getAssertion Funktion aufgerufen
+ */
 
 if($policy == 0 || 1) {
 	

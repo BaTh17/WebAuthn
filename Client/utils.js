@@ -2,6 +2,7 @@
  * 
  */
 
+
 function hello() {
 	document.write("Hallo Welt");
 }
@@ -36,7 +37,7 @@ function postAjaxCall(params, url) {
 	    }
 	    
 	    else if (xmlhttp.status === 401) {
-	    	document.getElementById('status').innerHTML = "wrong username or password"; 
+	    	document.getElementById('status').innerHTML = "wrong username"; 
 		    }  
 	}
 	
@@ -57,7 +58,6 @@ function login(){
 
 
 
-
 function checkPW(){ //Hier eventuell auch die AjaxCall Funktion brauchen, aber dann muss ich die HTTP Responses noch mitgeben
 
 	var pw = document.getElementById("pwInput").value;
@@ -73,11 +73,16 @@ function checkPW(){ //Hier eventuell auch die AjaxCall Funktion brauchen, aber d
 		  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 	     eval(xmlhttp.responseText); //Ausführen vom Code, der bei erfolgreichem PW Check vom Server zurückkam
-	      document.getElementById('pwState').innerHTML = "PASWORT OK"; 
-	      //WENN OK AUF SEITE BLEIBEN ABER ZU MAKE CRED WEITER WENN NÖTIG
-	     	      
-	      //forward to login.php mit bestehendem Session Cookie wo ich mitgeben und Server dadurch weiss, dase es user gibt
-	      //window.location = '../PHP/login.php';
+	     /*
+	      *  eval(xmlhttp.responseText) führt im Fall von Policy = 0 zum redirect auf den Webflow oder
+	      * bei Policy = 1 zum Aufruf vom getAssertion() auf dem Client. Das heisst pwCheck muss den Code dazu zzurückgeben
+	      * und auch gleich (als erstes?) <script src="webauthn.js"></script> ?
+	      * 
+	      *
+	      * 
+	      * 
+	      */ 
+	     document.getElementById('pwState').innerHTML = "PASWORT OK"; 
 	      
 	    }
 	    

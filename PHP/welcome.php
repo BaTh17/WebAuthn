@@ -46,12 +46,6 @@ echo "<script>
  }
 
 
-	function checkPW(){
-
-	var pw = document.getElementById('pwInput').value;
-	var params = 'username='+username;
-	postAjaxCall(params, '../PHP/usercheck.php');
-				}
 	</script";
 
 
