@@ -9,7 +9,67 @@
  *
  */
 class utility {
+	
+	public $Datasource;
+	
+	/**
+	 * Constructor
+	 *
+	 * @param String[Optional] $WFdbSystem = WFDBSOURCE {ORAWFTEST,BERKEDBSOUCEMYSQL}
+	 */
+	public function __construct($WFdbSystem = WFDBSOURCE) {
+	
+		//$WFdbSystem = WFDBSOURCE;
+		global $__configObject;
+	
+		//$Identifier = base64_encode ( "/modules/BerkeDataSource/drivers/" . WebAppAPI::GetVar ( "sysvar", "AppID" ) . "/" . WebAppAPI::GetVar ( "sysvar", "AppVersion" ) . "/{$WFdbSystem}/config.conf" );
+	
+		$appID = WebAppAPI::GetVar ( "sysvar", "AppID" );
+		$version = WebAppAPI::GetVar ( "sysvar", "AppVersion" );
+		$path = $__configObject->DocumentRoot."/modules/BerkeDataSource/drivers/" . WebAppAPI::GetVar ( "sysvar", "AppID" ) . "/" . WebAppAPI::GetVar ( "sysvar", "AppVersion" ) . "/{$WFdbSystem}/config.conf";
+		$this->Datasource = new BerkeDataSource ($__configObject->DocumentRoot."/modules/BerkeDataSource/drivers/" . WebAppAPI::GetVar ( "sysvar", "AppID" ) . "/" . WebAppAPI::GetVar ( "sysvar", "AppVersion" ) . "/{$WFdbSystem}/config.conf");
+	
+		//$this->Datasource = new stdClass();
+		//$this->Datasource->DataSourceHandle = WebAppAPI::GetDatasource($WFdbSystem);
+	
+		//var_dump($Identifier);
+		//var_dump($this->Datasource->InstanciateByIdentifier ( $Identifier ));
+		// Informationen ï¿½bergeben
+		//$this->Datasource->InstanciateByIdentifier ( $Identifier );
+	
+		// Treiber laden
+		$this->Datasource->Load ();
+	
+		if ($WFdbSystem == WFDBSOURCE) {
+			switch (DBSYSTEM) {
+				case "MSSQL" :
+					break;
+				case "MYSQL" :
+					break;
+				case "ORACLE" :
+					$SQL = "ALTER SESSION SET nls_territory = 'Switzerland'";
+					$this->executeSQL ( $SQL );
+					break;
+			}
+		}
+	}
+	
+	function executeMySQL($SQL) {
+	
+		if ($this->Datasource->IsLoaded) {
+	
+			$this->Datasource->DataSourceHandle->ExecuteQuery ( $SQL );
+			if ($this->Datasource->DataSourceHandle->GetResult ()) {
+				return $this->Datasource->DataSourceHandle->GetResult ();
+			} else {
+				return false;
+			}
+		}
+	}
+	
 
+	public $connection = NULL;
+	
 function dbconnect(){
 //connect to mysql DB
 $host="localhost";
@@ -25,7 +85,7 @@ if ( $connection )
 }
 else
 {
-	die('keine Verbindung möglich: ' . mysqli_error());
+	die('keine Verbindung mÃ¶glich: ' . mysqli_error());
 }
 
 
@@ -41,10 +101,11 @@ mysqli_query($connection, $sql) or die('Error selecting table WF_USER.');
 
 
 // Check connection
-if ($db_link->connect_error) {
+if ($connection->connect_error) {
 	die("Connection failed: " . $db_link->connect_error);
 }
 
+return $connection;
 /*
  $host="localhost";
  $user="root";
@@ -60,6 +121,26 @@ if ($db_link->connect_error) {
  echo '<h1>MySQL Server is not connected</h1>';
  }
  */
+}
+
+function executeSQL($sql, $asArray=false){	
+
+	mysqli_query($connection, $sql) or die('Error executing sql script');
+	
+
+	$result = $db_link->query($sql);
+	$result = $db_link->query($sql);
+	
+	if ($result->num_rows > 0) {
+		while($row = $result->fetch_assoc()) {
+			//echo "USERID: " . $row["USERID"]. " - NAME: " . $row["NAME"]. " - FULLNAME: " . $row["FULLNAME"]. "<br>";
+			$rs[] = $row;
+		}
+	} else {
+		$rs = false;
+	}
+	$db_link->close();
+	return $rs;
 }
 
 //get WF_USERs

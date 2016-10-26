@@ -70,15 +70,16 @@ INSERT INTO WF_USER ( USERID, NAME,FULLNAME,USERPASSWORD,EMAILADDRESS,RESET_PASS
 (5, 'test1', 'Tester_1', 'test', 'matscha7@gmail.com', 0, -1),
 (6, 'hello', 'helloUser', 'test', 'matscha7@gmail.com', 0, -1);
 
-/*
+-- 0 = Password only
+-- 1 = 2-FA
+-- 2 = Passwordless
 INSERT INTO PT_USER ( PTID, USERID,POLICY,TESTVALUE1,TESTVALUE2,TESTVALUE3,TESTVALUE4,TESTVALUE5,CREATEDTIME,CHANGEDTIME,AKTIV ) VALUES
-(1, 1, '0', 'ist Marcel Tschanz tscm mit passwort only', NULL,NULL,NULL,now(),now(), 0, -1);
+(1, 1, '1', 'ist Marcel Tschanz tscm mit 2-FA', NULL,NULL,NULL,NULL,now(), now(), -1),
+(2, 3, '1', 'ist five ist2-FA', NULL,NULL,NULL,NULL,now(), now(), -1),
+(3, 4, '2', 'ist five1 mit Passwordless', NULL,NULL,NULL,NULL,now(), now(), -1),
+(4, 2, '0', 'ist schf mit password only', NULL,NULL,NULL,NULL,now(), now(), -1),
+(6, 5, '2', 'ist test1 mit Passwordless', NULL,NULL,NULL,NULL,now(), now(), -1);
 
-(2, 3, '1', 'ist five ist windows Hello', NULL,NULL,NULL,now(),now(), 0, -1)
-(3, 4, '2', 'ist five1 mit 2FA', NULL,NULL,NULL,now(),now(), 0, -1),
-(4, 5, '2', 'ist test1 mit 2FA', NULL,NULL,NULL,now(),now(), 0, -1);
-
-*/
 /*
  *   USERID int(11) NOT NULL,
   UID int(11) NOT NULL,

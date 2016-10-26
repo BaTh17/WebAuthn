@@ -10,7 +10,7 @@ echo '<p>admin.php</p>';
 echo '<p>Display and Change of policy and users</p>';
 
 
-utility::dbconnect();
+$db = utility::dbconnect();
 
 
 
