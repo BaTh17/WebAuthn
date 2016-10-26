@@ -1,12 +1,14 @@
 <?php
 
 
-/*
+/**
  * überprüfen ob ein Benutzername in der DB existiert oder ev. gesperrt ist.
  * Return: boolean
  */
 function checkUsername($username) {
 
+	//User exists and is activ
+	
 	if($username=="schf" || $username=="tscm" || $username =="hello") 
 		return true;
 	else 
@@ -14,7 +16,7 @@ function checkUsername($username) {
 	
 }
 
-/*
+/**
  * checkPassword() - PW vom Benutzer überprüfen
  * Return: boolean
  * 
@@ -30,8 +32,8 @@ function checkPW($username, $pw) {
 		return false;
 }
 
-/*
- * Return: Integer
+/**
+ * @return: Integer
  * 0 = Password only
  * 1 = 2-FA
  * 2 = Passwordless
@@ -50,22 +52,20 @@ function getPolicy($username) {
 	
 }
 
-/*
+/**
  * Prüfen ob für einen mitgegebenen Benutzername Public Keys in der Tabelle gespeichert sind
+ * TSCM: 20161016 umbenennt auf hasKeys() , entspricht eher dem, was gemacht wird
  * Return: boolean
+ * 
  */
-
-function checkKeys($username) {
+function hasKeys($username) {
 	
 	if($username=="schf")
 		return true;
-	
 	if($username=="tscm")
 		return true;
-	
 	if($username=="hello")
 		return false;
-	
 	else
 		return false;
 }

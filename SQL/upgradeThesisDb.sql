@@ -63,11 +63,12 @@ CREATE TABLE IF NOT EXISTS SETTINGS (
 
 
 INSERT INTO WF_USER ( USERID, NAME,FULLNAME,USERPASSWORD,EMAILADDRESS,RESET_PASSWORD,AKTIV ) VALUES
-(1, 'tscm', 'Marcel Tschanz', '1234', 'matscha7@gmail.com', 0, -1),
-(2, 'schf', 'Fabian Schwab', '1234', 'fjschwab@outlook.com', 0, -1),
-(3, 'five', 'FIVE', '1234', 'matscha7@gmail.com', 0, -1),
-(4, 'five1', 'FIVE_1', '1234', 'matscha7@gmail.com', 0, -1),
-(5, 'test1', 'Tester_1', '1234', 'matscha7@gmail.com', 0, -1);
+(1, 'tscm', 'Marcel Tschanz', 'test', 'matscha7@gmail.com', 0, -1),
+(2, 'schf', 'Fabian Schwab', 'test', 'fjschwab@outlook.com', 0, -1),
+(3, 'five', 'FIVE', 'test', 'matscha7@gmail.com', 0, -1),
+(4, 'five1', 'FIVE_1', 'test', 'matscha7@gmail.com', 0, -1),
+(5, 'test1', 'Tester_1', 'test', 'matscha7@gmail.com', 0, -1),
+(5, 'hello', 'helloUser', 'test', 'matscha7@gmail.com', 0, -1);
 
 /*
 INSERT INTO PT_USER ( PTID, USERID,POLICY,TESTVALUE1,TESTVALUE2,TESTVALUE3,TESTVALUE4,TESTVALUE5,CREATEDTIME,CHANGEDTIME,AKTIV ) VALUES
