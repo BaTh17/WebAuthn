@@ -68,7 +68,7 @@ INSERT INTO WF_USER ( USERID, NAME,FULLNAME,USERPASSWORD,EMAILADDRESS,RESET_PASS
 (3, 'five', 'FIVE', 'test', 'matscha7@gmail.com', 0, -1),
 (4, 'five1', 'FIVE_1', 'test', 'matscha7@gmail.com', 0, -1),
 (5, 'test1', 'Tester_1', 'test', 'matscha7@gmail.com', 0, -1),
-(5, 'hello', 'helloUser', 'test', 'matscha7@gmail.com', 0, -1);
+(6, 'hello', 'helloUser', 'test', 'matscha7@gmail.com', 0, -1);
 
 /*
 INSERT INTO PT_USER ( PTID, USERID,POLICY,TESTVALUE1,TESTVALUE2,TESTVALUE3,TESTVALUE4,TESTVALUE5,CREATEDTIME,CHANGEDTIME,AKTIV ) VALUES
