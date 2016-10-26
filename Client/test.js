@@ -1,0 +1,7 @@
+/**
+ * 
+ */
+
+function lorem() {
+	alert("Ipsum");
+}
