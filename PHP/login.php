@@ -3,14 +3,10 @@ require_once('util.php');
 
 session_start();
 
-//von welcome.php übergeben
 $username =  $_SESSION['username'];
 $policy =  $_SESSION['policy'];
 
-echo "Active Policy: "+$policy;
-
-//Bei PW Check
-
+echo "Active Policy: ".$policy;
 
 /*
  * Auf Keys gecheckt. wenn das true wäre, könnte man die Challenge schicken,
@@ -21,8 +17,6 @@ echo "Active Policy: "+$policy;
  * 	2 (HELLO):	Meldung dass keine Keys + Button um Credentials zu generieren
  */
 $keys = $_SESSION['PKeys']; 
-
-
 
 $pwCode = "
 		
@@ -55,7 +49,7 @@ else {
 }
 
 
-echo "<p id='pwState'></p><br>username: $username";
+echo "<p id='pwState'></p><br>username:". $username;
 
 
 

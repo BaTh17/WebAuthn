@@ -17,20 +17,24 @@ else {
 		//start session
 		session_start();
 		
-		$policy = $_SESSION['policy'] = getPolicy($username);
-		$userHasKeys = $_SESSION['PKeys'] = checkKeys($username);
+		$policy = $_SESSION['policy'] = getPolicy($username); //int value of policy wird in $policy gespeichert
+		
+		/*
+		 * In DB nun prüfen, ob überhaupt Keys für den User bestehen
+		 */
+		$userHasKeys = $_SESSION['PKeys'] = hasKeys($username);
 		
 		$_SESSION['username'] = $username;
 		
-		if(!$userHasKeys && $policy) {
+		//Wenn der User keine Keys hat, aber gleichzeitig die Policy 
+		if(!$userHasKeys && ($policy==1 || $policy ==2)) { //Wenn 
 			$responseStatus = '202 Accepted';
-			$responseText = 'User OK, aber es existieren keine Keys...';
+			$responseText = 'User'.$username. ' OK, aber es existieren keine Keys...';
 		}
-		
 		
 		else {
 		$responseStatus = '200 OK';
-		$responseText = 'User OK, forwarding...';
+		$responseText = 'User'.$username.' OK, forwarding...';
 		}
 			
 	}

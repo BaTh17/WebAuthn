@@ -7,13 +7,12 @@
 // und sonst wird mit der Funktion eines gebaut.
 
 navigator.authentication = navigator.authentication || (function () {
-
+	console.log("BUILD Authentication Objekt");
 	/*
 	 * die webauthnDB als Konstante ist eigentlich eine Funktion, die bis und
 	 * mit Z.109 alles ausführt, weil sie instantiert wird und damit auch die
 	 * Funktion die ihr zugewiesen wurde ausführt
 	 */
-	
 
 	const webauthnDB = (function() {
 		
@@ -86,6 +85,7 @@ navigator.authentication = navigator.authentication || (function () {
 		}
 
 		function doGetAll() {
+			console.log("doGetAll was called");
 			if(!db) throw "DB not initialised";
 			return new Promise(function(resolve,reject) {
 				var tx = db.transaction(WEBAUTHN_ID_TABLE,"readonly");
@@ -128,13 +128,13 @@ navigator.authentication = navigator.authentication || (function () {
 	// oberste Ebene in der "mainfunction"
     function makeCredential(accountInfo, cryptoParams, attestChallenge, options) {
       	
+    	console.log("makeCrednetial in webauthn.js was called");
 		var acct = 	{rpDisplayName: accountInfo.rpDisplayName,userDisplayName: accountInfo.displayName};
 		var params = [];
 		var i;	
 		
 		if (accountInfo.name) { acct.accountName = accountInfo.name; }
 		
-//		console.log("Existiert das überhaupt? "+accountInfo.id); //Nein
 		if (accountInfo.id) { acct.userId = accountInfo.id; }
 		if (accountInfo.imageUri) { acct.accountImageUri = accountInfo.imageUri; }
 
@@ -152,6 +152,7 @@ navigator.authentication = navigator.authentication || (function () {
 		//Credentialobjekt (cred). Die ID aus dem Credentialobjekt (=>MSAssertion / ScopedCredentialInfo https://developer.microsoft.com/en-us/microsoft-edge/platform/documentation/dev-guide/device/web-authentication/
 		//wird zusammen mit den accountInfos in die indexedDB geschrieben. Die storeFunktion des webauthnDB Objektes gibt ein Promise zurück, aber ohne Value,
 		//deshalb returnieren wir nach dem call der Storefunktion das gefreezte Objekt.
+		
         return msCredentials.makeCredential(acct, params).then(function (cred) {
 			if (cred.type === "FIDO_2_0") {
 				var result = Object.freeze({ //mit Object.freeze wird unveränderbar gemacht. Die Methode gibt ein unveränderliches Objekt zurück
@@ -172,7 +173,15 @@ navigator.authentication = navigator.authentication || (function () {
 		});
     } // END of makeCredential
     
-    
+    function readDB() {
+    	console.log("readDB called");
+    	var credList = [];
+    	return webauthnDB.getAll().then(function(list) {
+			list.forEach(item => credList.push({ type: 'FIDO_2_0', id: item.id })); 
+			return credList; //Bekommt man dann die credList aufbereitet durch die Einträge in der indexedDB zurück?
+		});
+    	
+    }
     
     //Funktion, die ein Promise zurückgibt
     function getCredList(allowlist) {
@@ -190,6 +199,7 @@ navigator.authentication = navigator.authentication || (function () {
     			resolve(credList); //Wird das Promise erfüllt, wird die credList mit den ID's zurückgegeben
 			});
     	} 
+    	
     	//Wenn keine Optionen mitgegeben werden, geht er in die IndexedDB schauen, wo er die ID's abgelegt hat
     	else {
     		return webauthnDB.getAll().then(function(list) {
@@ -254,6 +264,7 @@ navigator.authentication = navigator.authentication || (function () {
 
     return {
     	
+    	readDB : readDB,
         makeCredential: makeCredential, // Simuliert Getter Methode
         getAssertion: getAssertion,
         

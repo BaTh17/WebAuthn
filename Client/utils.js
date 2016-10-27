@@ -11,10 +11,55 @@ function getAssertion() {
 	document.write("Mit Challenge wird ASsertion gebaut");
 }
 
-
 function makeCredentials() {
-	document.write("Es werden neue Challenges kreiirt");
+	//alert("Es werden neue Challenges kreiirt");
+	
+	const credAlgorithm = "RSASSA-PKCS1-v1_5";
+	
+	var userAccountInformation = { 
+			  rpDisplayName: "Test Site",
+			  displayName: "Adrian Bateman",
+			  //accoutnName: "u114415"
+			};
+	var cryptoParams = [
+	              	  { 
+	              	    type: "ScopedCred",
+	              	    algorithm: credAlgorithm,
+	              	  }
+	              	];
+
+	// Note: The following call will cause the authenticator to display UI.
+	navigator.authentication.makeCredential(userAccountInformation, cryptoParams).then(function (result) {
+		var id = result.credential.id;
+		var publicKey = result.publicKey;
+		
+	  	
+		console.log("Credentials wurden erstellt: ")
+		
+		console.log("ID und Public Key an Server schicken. ID: "+id + ", UND KEY: "+JSON.stringify(publicKey));
+		
+		navigator.authentication.readDB().then(function(credList){
+			console.log(credList);
+		}
+		)		;
+//		var credList = [];
+//		
+//		//webauthnDB is undefined und wenn ich navigator.authentication. vornedran hänge ist es nicht initialisiert
+//		navigator.authentication.webauthnDB.getAll().then(function(list) {
+//			list.forEach(item => credList.push({ type: 'FIDO_2_0', id: item.id })); 
+//		});
+//	    console.log(credList);
+
+	    
+	    
+	}).catch(function (err) {
+	    // No acceptable authenticator or user refused consent. Handle appropriately.
+	    alert(err);
+	});
+
+
 }
+
 
 /*
  * Funktionen für die Welcome Page
@@ -37,7 +82,12 @@ function postAjaxCall(params, url) {
 	    	document.getElementById('status').innerHTML = "wrong username"; 
 		    }
 	    else if (xmlhttp.status === 202) {
-	    	document.getElementById('status').innerHTML = "Für den Benutzer ist die Policy 1 oder 2 aktiv, aber es sind keine Keys auf dem Server vorhanden"; 
+	    	document.getElementById('status').innerHTML = "Für den Benutzer wurde die Policy 1 oder 2 aktiviert, aber es sind noch keine Public Keys auf dem Server vorhanden." +
+	    			"<br>"+
+	    			"<div id='makeCredButton'><br>"+
+	    			"<button id='makeCredButtonID' onclick='makeCredentials()'>Make Credentials</button></div>";
+	    			//MakeCredentials wird aufgerufen im utils.js, aber das hat keinen Zugriff auf das erstellte authentication Objekt im welcome.php
+	    	
 	    }
 	}
 	
@@ -45,6 +95,7 @@ function postAjaxCall(params, url) {
 	  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	  xmlhttp.setRequestHeader("Content-length", params.length);
 	  xmlhttp.setRequestHeader("Connection", "close");
+	  
 	  xmlhttp.send(params);
 }
 

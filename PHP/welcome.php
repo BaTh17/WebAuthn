@@ -6,8 +6,9 @@
 <?php 
 
 echo "<script src='../Client/utils.js'></script> ";
+echo "<script src='../Client/webauthn.js'></script>";
 
-
+		
 echo '<p><u><h1>LOGIN-Page</h1></p></u><br>'; 
 echo '<p><h2>&#xDC;berpr&#xFC;fen der Systemumgebung:</h2></p>';
 
