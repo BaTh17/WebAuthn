@@ -7,9 +7,6 @@ function hello() {
 	document.write("Hallo Welt");
 }
 
-function getAssertion() {
-	document.write("Mit Challenge wird ASsertion gebaut");
-}
 
 function makeCredentials() {
 	//alert("Es werden neue Challenges kreiirt");
@@ -60,8 +57,26 @@ function makeCredentials() {
 	    alert(err);
 	});
 
-
 }
+
+/* get Assertion - Helperfunktion */
+
+function getAssertion(challenge) {
+	navigator.authentication.getAssertion(challenge).then(function(assertion) {
+		console.log('Assertion created');
+		
+		/*
+		 * Eventuell befindet sicher der User auf der loging.php seite, nämlich wenn er policy code = 1 hat. Bei Code = 2 wurde das hier von getAssertion.php aufgerufen
+		 */
+		
+		//document.getElementById('status').innerHTML = assertion.credential.id;
+	
+		/*Funktionsaufruf für Ajax Call - direkt den call mit anonymer Funktion machen hat nicht geklappt*/
+		handleAssertion(JSON.stringify(assertion));				
+
+	});
+}
+
 
 
 
@@ -130,6 +145,7 @@ function postAjaxCall(params, url) {
 			}
 			
 			console.log("User hat Policy: "+response.policy);
+			
 			if(response.policy == 0 || response.policy == 1)
 				window.location = "../PHP/login.php";
 			else
@@ -213,8 +229,9 @@ function handleAssertion(params){
 	  xmlhttp.onreadystatechange = function () {
 		  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-	    	console.log("OK mit Status: "+xmlhttp.status+ "  |  Responsetext= "+xmlhttp.responseText);
-	      
+	    	console.log("USER ERFOLGREICH AUTHENTISIERT mit Status: "+xmlhttp.status+ "  |  Responsetext= "+xmlhttp.responseText);
+	    	
+	    	//window.location = "../PHP/homepage.php";
 	    }
 	    
 	    else { //Das wird mehrmals aufgerufen, wenn ich keine Condition rein tue, weil der onreadystatechange mehrmals wechselt von 0-4

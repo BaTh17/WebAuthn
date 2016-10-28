@@ -24,15 +24,24 @@ else {
 	$clientData = $assertionJs['clientData'];
 	$signature = $assertionJs['signature'];
 	
+	$cData = base64_decode($clientData);
+	
+	
+	
 	$responseStatus = '200 OK';
-	$responseText = "Assertion mit ID:".$id." und Signatur: ".$signature;
+	$responseText = "ClientData: ".$cData. "    |     Assertion mit ID:".$id." und Signatur: ".$signature;
 		
 	}
 
 /* 
  * Validieren der Assertion
  */
-
+function validateAssertion() {
+	//Prüfen, ob die Challenges matchen. Die Challenge ist in den ClientData drin
+	$challengeS = $_SESSION['challenge'];
+	$challengeC = $clientData['challenge'];
+	
+}
 	
 	
 

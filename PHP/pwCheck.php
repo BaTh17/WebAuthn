@@ -34,13 +34,15 @@ $password = $_POST['password'];
 			case 1: {
 				/*
 				 * Bei Case 1 muss nun nach dem erfolgereichen PW Check noch eine Assertion geholt werden.
-				 * Dabei geben wir
+				 * Darum auch eine Challenge generieren.
 				 */
+				$_SESSION['challenge'] = $challenge = getChallenge();
+				
 				$responseText = "				
 				var x = document.createElement('script');
 				x.src = '../Client/test.js';
 				document.getElementsByTagName('head')[0].appendChild(x);
-				lorem();				
+				getAssertion('$challenge');				
 				";
 				break;
 			}

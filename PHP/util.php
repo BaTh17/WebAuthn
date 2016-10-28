@@ -63,7 +63,7 @@ function hasKeys($username) {
 	if($username=="schf")
 		return true;
 	if($username=="tscm")
-		return false;
+		return true;
 	if($username=="hello")
 		return true;
 	else
@@ -78,6 +78,11 @@ function saveCredentials($username, $id, $pubKey) {
 
 return true;
 
+}
+
+function getChallenge() {
+	
+	return md5(mt_rand(12,12));
 }
 
 
