@@ -65,7 +65,7 @@ function hasKeys($username) {
 	if($username=="tscm")
 		return false;
 	if($username=="hello")
-		return false;
+		return true;
 	else
 		return false;
 }

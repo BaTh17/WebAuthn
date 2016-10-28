@@ -29,14 +29,30 @@ function makeCredentials() {
 	              	];
 
 	// Note: The following call will cause the authenticator to display UI.
+	
+	/*
+	 * Rückgabewert von navigator.authentication.makeCredential bei Erfolg:
+	 */
 	navigator.authentication.makeCredential(userAccountInformation, cryptoParams).then(function (result) {
-		var id = result.credential.id;
-		var publicKey = result.publicKey;
 		
-	  	
-		console.log("Credentials wurden erstellt: ")
+		/*
+		 * Ich schicke gleich das ganze result Objekt an den Server und parse es dort.
+		 */
 		
-		console.log("ID und Public Key an Server schicken. ID: "+id + ", UND KEY: "+JSON.stringify(publicKey));
+		
+		var idToServer = JSON.stringify(result.credential.id);
+		var keyToServer = JSON.stringify(result.publicKey.n);
+		
+		var credToServer = idToServer + keyToServer;
+		
+		console.log("Daten an Server: "+credToServer);
+		console.log("Credentials wurden erstellt und in der Indexed DB gespeichert.")
+		console.log(JSON.stringify(result));
+		
+		
+		//ID und Public Key extrahieren und an Server schicken.
+		
+		console.log("<br>ID und Public Key an Server schicken. ID: "+id + ", UND KEY: "+JSON.stringify(publicKey));
 		
 		navigator.authentication.readDB().then(function(credList){
 			console.log(credList);
@@ -74,8 +90,18 @@ function postAjaxCall(params, url) {
 		  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 	      console.log(xmlhttp.responseText);
+	      console.log("Username ist okay, und falls Policy 1/2 existiert sind angeblich auch Public Keys auf dem Server." +
+	      		"jetzt wird geprüft, ob die Indexed-DB Einträge enthält!");
+	      
+	  	navigator.authentication.readDB().then(function(credList){
+			console.log(credList);
+		}
+		);
+	  	
+	  	
+	      
 	      //forward to login.php mit bestehendem Session Cookie wo ich mitgeben und Server dadurch weiss, dase es user gibt
-	      window.location = '../PHP/login.php';
+	      //window.location = '../PHP/login.php';
 	    }
 	    
 	    else if (xmlhttp.status === 401) {
@@ -86,7 +112,7 @@ function postAjaxCall(params, url) {
 	    			"<br>"+
 	    			"<div id='makeCredButton'><br>"+
 	    			"<button id='makeCredButtonID' onclick='makeCredentials()'>Make Credentials</button></div>";
-	    			//MakeCredentials wird aufgerufen im utils.js, aber das hat keinen Zugriff auf das erstellte authentication Objekt im welcome.php
+	    			
 	    	
 	    }
 	}

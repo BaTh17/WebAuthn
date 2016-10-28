@@ -126,7 +126,7 @@ navigator.authentication = navigator.authentication || (function () {
 	
 	// Ebene: navigator.authentication || (function () - d.h. makeCredential ist
 	// oberste Ebene in der "mainfunction"
-    function makeCredential(accountInfo, cryptoParams, attestChallenge, options) {
+    function makeCredential(accountInfo, cryptoParams, attestChallenge, options) { //attestChallenge ist optional, brauchen wir nicht
       	
     	console.log("makeCrednetial in webauthn.js was called");
 		var acct = 	{rpDisplayName: accountInfo.rpDisplayName,userDisplayName: accountInfo.displayName};
@@ -176,8 +176,16 @@ navigator.authentication = navigator.authentication || (function () {
     function readDB() {
     	console.log("readDB called");
     	var credList = [];
+    	
     	return webauthnDB.getAll().then(function(list) {
-			list.forEach(item => credList.push({ type: 'FIDO_2_0', id: item.id })); 
+			list.forEach(item => credList.push({ type: 'FIDO_2_0', id: item.id, rpDisplayName : item.data.rpDisplayName })); //das credList Array wird mit den Item-Attributen Type=FIDO2.0 und id=item.id abgefüllt und retourniert.
+			
+			if (typeof credList == 'undefined' || credList.length < 1) {
+				console.log("Keine Items in der indexed DB!");
+			}
+			else {
+				console.log("Es gibt Einträge in der Indexed DB!");
+			}
 			return credList; //Bekommt man dann die credList aufbereitet durch die Einträge in der indexedDB zurück?
 		});
     	

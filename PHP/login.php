@@ -7,6 +7,9 @@ $username =  $_SESSION['username'];
 $policy =  $_SESSION['policy'];
 
 echo "Active Policy: ".$policy;
+echo "<script src='../Client/utils.js'></script> ";
+echo "<script src='../Client/webauthn.js'></script>";
+
 
 /*
  * Auf Keys gecheckt. wenn das true wäre, könnte man die Challenge schicken,
@@ -38,14 +41,16 @@ echo "<script src='../Client/utils.js'></script> ";
  * Bei 2 wird direkt die getAssertion Funktion aufgerufen
  */
 
-if($policy == 0 || 1) {
+if($policy == 0 || $policy == 1) {
 	
 	echo $pwCode;
 	
 }
 
 else {
-	echo "Passwordless is active";
+	echo "Passwordless is active. Call of getAssertion:<br>";
+	echo "<script>hello()</script>";
+	
 }
 
 

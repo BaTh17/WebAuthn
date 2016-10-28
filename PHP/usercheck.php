@@ -34,7 +34,8 @@ else {
 		
 		else {
 		$responseStatus = '200 OK';
-		$responseText = 'User'.$username.' OK, forwarding...';
+		$responseText = 'User'.$username.' OK, forwarding...'; 
+		//Eventuell daraus ein JSON machen, wo die Policy mit drin steht, damit im AJAX call auf indexedDB geprüft werden kann wenn Policy 1/2 ist
 		}
 			
 	}
