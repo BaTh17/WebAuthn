@@ -1,9 +1,15 @@
 <?php
 
+use phpseclib\Crypt\RSA;
+
+set_include_path(dirname(dirname(__FILE__)));
+
 require_once('util.php');
-include('Crypt/RSA.php');
+include('\phpseclib\Crypt\RSA.php');
 
 session_start();
+
+$INCpath = getcwd();
 
 $responseText = "empty";
 $clientData = "";
@@ -35,7 +41,7 @@ else {
 	$cChallenge = $cData->{'challenge'};
 	
 	$responseStatus = '200 OK';
-	$responseText = "Challenge-Vergleich: ". validateAssertion($cChallenge). 
+	$responseText = "Path is: ". $INCpath . "Challenge-Vergleich: ". validateAssertion($cChallenge). 
 	" ClientData: " .$cChallenge. "   |     Assertion mit ID:".$id." und Signatur: ".$signature;
 		
 	}
@@ -57,10 +63,10 @@ function validateAssertion($ChallengeFromClient) {
 	/* Überprüfen der Signatur */
 	
 	/* Prepare Public Key */
-	$rsa = new Crypt_RSA();
+	$rsa = new RSA();
 	
-	$cSignature = json_decode(trim(base64_decode($signature)));
-	$cSignature = $cSignature->{'challenge'};
+// 	$cSignature = json_decode(trim(base64_decode($signature)));
+// 	$cSignature = $cSignature->{'challenge'};
 	
 	
 	
