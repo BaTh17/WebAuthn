@@ -109,24 +109,34 @@ function postAjaxCall(params, url) {
 	  //Events für Response
 	  xmlhttp.onreadystatechange = function () {
 		  
-	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) { //Userüberprüfung erfolgreich. $responseText = json_encode(array("user" => $username, "policy" => $policy));
+	    	
 	      console.log("Responsetext: "+xmlhttp.responseText);
-	      var response = JSON.parse(xmlhttp.responseText); //ein JSON das zurückkommt
+	      var response = JSON.parse(xmlhttp.responseText); //ein JSON das zurückkommt: {"user":"x","policy":y}
 	      
 	      console.log("Username ist okay, und falls Policy 1/2 existiert sind angeblich auch Public Keys auf dem Server." +
 	      		"jetzt wird geprüft, ob die Indexed-DB Einträge enthält!");
 	     
 	    //Prüfen, ob in der indexedDB Credentials existieren
 	  	navigator.authentication.readDB().then(function(credList){
-			console.log(credList);
+			console.log(credList); //gibt das CredList Objekt aus. 
+			
+			//Prüfen, ob Keys in der indexed DB sind
+			if (typeof credList == 'undefined' || credList.length < 1) {
+				console.log("Keine Items in der indexed DB!");
+			}
+			else {
+				console.log("Es gibt Einträge in der Indexed DB!");
+			}
+			
 			console.log("User hat Policy: "+response.policy);
-			if(response.policy == 0)
+			if(response.policy == 0 || response.policy == 1)
 				window.location = "../PHP/login.php";
+			else
+				window.location = "../PHP/getAssertion.php";
+				
 		});
-	  	
-	  	
-		  	
-	    }
+	 }
 	    
 	   
 	    
@@ -137,9 +147,7 @@ function postAjaxCall(params, url) {
 	    	document.getElementById('status').innerHTML = "Für den Benutzer wurde die Policy 1 oder 2 aktiviert, aber es sind noch keine Public Keys auf dem Server vorhanden." +
 	    			"<br>"+
 	    			"<div id='makeCredButton'><br>"+
-	    			"<button id='makeCredButtonID' onclick='makeCredentials()'>Make Credentials</button></div>";
-	    			
-	    	
+	    			"<button id='makeCredButtonID' onclick='makeCredentials()'>Make Credentials</button></div>";	    	
 	    }
 	}
 	
@@ -176,11 +184,6 @@ function checkPW(){ //Hier eventuell auch die AjaxCall Funktion brauchen, aber d
 		  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 	     eval(xmlhttp.responseText); //Ausführen vom Code, der bei erfolgreichem PW Check vom Server zurückkam
-	     /*
-	      *  eval(xmlhttp.responseText) führt im Fall von Policy = 0 zum redirect auf den Webflow oder
-	      * bei Policy = 1 zum Aufruf vom getAssertion() auf dem Client. Das heisst pwCheck muss den Code dazu zzurückgeben
-	      * und auch gleich (als erstes?) <script src="webauthn.js"></script> ?
-	      */ 
 	     document.getElementById('pwState').innerHTML = "PASWORT OK"; 
 	      
 	    }
@@ -195,6 +198,43 @@ function checkPW(){ //Hier eventuell auch die AjaxCall Funktion brauchen, aber d
 	  xmlhttp.setRequestHeader("Content-length", params.length);
 	  xmlhttp.setRequestHeader("Connection", "close");
 	  xmlhttp.send(params);
-	
-	
+
 }
+
+function handleAssertion(params){ 
+
+	console.log("handleAssertion was called mit Parameter"+params);
+	var params = "assertion="+params;
+	var url = "../PHP/handleAssertion.php";
+		
+	xmlhttp = new XMLHttpRequest();
+	console.log("übermitteln von: "+params);
+
+	  xmlhttp.onreadystatechange = function () {
+		  
+	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+	    	console.log("OK mit Status: "+xmlhttp.status+ "  |  Responsetext= "+xmlhttp.responseText);
+	      
+	    }
+	    
+	    else { //Das wird mehrmals aufgerufen, wenn ich keine Condition rein tue, weil der onreadystatechange mehrmals wechselt von 0-4
+	    	console.log("State Change:"+xmlhttp.readyState);
+		    }  
+	}
+	
+	  xmlhttp.open("POST", url, true);
+	  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	  xmlhttp.setRequestHeader("Content-length", params.length);
+	  xmlhttp.setRequestHeader("Connection", "close");
+	  xmlhttp.send(params);
+
+}
+
+
+
+
+
+
+
+
+

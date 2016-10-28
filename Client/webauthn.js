@@ -180,12 +180,6 @@ navigator.authentication = navigator.authentication || (function () {
     	return webauthnDB.getAll().then(function(list) {
 			list.forEach(item => credList.push({ type: 'FIDO_2_0', id: item.id, rpDisplayName : item.data.rpDisplayName })); //das credList Array wird mit den Item-Attributen Type=FIDO2.0 und id=item.id abgefüllt und retourniert.
 			
-			if (typeof credList == 'undefined' || credList.length < 1) {
-				console.log("Keine Items in der indexed DB!");
-			}
-			else {
-				console.log("Es gibt Einträge in der Indexed DB!");
-			}
 			return credList; //Bekommt man dann die credList aufbereitet durch die Einträge in der indexedDB zurück?
 		});
     	
@@ -221,15 +215,16 @@ navigator.authentication = navigator.authentication || (function () {
     	console.log("getAssertion has been called");
     	
         var allowlist = options ? options.allowList : undefined; //wenn options gesetzt sind, wird der Variable allowlist der Wert options.allowList zugewiesen
-		console.log("allowlist ist undefined: "+allowlist);  //Das kommt noch vor Eingabe des PINs
+		console.log("allowlist ist :"+allowlist);  //Das kommt noch vor Eingabe des PINs
 		
         return getCredList(allowlist).then(function(credList) { //Wird das Promise erfüllt, wurde eine credList aufbereitet mit ID's die dem Client bekannt sind
-			var filter = { accept: credList }; 
+			console.log("Die CredentialListe, die der Client sich aus der IndexedDB gebaut hat und welche dann als filter Parameter an msCredentials.getAssertion geschickt wird:")
+			console.log("credList ist: "+JSON.stringify(credList));
+			
+        	var filter = { accept: credList }; 
 			var sigParams = undefined;
 			//Nun noch was mit signaturparameter - im Moment wohl nicht wichtig:
 			if (options && options.extensions && options.extensions["webauthn_txAuthSimple"]) { sigParams = { userPrompt: options.extensions["webauthn_txAuthSimple"] }; }
-			
-			//Hier nun der Call der MSLibrary: Sollte das nicht gehen, wenn wir für einen User die credentialID's bereits als CredList mitgeben?
 			
 			/*
 			 * Von getCredList(allowlist) kommt die credList zurück: 
@@ -237,22 +232,23 @@ navigator.authentication = navigator.authentication || (function () {
 			 * Gespeichert ist dies nun im var filter = {accept:credList} und wird der MSCredentials.getAssertion geschickt
 			 * ES MUSS dabei ein accept-Object sein (das auf ein Array(?) zeigt.
 			 */
-			console.log("credList ist: "+credList);
+
 	        return msCredentials.getAssertion(challenge, filter, sigParams).then(function (sig) {
 	        	console.log("msCredentials.getAssertion called!");
-	        	//Jetzt ist die Frage, was msCreentials.getAssertion mit dem filterObjekt {accept:credList[]} macht.....
+	        	//Jetzt ist die Frage, was msCreentials.getAssertion mit dem filterObjekt {accept:credList[]} macht. Nimmt er den erstbesten, wenn wie oben sigParams undefined ist?
 	        	
 				if (sig.type === "FIDO_2_0"){
 					console.log("sig.type == FIDO_2_0!");
 					console.log("CHECKE ALLE DATEN:")
-					console.log("Returnierte Signature-ID ist: "+sig.id);
+					console.log("Returnierte Signature-ID ist: "+sig.id); //Signature-ID entspricht der Key ID
 					
-					console.log(sig.signature.clientData);
-							console.log(sig.signature.authnrData);
-									console.log(sig.signature.signature);
+					console.log("Clientdata (B64): "+sig.signature.clientData);
+							console.log("Auhtnr (B64): "+sig.signature.authnrData);
+									console.log("Signatur (B64): "+sig.signature.signature);
 					
+					/* Dieses Objekt schicken wir an den Server. Es wird von msCredentials.getAssertion an getCredList und an getAssetion zurückgegeben  */
 					return Object.freeze({
-						credential: {type: "ScopedCred", id: sig.id}, //Signature ID = Cred.ID wie man sie beim makeCredential() erhält?
+						credential: {type: "ScopedCred", id: sig.id}, //Signature ID = Cred.ID
 						clientData: sig.signature.clientData,
 						authenticatorData: sig.signature.authnrData,
 						signature: sig.signature.signature

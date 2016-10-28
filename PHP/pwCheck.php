@@ -31,24 +31,23 @@ $password = $_POST['password'];
 				$responseText = "window.location = 'https://www.5webflow.ch/category/allgemein/';";
 				break;
 			}
-			case 1:
+			case 1: {
 				/*
 				 * Bei Case 1 muss nun nach dem erfolgereichen PW Check noch eine Assertion geholt werden.
 				 * Dabei geben wir
 				 */
-				$responseText = 				
-				"var x = document.createElement('script');
+				$responseText = "				
+				var x = document.createElement('script');
 				x.src = '../Client/test.js';
 				document.getElementsByTagName('head')[0].appendChild(x);
-				
-				alert('loading lorem');
-				lorem();		
-						
+				lorem();				
 				";
-				
-				
-				//$responseText = "alert('Invoke getAssertion because+".$policy."')";
 				break;
+			}
+			//Case 2 wird es gar nicht geben, da hier ja kein Passwort überprüft wird.
+			//Einem User mit Policy = 2 wird nach erfolgreichen Userlookup & der Prüfung nach Keys die getAssertion geschickt
+				
+				
 			}
 		}	
 	else {
