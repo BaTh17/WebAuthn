@@ -39,33 +39,20 @@ function makeCredentials() {
 		 * Ich schicke gleich das ganze result Objekt an den Server und parse es dort.
 		 */
 		
+		var params = "credentials="+JSON.stringify(result);
+		sendCredentials(params,"../PHP/processCreds.php");
 		
-		var idToServer = JSON.stringify(result.credential.id);
-		var keyToServer = JSON.stringify(result.publicKey.n);
-		
-		var credToServer = idToServer + keyToServer;
-		
-		console.log("Daten an Server: "+credToServer);
-		console.log("Credentials wurden erstellt und in der Indexed DB gespeichert.")
+//		var idToServer = JSON.stringify(result.credential.id);
+//		var keyToServer = JSON.stringify(result.publicKey.n);
+
+		console.log("Credentials wurden erstellt und in der Indexed DB gespeichert. Folgendes Objekt wurde an den Server übertragen:")
 		console.log(JSON.stringify(result));
-		
-		
-		//ID und Public Key extrahieren und an Server schicken.
-		
-		console.log("<br>ID und Public Key an Server schicken. ID: "+id + ", UND KEY: "+JSON.stringify(publicKey));
-		
+				
 		navigator.authentication.readDB().then(function(credList){
 			console.log(credList);
-		}
-		)		;
-//		var credList = [];
-//		
-//		//webauthnDB is undefined und wenn ich navigator.authentication. vornedran hänge ist es nicht initialisiert
-//		navigator.authentication.webauthnDB.getAll().then(function(list) {
-//			list.forEach(item => credList.push({ type: 'FIDO_2_0', id: item.id })); 
-//		});
-//	    console.log(credList);
-
+		}); //nun muss dies zurückmelden, dass Einträge existieren. Nun wird eine Meldung auf die Seite geschrieben, dass Keys erstellt wurden
+		
+		document.getElementById('status').innerHTML = "Keymaterial wurde erstellt. Bitte loggen Sie sich ein mit der Eingabe ihres Benutzernamens."
 	    
 	    
 	}).catch(function (err) {
@@ -77,8 +64,42 @@ function makeCredentials() {
 }
 
 
+
+
+
 /*
- * Funktionen für die Welcome Page
+ * Übertragen der Credentials
+ */
+
+function sendCredentials(params, url) {
+	
+	xmlhttp = new XMLHttpRequest();
+	 
+	  xmlhttp.onreadystatechange = function () {
+		  
+	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+	      console.log(xmlhttp.responseText);
+	      
+	    }
+	    
+	    else if (xmlhttp.status === 401) {
+
+		    }
+	
+	}
+	  xmlhttp.open("POST", url, true);
+	  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	  xmlhttp.setRequestHeader("Content-length", params.length);
+	  xmlhttp.setRequestHeader("Connection", "close");
+	  
+	  xmlhttp.send(params);
+}
+
+
+
+
+/*
+ * Handeln des übermitteln vom Usernamen
  */
 
 function postAjaxCall(params, url) {
@@ -89,20 +110,25 @@ function postAjaxCall(params, url) {
 	  xmlhttp.onreadystatechange = function () {
 		  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-	      console.log(xmlhttp.responseText);
+	      console.log("Responsetext: "+xmlhttp.responseText);
+	      var response = JSON.parse(xmlhttp.responseText); //ein JSON das zurückkommt
+	      
 	      console.log("Username ist okay, und falls Policy 1/2 existiert sind angeblich auch Public Keys auf dem Server." +
 	      		"jetzt wird geprüft, ob die Indexed-DB Einträge enthält!");
-	      
+	     
+	    //Prüfen, ob in der indexedDB Credentials existieren
 	  	navigator.authentication.readDB().then(function(credList){
 			console.log(credList);
-		}
-		);
+			console.log("User hat Policy: "+response.policy);
+			if(response.policy == 0)
+				window.location = "../PHP/login.php";
+		});
 	  	
 	  	
-	      
-	      //forward to login.php mit bestehendem Session Cookie wo ich mitgeben und Server dadurch weiss, dase es user gibt
-	      //window.location = '../PHP/login.php';
+		  	
 	    }
+	    
+	   
 	    
 	    else if (xmlhttp.status === 401) {
 	    	document.getElementById('status').innerHTML = "wrong username"; 
@@ -154,10 +180,6 @@ function checkPW(){ //Hier eventuell auch die AjaxCall Funktion brauchen, aber d
 	      *  eval(xmlhttp.responseText) führt im Fall von Policy = 0 zum redirect auf den Webflow oder
 	      * bei Policy = 1 zum Aufruf vom getAssertion() auf dem Client. Das heisst pwCheck muss den Code dazu zzurückgeben
 	      * und auch gleich (als erstes?) <script src="webauthn.js"></script> ?
-	      * 
-	      *
-	      * 
-	      * 
 	      */ 
 	     document.getElementById('pwState').innerHTML = "PASWORT OK"; 
 	      

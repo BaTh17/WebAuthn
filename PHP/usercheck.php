@@ -32,9 +32,14 @@ else {
 			$responseText = 'User'.$username. ' OK, aber es existieren keine Keys...';
 		}
 		
-		else {
+		else { 
 		$responseStatus = '200 OK';
-		$responseText = 'User'.$username.' OK, forwarding...'; 
+		$responseText = json_encode(array("user" => $username, "policy" => $policy));
+		//$responseText = 'User'.$username.' OK, forwarding...'; 
+		
+		// Returns: {"4":"four","8":"eight"}
+		
+		
 		//Eventuell daraus ein JSON machen, wo die Policy mit drin steht, damit im AJAX call auf indexedDB geprüft werden kann wenn Policy 1/2 ist
 		}
 			
