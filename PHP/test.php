@@ -1,6 +1,9 @@
 <?php 
 error_reporting(E_ALL);
 
+require_once('utility.php');
+require_once('util.php');
+
 // Verbindungsdaten
 define ( 'HOST',      'localhost' );
 define ( 'BENUTZER',  'webflow' );
@@ -15,7 +18,7 @@ mysqli_set_charset($db_link, 'utf8');
 
 if ( $db_link )
 {
-	echo 'Verbindung erfolgreich: ';
+	utility::addLog('Verbindung mit Datenbank '.DATENBANK.' erfolgreich.');
 	print_r( $db_link);
 }
 else

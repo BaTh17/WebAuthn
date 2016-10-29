@@ -1,0 +1,14 @@
+body{
+    font-family:verdana, sans-serif;
+    background-color: #82c0f2;
+}
+table{
+    border: 1px solid black;
+}
+td, tr {
+	font-size:small;
+    background-color: #beddf7;
+}
+th {
+	font-weight:bold;
+}
