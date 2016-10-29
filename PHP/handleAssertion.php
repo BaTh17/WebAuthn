@@ -25,47 +25,49 @@ else {
 	
 	//Credential
 	$type = $assertionJs['credential']['type'];
-	$id = $assertionJs['credential']['id'];
+	$id = $assertionJs['credential']['id']; //Assertion ID, aber gleichzeitig die ID zum hinterlegten PublicKey
 	
 	//ClientData (noch base64 encodiert): Enthält die Challenge
 	$clientData = $assertionJs['clientData']; //clientData liegen nun vor als: ew0KCSJjaGFsbGVuZ2UiIDogImMyMGFkNGQ3NmZlOTc3NTlhYTI3YTBjOTliZmY2NzEwIg0KfQA
-	//$c = base64_decode($clientData); //Danach liegt cData als { "challenge" : "c232...." }
-	$c = rfc4648_base64_url_decode($clientData);
+	$c = rfc4648_base64_url_decode($clientData);//Danach liegt cData als { "challenge" : "c232...." }
 		
-	
+	//Extrahieren der Challenge
 	$cData = json_decode(trim($c)); //das macht das ganze zu einem Array, damit ich die Challenge unten auslesen kann
 	$cChallenge = $cData->{'challenge'}; //Zugriff auf den Value mit Key "challenge"
 	
 	//AuthenticatorData
 	$authnData64 = $assertionJs['authenticatorData'];
-	//$a = "1000000"; //statisch, da es so mitgegeben wird und die Dekodierung noch ein Problem ist
 	$a = rfc4648_base64_url_decode($authnData64);
-	//$authnData2 = bin2hex($authnData64);
 	
 	//Signature 
 	$signature = $assertionJs['signature']; //B8UoaYhTXdTG7O83iQVpGnhKqizl5182q-KQdSpvP8E_2vi115xlVbEIuHEK....
-	//$s = base64_decode($signature);
 	$s = rfc4648_base64_url_decode($signature);
 	
-	$responseStatus = '200 OK';
-	$responseText = "Validierung:". validateAssertion($cChallenge,$c,$a,$s). 
-	" ClientData B64: " .$clientData. " danach b64decodiert: ".$c." |   AuthData: ". $authnData64. "  |   Assertion mit ID:".$id." und Signatur: ".$signature;
-		
+	//Challenge vergleichen
+	if($_SESSION['challenge']!=$cChallenge) {
+		$responseStatus = '400 Bad Request';
+		$responseText = 'Fehlerhafte Challenge';
 	}
-
 	
+	//Restliche Assertion (Signatur) überprüfen
+	
+	if(validateAssertion($c,$a,$s)) {
+		$responseStatus = '200 OK';
+		$responseText = "Validierung erfolgreich. Leite weiter zum Webflow";
+	}
+	else {
+		$responseStatus = '400 Bad Request';
+		$responseText = 'Fehlerhafte Assertion';
+	}
+	//" ClientData B64: " .$clientData. " danach b64decodiert: ".$c." |   AuthData: ". $authnData64. "  |   Assertion mit ID:".$id." und Signatur: ".$signature;
+	
+		
+} //End of Else 
+
+
 /* Validieren der Assertion */
 	
-function validateAssertion($ChallengeFromClient,$c,$a,$s) {
-	//Prüfen, ob die Challenges matchen. Die Challenge ist in den ClientData drin
-	
-// 	if($_SESSION['challenge']!=$ChallengeFromClient) {
-// 		return "Falsche Challenge!";
-// 	}
-// 	else
-// 		return "Challenge matchen!";
-	
-	/* Überprüfen der Signatur */
+function validateAssertion($c,$a,$s) {
 	
 	//HASH DATA
 	$hash = new Crypt_Hash('sha256');
@@ -73,37 +75,44 @@ function validateAssertion($ChallengeFromClient,$c,$a,$s) {
 	
 	//LOAD PUBLIC KEY
 	$rsa = new Crypt_RSA();
+	$rsa = buildPubKey("1", $rsa);
 	
-	$pKey64 = "gpplFmlkpwee0lZQ5ZNkfKnA6xjXr_xkgL0zMXBThWkP9zFSveowDrHqS8hueV44U0jicgz_4fDkF7qR3tgJN0_-STnoEcZ-iSQrVw71OBare-x6fp6f5G4ApdXUhOCSxxauYAtPO3W3r8aJXNqn40ijfJbIK-3SSWF-qqHnMwjojLLpnwjap76PsfQHOUpl_p9FxKdbU6k1Y-SGTN8HvXRYiA-Uabem6ok6Thw4EgX3AGr3DleoHjpMhmegcMGO7aVBokq0Q8fpPAsmSMZ6Tfemj7zYJCRg8eQb1XTg-SStKvovCWDyBbBfzUOhI_JiOEBctsje6XYLjaEem2RDPw";
-	$n = rfc4648_base64_url_decode($pKey64);
-	
-	$e64 = "AQAB"; //ist statisch
-	$e = rfc4648_base64_url_decode($e64); //decodiert ist dies
-	
-	
-	/* Weshalb bauen die ein Array aus den beiden Strings und übergeben das? */
-	$raw = array("n"=>new Math_BigInteger($n,256),"e"=>new Math_BigInteger($e,256));
-	
-	$rsa->loadKey($raw);
-
-	
-	//Decoden der Signatur (Manuell)
-	//$signature = "B8UoaYhTXdTG7O83iQVpGnhKqizl5182q-KQdSpvP8E_2vi115xlVbEIuHEK1qjS7Csz0N493xsqT-Ikn0AwBtzskV1ymS407kcCOGf_R9l9no7QlpzpNWJuanXjuPpwoEmMs4AUhZom9eQqFYHVFwY4n_2hdrUUFeuINP4ph-wN-MNQmpX5O_wMIjZkgS7Zxg0kI0g1pB77YbdBxggo4F7i8VwLwbPgJJtpTHU9d_2RoXCQRrbkjWqv5oiXBtFcfLZgglSeHylhAgAXTpB8jETkPctls1sVQSmbnm5oGx97q904t31mWkwB3CHAGWOLxH_YwAa1u3O1QWRJO6myTg";
-	
+	//Vorbereiten der Validierung
 	$rsa->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
 	$rsa->setHash('sha256');
-	
-	
 	
 	// Verify signature is correct for authnrData + hash: Das decrypted nun die Signatur und vergleich sie mit dem hash
 	$result = $rsa->verify($a . $h,$s);
 	
-	if($result)
-		return "TRUE";
-	else
-		return "False";
-	//return $result;
+	return $result;
+
 }
+
+
+function buildPubKey($id, $rsa) {
+
+	//Key mit ID aus der DB holen
+	//$pKey64 getPublicKey($username, $keyID) returns PubKey string, base64 URL encodiert
+	$pKey64 = "gpplFmlkpwee0lZQ5ZNkfKnA6xjXr_xkgL0zMXBThWkP9zFSveowDrHqS8hueV44U0jicgz_4fDkF7qR3tgJN0_-STnoEcZ-iSQrVw71OBare-x6fp6f5G4ApdXUhOCSxxauYAtPO3W3r8aJXNqn40ijfJbIK-3SSWF-qqHnMwjojLLpnwjap76PsfQHOUpl_p9FxKdbU6k1Y-SGTN8HvXRYiA-Uabem6ok6Thw4EgX3AGr3DleoHjpMhmegcMGO7aVBokq0Q8fpPAsmSMZ6Tfemj7zYJCRg8eQb1XTg-SStKvovCWDyBbBfzUOhI_JiOEBctsje6XYLjaEem2RDPw";
+	$n = rfc4648_base64_url_decode($pKey64);
+
+	$e64 = "AQAB"; //ist statisch (Exponent)
+	$e = rfc4648_base64_url_decode($e64);
+
+	/* Math_BigInteger($e,256)
+	 * 1. Parameter: .....
+	 * 2. Parameter: 256 = Basis der Zahl?  */
+
+	//Bau des Keys. Der Public Key "setzt" sich aus Exponent und Modulus zusammen => http://crypto.stackexchange.com/questions/18031/the-modulus-of-rsa-public-key
+	$raw = array("n"=>new Math_BigInteger($n,256),"e"=>new Math_BigInteger($e,256));
+	$exponent = $raw['e']; //65537 => Das ist der Exponent
+	$modulus = $raw['n']; //Modulus, Produkt zweier grosser Primzahlen.
+
+	//loadKey akzeptiert scheinbar ein Array, wo der Exponent und der Modulus als Elemente einetragen sind:
+	$rsa->loadKey($raw);
+	return $rsa;
+}
+
 	
 function rfc4648_base64_url_decode($url) {
 	$url = str_replace('-', '+', $url); // 62nd char of encoding
@@ -126,20 +135,6 @@ function rfc4648_base64_url_decode($url) {
 	}
 	if($url) $url = base64_decode($url);
 	return $url;
-}
-
-
-function loadJWK($rsa,$pk)
-{
-	$jpk = json_decode($pk);
-// 	if($jpk->{'kty'}!='RSA' || $jpk->{'alg'}!='RS256') throw new Exception('Invalid key type.');
-	
-	$n = fido_authenticator::rfc4648_base64_url_decode($jpk->{'n'});
-	$e = fido_authenticator::rfc4648_base64_url_decode($jpk->{'e'});
-	
-	$raw = array("n"=>new Math_BigInteger($n,256),"e"=>new Math_BigInteger($e,256));
-	
-	$rsa->loadKey($raw);
 }
 
 	

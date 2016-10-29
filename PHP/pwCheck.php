@@ -41,7 +41,7 @@ $password = $_POST['password'];
 				$responseText = "				
 				var x = document.createElement('script');
 				x.src = '../Client/test.js';
-				document.getElementsByTagName('head')[0].appendChild(x);
+				document.getElementsByTagName('head')[0].appendChild(x); 
 				getAssertion('$challenge');				
 				";
 				break;

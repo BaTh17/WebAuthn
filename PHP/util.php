@@ -1,5 +1,11 @@
 <?php
 
+function getPublicKey($username, $keyID){
+	
+	return "1";
+	
+}
+
 
 /**
  * überprüfen ob ein Benutzername in der DB existiert oder ev. gesperrt ist.

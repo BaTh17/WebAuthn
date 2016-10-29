@@ -132,34 +132,37 @@ function postAjaxCall(params, url) {
 	      console.log("Username ist okay, und falls Policy 1/2 existiert sind angeblich auch Public Keys auf dem Server." +
 	      		"jetzt wird geprüft, ob die Indexed-DB Einträge enthält!");
 	     
-	    //Prüfen, ob in der indexedDB Credentials existieren
-	  	navigator.authentication.readDB().then(function(credList){
-			console.log(credList); //gibt das CredList Objekt aus. 
+	      	//Prüfen, ob in der indexedDB Credentials existieren. Wir gehen davon aus, dass der passende Public Key auf dem Server liegt
+	  		navigator.authentication.readDB().then(function(credList){
 			
-			//Prüfen, ob Keys in der indexed DB sind
-			if (typeof credList == 'undefined' || credList.length < 1) {
-				console.log("Keine Items in der indexed DB!");
-			}
-			else {
-				console.log("Es gibt Einträge in der Indexed DB!");
-			}
+	  			console.log(credList); //gibt das CredList Objekt aus. Ein Array mit (mehreren) Scoped Credentials: [{"type":"FIDO_2_0","id":"4BDCC1AF-3169-45CD-A97A-5EDAD7BCCFD2"}]
 			
-			console.log("User hat Policy: "+response.policy);
-			
-			if(response.policy == 0 || response.policy == 1)
-				window.location = "../PHP/login.php";
-			else
-				window.location = "../PHP/getAssertion.php";
+				//Prüfen, ob Keys in der indexed DB sind
+				if (typeof credList == 'undefined' || credList.length < 1) {
+					console.log("Keine Items in der indexed DB!");
+					//KEINE WEITERLEITUNG
+					return;
+				}
+				else {
+					console.log("Es gibt Einträge in der Indexed DB!");
+				}
 				
-		});
-	 }
+				console.log("User hat Policy: "+response.policy);
+			
+					if(response.policy == 0 || response.policy == 1)
+						window.location = "../PHP/login.php";
+					else
+						window.location = "../PHP/getAssertion.php";
+				
+	  		});//Ende des readDB()-Aufufs.
+	  		
+	 }//Ende der Schleife, die einen erfolgreichen Account check weitertreibt
 	    
-	   
 	    
 	    else if (xmlhttp.status === 401) {
 	    	document.getElementById('status').innerHTML = "wrong username"; 
 		    }
-	    else if (xmlhttp.status === 202) {
+	    else if (xmlhttp.status === 202) { //Username okay, aber es kann nicht weitergemacht werden, weil auf dem Server keine Public Keys liegen
 	    	document.getElementById('status').innerHTML = "Für den Benutzer wurde die Policy 1 oder 2 aktiviert, aber es sind noch keine Public Keys auf dem Server vorhanden." +
 	    			"<br>"+
 	    			"<div id='makeCredButton'><br>"+
@@ -217,10 +220,10 @@ function checkPW(){ //Hier eventuell auch die AjaxCall Funktion brauchen, aber d
 
 }
 
-function sendAssertion(params){ 
+function sendAssertion(assertion){ 
 
-	console.log("utils.js hat sendAssertion() aufgerufen mit Parameter"+params);
-	var params = "assertion="+params;
+	console.log("utils.js hat sendAssertion() aufgerufen mit Parameter"+assertion);
+	var params = "assertion="+assertion;
 	var url = "../PHP/handleAssertion.php";
 		
 	xmlhttp = new XMLHttpRequest();
@@ -230,12 +233,16 @@ function sendAssertion(params){
 		  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 	    	console.log("USER ERFOLGREICH AUTHENTISIERT mit Status: "+xmlhttp.status+ "  |  Responsetext= "+xmlhttp.responseText);
-	    	
-	    	//window.location = "../PHP/homepage.php";
+	    	document.getElementById('assertionState').innerHTML = "ASSERTION ERFOLGREICH VALIDIERT";
+	    }
+	    
+	    if (xmlhttp.readyState === 4 && xmlhttp.status === 400) {
+	    	console.log("Validierung der Assertion fehlgeschlagen:   |  Responsetext= "+xmlhttp.responseText);
+	    	 document.getElementById('assertionState').innerHTML = "Validierung fehlgeschlagen. Try again [BUTTON]"; 
 	    }
 	    
 	    else { //Das wird mehrmals aufgerufen, wenn ich keine Condition rein tue, weil der onreadystatechange mehrmals wechselt von 0-4
-	    	console.log("State Change:"+xmlhttp.readyState);
+	    	console.log("Change in State:"+xmlhttp.readyState);
 		    }  
 	}
 	

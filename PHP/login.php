@@ -55,6 +55,8 @@ else {
 
 
 echo "<p id='pwState'></p><br>username:". $username;
+echo "<br><p id='assertionState'></p>";
+
 
 
 
