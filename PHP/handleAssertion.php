@@ -1,15 +1,14 @@
 <?php
 
-use phpseclib\Crypt\RSA;
-
-set_include_path(dirname(dirname(__FILE__)));
 
 require_once('util.php');
-include('\phpseclib\Crypt\RSA.php');
+
+
+$rsa = new RSA();
 
 session_start();
 
-$INCpath = getcwd();
+$INCpath = get_include_path();
 
 $responseText = "empty";
 $clientData = "";
@@ -63,7 +62,7 @@ function validateAssertion($ChallengeFromClient) {
 	/* Überprüfen der Signatur */
 	
 	/* Prepare Public Key */
-	$rsa = new RSA();
+	
 	
 // 	$cSignature = json_decode(trim(base64_decode($signature)));
 // 	$cSignature = $cSignature->{'challenge'};
