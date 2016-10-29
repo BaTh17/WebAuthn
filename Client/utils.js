@@ -72,7 +72,7 @@ function getAssertion(challenge) {
 		//document.getElementById('status').innerHTML = assertion.credential.id;
 	
 		/*Funktionsaufruf für Ajax Call - direkt den call mit anonymer Funktion machen hat nicht geklappt*/
-		handleAssertion(JSON.stringify(assertion));				
+		sendAssertion(JSON.stringify(assertion));				
 
 	});
 }
@@ -217,9 +217,9 @@ function checkPW(){ //Hier eventuell auch die AjaxCall Funktion brauchen, aber d
 
 }
 
-function handleAssertion(params){ 
+function sendAssertion(params){ 
 
-	console.log("handleAssertion was called mit Parameter"+params);
+	console.log("utils.js hat sendAssertion() aufgerufen mit Parameter"+params);
 	var params = "assertion="+params;
 	var url = "../PHP/handleAssertion.php";
 		
