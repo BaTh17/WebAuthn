@@ -15,7 +15,7 @@ if($_REQUEST['resetLog']=1){
 // Session & Log
 utility::addLog('Beginne mit Laden der Admin maske');
 
-print_r($_SERVER['PHP_SELF']);
+
 
 //header("Location: ".$_SERVER['PHP_SELF'].'page=1');
 
@@ -27,38 +27,37 @@ echo '<html>
 <title>'.$pageTitle.'</title>
 		<link rel="stylesheet" href="../CSS/default.css" type="text/css">
 		<script language="javascript" type="text/javascript">
-		function btntest_onclick() 
+		function createPolicy() 
 		{
-		window.location.href = "http://www.google.com";    
+		window.location.href = "'.$_SERVER['PHP_SELF'].'?createPolicy=1&userid=1&policyid=2";    
 		
 		}
 		</script>
 </head>
 <body>';
-echo '<h1>Das ist die Page: '.$pageTitle.'</h1><br />'; 
-echo '<p>Display and Change of policy and users</p><br />';
+echo '<h1>Das ist die Page: '.$pageTitle.'</h1><br />';
 
 
-$db = db::dbconnect();
+$db = new db;
 utility::addLog('erste log-Meldung erstellt');
 
 
 //html Set Policy
 echo '
-<h2>Benutzer Policy erstellen</h2>
-		<input id="btntest" type="button" value="Check"
-		onclick="return btntest_onclick()" />
-		
+<h2>Benutzer Policy Tabelle (PT_USER)</h2>
+		<span>Policy erstellen:</span>
+		<input id="createPolicy" type="text" value="" onclick="return createPolicy()" />
+		<input id="createPolicy" type="button" value="createPolicy" onclick="return createPolicy()" />
 		';
+utility::createTable('PT_USER','');
 
 //loads the benutzertabelle
 utility::createTable('PT_USER');
-utility::addLog('PT_USER Table erstellt');
 
 
 //html Benutzertabelle
 echo '
-<div id="Benutzertabelle">
+<div id="Benutzertabelle (WF_USER)">
 <h2>Benutzertabelle</h2><input id=getUsers value="Anzeige neu laden" />
 		
 				<form action="utility.php" method="post" > 

@@ -75,42 +75,61 @@ class utility {
 
 
 	// checkPassword (default)
-	//
+	
 
 
 	//get Public KEy from USER (NAME)
-
-
-	//log in session
 
 
 	//create TAble
 
 	/**
 	 * erstellt eine Tabelle, param muss der Tabellenname sein
+	 * @param string Tabellenname z.B. 'WF_USER'
 	 */
 	function createTable($tableName)
 	{
 		utility::addLog('erstelle Tabelle: '.$tableName);
 		$db = new db();
 		$sql = "SELECT * FROM $tableName";
-		$rs = $db->executeSQL();
+		$rs = $db->executeSQL($sql,true);
 		$htmlOutput = '';
 		//Build HTML Table around result
+//print_r($rs);
 		if($rs){
-			$htmlOutput .= '
+			$htmlOutputTable .= '
 				<table id=table_"'.$tableName.'" style="width:100%;border=1">
 					';
-			foreach($rs as $key => $value){
-				$htmlOutput .= '<tr>
-						<td id='.$key.'>'.$key.'</td><td>'.$value.'</td>
-					</tr>';
+//print_r($rs);
+			$i = 1;
+			$htmlOutputHeads .='<tr>';
+			foreach($rs as $rowKey => $rowValue)
+			{
+				//print_r($rs);
+				$htmlOutput .= '<tr id='.$rowKey.'>';
+				
+				foreach($rowValue as $columnKey => $columnValue)
+				{
+					//create head row
+					if($i === 1){
+						$htmlOutputHeads .= '<th>'.$columnKey.'</th>';
+					}
+					$htmlOutput .= '<td id='.$columnKey.'>'.$columnValue.'</td>';
+				}
+						
+				$htmlOutput .= '<tr>';
+				$i++;
 			}
-
-
-			$htmlOutput .= '		</table>
+			$htmlOutputHeads .='</tr>';
+			$htmlOutput .= '
+					</table>
 				';
+			
 		}
+
+		$htmlOutputFinal = $htmlOutputTable.$htmlOutputHeads.$htmlOutput;
+		print_r($htmlOutputFinal);
+		return $htmlOutputFinal;
 	}
 
 	
@@ -129,6 +148,9 @@ class db{
 	 * @param String[Optional] $WFdbSystem = WFDBSOURCE {ORAWFTEST,BERKEDBSOUCEMYSQL}
 	 */
 	public function __construct() {
+		
+		return self::dbconnect();
+		
 		/*
 		//$WFdbSystem = WFDBSOURCE;
 		global $__configObject;
@@ -166,8 +188,46 @@ class db{
 		*/
 	}
 	
-	function executeMySQL($SQL) {
+	function executeMySQL($sql,$asArray=false) {
 		
+		
+		var_dump($sql);
+		$connection = $this->connection;
+		mysqli_query($connection, $sql) or die('Fehler beim Ausführen des SQL Statements');
+		
+		//TODO
+		if($asArray){
+			
+		}else{
+			
+		}
+		
+
+		$sql = "SELECT USERID, NAME, FULLNAME FROM WF_USER";
+		$result = $connection->query($sql);
+		
+		if ($result->num_rows > 0) {
+			return $result;
+// 			while($row = $result->fetch_assoc()) {
+// 				echo "USERID: " . $row["USERID"]. " - NAME: " . $row["NAME"]. " - FULLNAME: " . $row["FULLNAME"]. "<br>";
+// 			}
+		} else {
+			return 'Sorry, 0 results found';
+			//echo "Sorry, 0 results found";
+		}
+		
+
+		//Example SQL Select
+		/*
+		 $sql = "SELECT * FROM WF_USER";
+		 mysqli_query($connection, $sql) or die('Error selecting table WF_USER.');
+		
+		
+		 // Check connection
+		 if ($connection->connect_error) {
+		 die("Connection failed: " . $db_link->connect_error);
+		 }
+		 */
 		/*
 	
 		if ($this->Datasource->IsLoaded) {
@@ -186,6 +246,7 @@ class db{
 	
 	
 	function dbconnect(){
+		utility::addLog(__METHOD__.' : Verbindungsaufbau mit dbconnect() gestartet');
 		//connect to mysql DB
 		$host="localhost";
 		$user="webflow";
@@ -195,7 +256,7 @@ class db{
 	
 		if ( $connection )
 		{
-			utility::addLog('Verbindung erfolgreich.');
+			//utility::addLog(__METHOD__.' : Verbindung erfolgreich.');
 			//echo 'Verbindung erfolgreich: ';
 			//print_r( $connection);
 		}
@@ -216,6 +277,10 @@ class db{
 		//set charset
 		mysqli_set_charset($connection, 'utf8');
 	
+		
+		
+		//Example SQL Select
+		/*
 		$sql = "SELECT * FROM WF_USER";
 		mysqli_query($connection, $sql) or die('Error selecting table WF_USER.');
 	
@@ -224,7 +289,7 @@ class db{
 		if ($connection->connect_error) {
 			die("Connection failed: " . $db_link->connect_error);
 		}
-	
+		*/
 		return $connection;
 		/*
 		 $host="localhost";
@@ -243,8 +308,62 @@ class db{
 		 */
 	}
 	
+	/**
+	 * Führt das mitgegebene SQL aus. Orientiert sich vom Aufruf her am FIVE Webflow,
+	 * damit die Funktionen gleich genutzt werden können.
+	 * @param string $sql
+	 * @param boolean $asArray
+	 * @return unknown[]|string
+	 */
 	function executeSQL($sql, $asArray=false){
+
+//print_r('hallefluhy iah weisls doch nicht mwehr saish caahewi jwoi');
+//print_r($sql);
+		$db = new db();
+		//$connection = $this->connection;
+//print_r($db);
+//print_r('<br />');
+		$connection = $db->dbconnect();
+//print_r($connection);
+		//mysqli_query($connection, $sql) or die('Fehler beim Ausführen des SQL Statements');
 		
+		//TODO Unterscheiden
+		if($asArray){
+			$result = $connection->query($sql);
+		}else{
+			$result = $connection->query($sql);
+		}
+//print_r($result);
+
+		
+		if ($result->num_rows > 0) {
+//print_r('return this:');
+//print_r($result);
+			$resultArray = array();
+//print_r($result->fetch_assoc());
+			while($row = $result->fetch_assoc()) {
+				$resultArray[] = $row;
+				//echo "USERID: " . $row["USERID"]. " - NAME: " . $row["NAME"]. " - FULLNAME: " . $row["FULLNAME"]. "<br>";
+			}
+//print_r($resultArray);
+			return $resultArray;
+		} else {
+			return 'Sorry, 0 results found';
+			//echo "Sorry, 0 results found";
+		}
+		
+		
+		//Example SQL Select
+		/*
+		 $sql = "SELECT * FROM WF_USER";
+		 mysqli_query($connection, $sql) or die('Error selecting table WF_USER.');
+		
+		
+		 // Check connection
+		 if ($connection->connect_error) {
+		 die("Connection failed: " . $db_link->connect_error);
+		 }
+		 */
 		/*
 		$connection = $this->$connection;
 		mysqli_query($connection, $sql) or die('Error executing sql script');
@@ -265,4 +384,4 @@ class db{
 		*/
 	}
 	
-}
+}//end class db
