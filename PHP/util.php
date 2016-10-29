@@ -80,11 +80,22 @@ return true;
 
 }
 
+<<<<<<< Upstream, based on origin/master
 function getChallenge() {
 	
 	return md5(mt_rand(12,12));
 }
 
+=======
+class db{
+
+	function executeSQL()
+	{
+		
+		
+	}
+}
+>>>>>>> e261ed8 mt
 
 
 ?>
