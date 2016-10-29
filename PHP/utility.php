@@ -180,3 +180,7 @@ function getWfUser($userInfo, $infoValue = 1){
 
 
 }//end utility class
+
+class db{
+	
+}
