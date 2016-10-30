@@ -21,7 +21,7 @@ else {
 	$assertion = $_POST['assertion'];
 	$assertionJs = json_decode($assertion,true); //macht ein assoziatives Array aus der Assertion die als JSON daherkam
 	
-	/*Die Assertion in ihre einzelnen Teile zerlegen. Vergleich: */
+	/*Die Assertion in ihre einzelnen Teile zerlegen. Vergleich: Code Snippets von Microsoft */
 	
 	//Credential
 	$type = $assertionJs['credential']['type'];
@@ -49,8 +49,7 @@ else {
 		$responseText = 'Fehlerhafte Challenge';
 	}
 	
-	//Restliche Assertion (Signatur) überprüfen
-	
+	//Restliche Assertion (->Signatur) überprüfen
 	if(validateAssertion($c,$a,$s)) {
 		$responseStatus = '200 OK';
 		$responseText = "Validierung erfolgreich. Leite weiter zum Webflow";
@@ -91,8 +90,11 @@ function validateAssertion($c,$a,$s) {
 
 function buildPubKey($id, $rsa) {
 
-	//Key mit ID aus der DB holen
-	//$pKey64 getPublicKey($username, $keyID) returns PubKey string, base64 URL encodiert
+	/*Key mit ID aus der DB holen.
+	$pKey64 getPublicKey($username, $keyID) returns PubKey string, base64 URL encodiert
+	
+	*/
+	//Aktuelles Mockup
 	$pKey64 = "tWN-7UoNdspOleGptyMIONdQEazPPHZKfDhWcfRbspQzsR2xhFvDuHRd6J__Fg2yBfqK1a4QEMoq7djmm-1jIHe2mcy0Y7XSCzZzAC0saZi0TfxGUqDlf30H4M9gNSdxPgsddMxp8Gh_SDSSNwGqFA66iSz4wKlEllqa7cEphIfSPyH3YtWZYq7hyJLfb1cLcrSo4pMDUKC0tAFqzHI6erl5b7eXzNvtjTLxC_TLOj82mW_so2tVecSTg48Y5ARj9nrBZpaFS3th1o02vdMXCAe4d0sgSAPtRAEsRlb7OwzpCYwmkERVBhMHKmYL_7TDkS27kL3hzmEXN4gvhAYwcQ";
 	$n = rfc4648_base64_url_decode($pKey64);
 
@@ -138,15 +140,9 @@ function rfc4648_base64_url_decode($url) {
 }
 
 	
-
 header($_SERVER['SERVER_PROTOCOL'].' '.$responseStatus);
 header('Content-type: text/html; charset=utf-8');
 echo $responseText;
-
-
-
-
-
 
 
 ?>

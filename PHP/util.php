@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @param unknown $username
+ * @param unknown $keyID
+ * 
+ * Returniert den Public Key als String der zu dieser KeyID in der DB abgelegt wurde.
+ */
+
 function getPublicKey($username, $keyID){
 	
 	return "1";
@@ -79,6 +86,10 @@ function hasKeys($username) {
 /**
  * @return: boolean
  * Es werden die vom Client übertragenen Credentials in der DB gespeichert
+ * Im Moment wäre das der $usernamen, die Key/Cred-ID und der Public Key
+ * 
+ * Alle Parameter werden als Strings übergeben. Der Public Key ist hier Base64URL encodiert.
+ * Das ist aber okay, da ich das in der Verifizierung dekodiere.
  */
 function saveCredentials($username, $id, $pubKey) {
 

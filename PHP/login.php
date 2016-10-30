@@ -30,9 +30,7 @@ Enter your password: <br><input type='text' size='30' id='pwInput'><br>
 		
 ";
 
-$passwordless = "
-		
-		";
+//$passwordless = "";
 
 echo "<script src='../Client/utils.js'></script> ";
 

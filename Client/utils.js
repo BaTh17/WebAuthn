@@ -1,12 +1,7 @@
 /**
+ *utils.js: Main Scriptfile für den Client
  * 
  */
-
-
-function hello() {
-	document.write("Hallo Welt");
-}
-
 
 function makeCredentials() {
 	//alert("Es werden neue Challenges kreiirt");
@@ -25,16 +20,11 @@ function makeCredentials() {
 	              	  }
 	              	];
 
-	// Note: The following call will cause the authenticator to display UI.
-	
-	/*
-	 * Rückgabewert von navigator.authentication.makeCredential bei Erfolg:
-	 */
+
+	/* Rückgabewert von navigator.authentication.makeCredential bei Erfolg: Ein Promise vom Typ MSAssertion */
 	navigator.authentication.makeCredential(userAccountInformation, cryptoParams).then(function (result) {
 		
-		/*
-		 * Ich schicke gleich das ganze result Objekt an den Server und parse es dort.
-		 */
+		/* Ich schicke gleich das ganze result Objekt an den Server und parse es dort. */
 		
 		var params = "credentials="+JSON.stringify(result);
 		sendCredentials(params,"../PHP/processCreds.php");
@@ -42,11 +32,10 @@ function makeCredentials() {
 //		var idToServer = JSON.stringify(result.credential.id);
 //		var keyToServer = JSON.stringify(result.publicKey.n);
 
-		console.log("Credentials wurden erstellt und in der Indexed DB gespeichert. Folgendes Objekt wurde an den Server übertragen:")
-		console.log(JSON.stringify(result));
+		console.log("Credentials erstellt. Eintrag in der Indexed DB gemacht. Folgendes Objekt wurde an den Server übertragen: "+JSON.stringify(result))
 				
 		navigator.authentication.readDB().then(function(credList){
-			console.log(credList);
+			console.log("Einträge in der Indexed DB: "+credList);
 		}); //nun muss dies zurückmelden, dass Einträge existieren. Nun wird eine Meldung auf die Seite geschrieben, dass Keys erstellt wurden
 		
 		document.getElementById('status').innerHTML = "Keymaterial wurde erstellt. Bitte loggen Sie sich ein mit der Eingabe ihres Benutzernamens."
@@ -87,10 +76,6 @@ function getAssertion(challenge) {
 
 	});
 }
-
-
-
-
 
 
 /*
@@ -137,7 +122,7 @@ function postAjaxCall(params, url) {
 		  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) { //Userüberprüfung erfolgreich. $responseText = json_encode(array("user" => $username, "policy" => $policy));
 	    	
-	      console.log("Responsetext: "+xmlhttp.responseText);
+	      //console.log("Responsetext: "+xmlhttp.responseText);
 	      var response = JSON.parse(xmlhttp.responseText); //ein JSON das zurückkommt: {"user":"x","policy":y}
 	      
 	      console.log("Username ist okay, und falls Policy 1/2 existiert sind angeblich auch Public Keys auf dem Server." +
@@ -247,7 +232,7 @@ function sendAssertion(assertion){
 	  xmlhttp.onreadystatechange = function () {
 		  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-	    	console.log("USER ERFOLGREICH AUTHENTISIERT mit Status: "+xmlhttp.status+ "  |  Responsetext= "+xmlhttp.responseText);
+	    	console.log("USER ERFOLGREICH AUTHENTISIERT mit Status: "+xmlhttp.status+ "\n" + "Responsetext: "+xmlhttp.responseText);
 	    	document.getElementById('assertionState').innerHTML = "ASSERTION ERFOLGREICH VALIDIERT";
 	    }
 	    

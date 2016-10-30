@@ -40,17 +40,12 @@ echo "
 
 		
 echo "<script>
-	function login(){
-					
-	var username = document.getElementById('userNameInput').value;
-	var params = 'username='+username;
-	postAjaxCall(params, '../PHP/usercheck.php');
- }
-
-
+		function login(){			
+		var username = document.getElementById('userNameInput').value;
+		var params = 'username='+username;
+		postAjaxCall(params, '../PHP/usercheck.php');
+	 	}
 	</script";
-
-
 
 
 ?> 
