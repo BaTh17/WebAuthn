@@ -93,7 +93,7 @@ function buildPubKey($id, $rsa) {
 
 	//Key mit ID aus der DB holen
 	//$pKey64 getPublicKey($username, $keyID) returns PubKey string, base64 URL encodiert
-	$pKey64 = "gpplFmlkpwee0lZQ5ZNkfKnA6xjXr_xkgL0zMXBThWkP9zFSveowDrHqS8hueV44U0jicgz_4fDkF7qR3tgJN0_-STnoEcZ-iSQrVw71OBare-x6fp6f5G4ApdXUhOCSxxauYAtPO3W3r8aJXNqn40ijfJbIK-3SSWF-qqHnMwjojLLpnwjap76PsfQHOUpl_p9FxKdbU6k1Y-SGTN8HvXRYiA-Uabem6ok6Thw4EgX3AGr3DleoHjpMhmegcMGO7aVBokq0Q8fpPAsmSMZ6Tfemj7zYJCRg8eQb1XTg-SStKvovCWDyBbBfzUOhI_JiOEBctsje6XYLjaEem2RDPw";
+	$pKey64 = "tWN-7UoNdspOleGptyMIONdQEazPPHZKfDhWcfRbspQzsR2xhFvDuHRd6J__Fg2yBfqK1a4QEMoq7djmm-1jIHe2mcy0Y7XSCzZzAC0saZi0TfxGUqDlf30H4M9gNSdxPgsddMxp8Gh_SDSSNwGqFA66iSz4wKlEllqa7cEphIfSPyH3YtWZYq7hyJLfb1cLcrSo4pMDUKC0tAFqzHI6erl5b7eXzNvtjTLxC_TLOj82mW_so2tVecSTg48Y5ARj9nrBZpaFS3th1o02vdMXCAe4d0sgSAPtRAEsRlb7OwzpCYwmkERVBhMHKmYL_7TDkS27kL3hzmEXN4gvhAYwcQ";
 	$n = rfc4648_base64_url_decode($pKey64);
 
 	$e64 = "AQAB"; //ist statisch (Exponent)

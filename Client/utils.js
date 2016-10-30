@@ -14,8 +14,8 @@ function makeCredentials() {
 	const credAlgorithm = "RSASSA-PKCS1-v1_5";
 	
 	var userAccountInformation = { 
-			  rpDisplayName: "Test Site",
-			  displayName: "Adrian Bateman",
+			  rpDisplayName: "IHEG1-2-17",
+			  displayName: "Fabian Schwab",
 			  //accoutnName: "u114415"
 			};
 	var cryptoParams = [
@@ -52,10 +52,21 @@ function makeCredentials() {
 		document.getElementById('status').innerHTML = "Keymaterial wurde erstellt. Bitte loggen Sie sich ein mit der Eingabe ihres Benutzernamens."
 	    
 	    
-	}).catch(function (err) {
-	    // No acceptable authenticator or user refused consent. Handle appropriately.
-	    alert(err);
-	});
+	}).catch(function(reason) {
+		console.log('catch Function called');
+        // Windows Hello isn't setup, show dialog explaining how to set it up
+        console.log(reason.message);
+		if (reason.message === 'NotSupportedError') {
+            //showSetupWindowsHelloDialog(true);
+            console.log("showSetupWindowsHelloDialog hätte kommen sollen");
+            console.log('Windows Hello failed (' + reason.message + ').');
+            document.getElementById('helloState').innerHTML =  "Windows Hello wurde noch nicht eingerichtet! Mach das und das.<br><button id='helloSetupOK' onclick='makeCredentials()'>Done and Done</button>";
+        }
+        else {
+        	console.log('other problems: '+reason.message);
+        }
+        
+    });
 
 }
 
@@ -138,9 +149,12 @@ function postAjaxCall(params, url) {
 	  			console.log(credList); //gibt das CredList Objekt aus. Ein Array mit (mehreren) Scoped Credentials: [{"type":"FIDO_2_0","id":"4BDCC1AF-3169-45CD-A97A-5EDAD7BCCFD2"}]
 			
 				//Prüfen, ob Keys in der indexed DB sind
-				if (typeof credList == 'undefined' || credList.length < 1) {
+				if (response.policy != 0 && typeof credList == 'undefined' || credList.length < 1) {
 					console.log("Keine Items in der indexed DB!");
-					//KEINE WEITERLEITUNG
+					document.getElementById('status').innerHTML = 
+						"In der IndexDB wurden keine Key-ID's gefunden. Es muss neues Material erstellt werden.<br>"+
+		    			"<div id='makeCredButton'><br>"+
+		    			"<button id='makeCredButtonID' onclick='makeCredentials()'>Make Credentials</button></div>"; 
 					return;
 				}
 				else {
@@ -166,7 +180,8 @@ function postAjaxCall(params, url) {
 	    	document.getElementById('status').innerHTML = "Für den Benutzer wurde die Policy 1 oder 2 aktiviert, aber es sind noch keine Public Keys auf dem Server vorhanden." +
 	    			"<br>"+
 	    			"<div id='makeCredButton'><br>"+
-	    			"<button id='makeCredButtonID' onclick='makeCredentials()'>Make Credentials</button></div>";	    	
+	    			"<button id='makeCredButtonID' onclick='makeCredentials()'>Make Credentials</button> " +
+	    			"<br><br><p id='helloState'></p></div>";	    	
 	    }
 	}
 	

@@ -69,7 +69,7 @@ function hasKeys($username) {
 	if($username=="schf")
 		return true;
 	if($username=="tscm")
-		return true;
+		return false;
 	if($username=="hello")
 		return true;
 	else
@@ -88,7 +88,7 @@ return true;
 
 function getChallenge() {
 	
-	return md5(mt_rand(12,12));
+	return md5(openssl_random_pseudo_bytes(16));
 }
 
 

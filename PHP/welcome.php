@@ -36,7 +36,7 @@ echo "
 
 		} 
 	</script>
-						<br><p id='status'><p>";
+						<br><div id='status'></div>";
 
 		
 echo "<script>
