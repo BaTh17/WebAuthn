@@ -321,7 +321,7 @@ class utility {
 	}
 	
 	function getWindowsHelloStatus(){
-		
+		//TODO
 	}
 	
 }//end utility class

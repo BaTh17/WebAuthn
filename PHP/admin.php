@@ -92,7 +92,8 @@ echo '
 		<input id="changeWindowsHelloStatus" type="button" value="changeWindowsHelloStatus()" onclick="return changeWindowsHelloStatus()" />
 		';
 //loads the benutzertabelle
-utility::getWindowsHelloStatus();
+echo(utility::getWindowsHelloStatus());
+
 
 
 //test.php
