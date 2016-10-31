@@ -7,6 +7,56 @@
 * script
 */
 class utility {
+	
+	
+	function catchResponse($response)
+	{
+		//TODO
+		//print_r(__METHOD__.__LINE__);
+		//print_r($response);
+		//Policy Case
+		if($response['createPolicy'] == 1 && isset($response['userid']) && isset($response['policyid']) ){
+			utility::changePolicy($response['userid'],$response['policyid']);
+		}
+
+	
+	}
+	
+	function changePolicy($userid,$policy){
+		utility::addLog('change Policy, Userid = '.$userid.' und Policy = '.$policy.'');
+		$db = new db();
+		$isActive = -1;
+		
+		//hat es bereits einen Eintrag? dann updaten
+		$sql = "SELECT * FROM PT_USER WHERE USERID = $userid";
+		$rs = $db->executeSQL($sql,true);
+		//TODO
+		//print_r(__METHOD__.__LINE__);
+		//print_r($rs);
+		
+		if($rs){
+			utility::addLog('Update Policy');
+			$sql = "UPDATE PT_USER SET POLICY') VALUES ($userid,'$policy',$isActive)";
+		}else{
+			utility::addLog('insert Policy');
+			$sql = "INSERT INTO PT_USER ('USERID','POLICY','AKTIV') VALUES ($userid,'$policy',$isActive)";
+		}
+		
+		$rs = $db->executeSQL($sql,true);
+		$htmlOutput = '';
+		//Build HTML Table around result
+		//print_r($rs);
+	}
+	
+	function getPolicyFromUser($userid){
+		utility::addLog('Aufruf getPolicyFromUser() mit USERID = '.$userid.'');
+		$db = new db();
+		$isActive = -1;
+		$sql = "SELECT * FROM  INTO PT_USER ('USERID','POLICYID','AKTIV') VALUES ($userid,'$policy',$isActive) * FROM $tableName";
+		$rs = $db->executeSQL($sql,true);
+		
+	}
+	
 	/**
 	 * Fügt einen neuen Eintrag ins log
 	 * @param: string z.B. "Teil eines Logs"
@@ -62,6 +112,10 @@ class utility {
 	}
 
 
+	//changeWindowsHelloStatus
+	//(in Settings)
+	
+	
 
 
 	//get Policy ( 0,1,2)
@@ -82,7 +136,106 @@ class utility {
 
 
 	//create TAble
+	
+	/**
+	 * überprüfen ob ein Benutzername in der DB existiert oder ev. gesperrt ist.
+	 * Return: boolean
+	 */
+	function checkUsername($username) {
+	
+		//User exists and is activ
+	
+		if($username=="schf" || $username=="tscm" || $username =="hello")
+			return true;
+			else
+				return false;
+	
+	}
+	
+	/**
+	 * checkPassword() - PW vom Benutzer überprüfen
+	 * Return: boolean
+	 *
+	 */
+	
+	function checkPW($username, $pw) {
+		if($username=="schf" && $pw=="test")
+			return true;
+			if($username=="tscm" && $pw=="test")
+				return true;
+				else
+					return false;
+	}
+	
+	/**
+	 * @return: Integer
+	 * 0 = Password only
+	 * 1 = 2-FA
+	 * 2 = Passwordless
+	 */
+	function getPolicy($username) {
+	
+		//returnieren der Policy des Users - vorher nochmals überprüfen ob es ihn gibt:
+	
+		if($username=="schf")
+			return 0;
+			if($username=="tscm")
+				return 1;
+				if($username=="hello")
+					return 2;
+	
+	
+	}
+	
+	
+	/**
+	 * Löscht eine Policy aufgrund des Benutzernamens
+	 * @param int
+	 * @return void
+	 */
+	function deletePolicy($username) {
+	
+		
+	
+	}
 
+	/**
+	 * Prüfen ob für einen mitgegebenen Benutzername Public Keys in der Tabelle gespeichert sind
+	 * TSCM: 20161016 umbenennt auf hasKeys() , entspricht eher dem, was gemacht wird
+	 * Return: boolean
+	 *
+	 */
+	function hasKeys($username) {
+		if($username=="schf")
+			return true;
+			if($username=="tscm")
+				return true;
+				if($username=="hello")
+					return true;
+					else
+					return false;
+	}
+	
+	/**
+	 * @return: boolean
+	 * Es werden die vom Client übertragenen Credentials in der DB gespeichert
+	 */
+	function saveCredentials($username, $id, $pubKey) {
+	
+		return true;
+	
+	}
+	
+	
+	/**
+	 * Gibt eine Random MD5 Hash Challenge mit
+	 * @return string
+	 */
+	function getChallenge() {
+	
+		return md5(mt_rand(12,12));
+	}
+	
 	/**
 	 * erstellt eine Tabelle, param muss der Tabellenname sein
 	 * @param string Tabellenname z.B. 'WF_USER'
@@ -131,9 +284,46 @@ class utility {
 		print_r($htmlOutputFinal);
 		return $htmlOutputFinal;
 	}
-
 	
-
+	
+	/**
+	 * Erstellt ein Selectfeld mit gegebener ID und Wert
+	 * @param unknown $id
+	 * @param unknown $value
+	 * @return string
+	 */
+	function createSelect($tableName,$id, $value){
+		utility::addLog('erstelle Select zu: '.$tableName);
+		$db = new db();
+		
+		$sql = "SELECT $id, $value FROM $tableName";
+//print_r($sql);
+		$rs = $db->executeSQL($sql,true);
+	//print_r($rs);
+		if($rs){
+//print_r($rs);
+			$htmlOutputFinal .='<select id=select_'.$tableName.'_'.$id.'>';
+			foreach($rs as $rowKey)
+			{
+// 				foreach($rowValue as $columnKey => $columnValue)
+// 				{
+					//$columnKey
+// 					var_dump($columnKey);
+// 					var_dump($columnKey);
+// 					var_dump($columnValue);
+					$htmlOutputFinal .= '<option value='.$rowKey[$id].'>'.$rowKey[$value].'</option>';
+// 				}
+			}
+			$htmlOutputFinal .='</select>';				
+		}
+		print_r($htmlOutputFinal);
+		return $htmlOutputFinal;
+	}
+	
+	function getWindowsHelloStatus(){
+		
+	}
+	
 }//end utility class
 
 
@@ -244,9 +434,12 @@ class db{
 	
 	
 	
-	
+	/**
+	 * Verbindungsaufbau mit Datenbank
+	 * @return unknown
+	 */
 	function dbconnect(){
-		utility::addLog(__METHOD__.' : Verbindungsaufbau mit dbconnect() gestartet');
+		//utility::addLog(__METHOD__.' : Verbindungsaufbau mit dbconnect() gestartet');
 		//connect to mysql DB
 		$host="localhost";
 		$user="webflow";
@@ -313,7 +506,7 @@ class db{
 	 * damit die Funktionen gleich genutzt werden können.
 	 * @param string $sql
 	 * @param boolean $asArray
-	 * @return unknown[]|string
+	 * @return array
 	 */
 	function executeSQL($sql, $asArray=false){
 
@@ -348,7 +541,7 @@ class db{
 //print_r($resultArray);
 			return $resultArray;
 		} else {
-			return 'Sorry, 0 results found';
+			return array();
 			//echo "Sorry, 0 results found";
 		}
 		

@@ -16,6 +16,7 @@ if($_REQUEST['resetLog']=1){
 utility::addLog('Beginne mit Laden der Admin maske');
 
 
+utility::catchResponse($_REQUEST);
 
 //header("Location: ".$_SERVER['PHP_SELF'].'page=1');
 
@@ -27,9 +28,19 @@ echo '<html>
 <title>'.$pageTitle.'</title>
 		<link rel="stylesheet" href="../CSS/default.css" type="text/css">
 		<script language="javascript" type="text/javascript">
+		
 		function createPolicy() 
 		{
-		window.location.href = "'.$_SERVER['PHP_SELF'].'?createPolicy=1&userid=1&policyid=2";    
+			var Varuserid = document.getElementById("select_WF_USER_USERID").value;
+			var Varpolicy = document.getElementById("select_PT_USER_USERID").value;
+			var VarStart = "createPolicy";
+		alert(Varuserid);
+		alert(Varpolicy);
+		//TODO TODO TODO
+		var getFullstring = VarStart.concat();
+		alert(?createPolicy=1&userid=Varuserid&policyid=Varpolicy);
+		//id=select_'.$tableName.'_'.$id.'
+			window.location.href = "'.$_SERVER['PHP_SELF'].'?createPolicy=1&userid=Varuserid&policyid=Varpolicy";    
 		
 		}
 		</script>
@@ -44,13 +55,15 @@ utility::addLog('erste log-Meldung erstellt');
 
 //html Set Policy
 echo '
-<h2>Benutzer Policy Tabelle (PT_USER)</h2>
-		<span>Policy erstellen:</span>
-		<input id="createPolicy" type="text" value="" onclick="return createPolicy()" />
+<h2>Benutzer Policy Tabelle (PT_USER)</h2>';
+
+echo '		<span>Policy erstellen:</span>';
+utility::createSelect('WF_USER','USERID','FULLNAME');
+utility::createSelect('PT_USER','USERID','POLICY');
+
+echo '
 		<input id="createPolicy" type="button" value="createPolicy" onclick="return createPolicy()" />
 		';
-utility::createTable('PT_USER','');
-
 //loads the benutzertabelle
 utility::createTable('PT_USER');
 
@@ -59,10 +72,8 @@ utility::createTable('PT_USER');
 echo '
 <div id="Benutzertabelle (WF_USER)">
 <h2>Benutzertabelle</h2><input id=getUsers value="Anzeige neu laden" />
-		
 				<form action="utility.php" method="post" > 
 <input id=getUsersLabel value="getUser" disabled=disabled /><input id=getUsers value="" /></br>
-<input id=setUser value="setUser" disabled=disabled /><input id=getUsers value="" /></br>
 <input id=getUsersLabel value="setPolicy" disabled=disabled /><input id=getUsers value="" /></br>
 </form>
 		
@@ -74,6 +85,14 @@ echo '
 //loads the benutzertabelle
 utility::createTable('WF_USER');
 //utility::addLog('WF_USER Table erstellt');
+
+
+echo '  
+		<span>Windows Hello Status:</span>
+		<input id="changeWindowsHelloStatus" type="button" value="changeWindowsHelloStatus()" onclick="return changeWindowsHelloStatus()" />
+		';
+//loads the benutzertabelle
+utility::getWindowsHelloStatus();
 
 
 //test.php
