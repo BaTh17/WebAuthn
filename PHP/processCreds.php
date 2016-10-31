@@ -24,7 +24,7 @@ else {
 	$publicKey = $credString['publicKey']['n'];
 			
 		
-	if(saveCredentials($username,$publicKey,$id)) {
+	if(saveCredentials($username,$publicKey,$id)) { //Den Check auf einen validen Public Key und Usernamen machen wir in der Funktion
 		$responseStatus = '200 OK';
 		$responseText = 'Credentials übertragen. Auf dem Server wird für den User '.$username.' gespeichert: ID: '.$id.' und der PublicKey: '.$publicKey;
 	};

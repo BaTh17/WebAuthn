@@ -24,7 +24,6 @@ $password = $_POST['password'];
 	if(checkPW($username, $password)) {
 		//OK
 		$responseStatus = '200 OK';
-		//Wenn das PW okay ist, gebe ich abhängig von der Policy noch die getChallenge() zurück oder leite gleich zum Webflow
 		//Weil vielleicht noch neue Policies dazu kommen mit switch arbeiten
 		switch($policy) {
 			case 0: {
@@ -32,24 +31,17 @@ $password = $_POST['password'];
 				break;
 			}
 			case 1: {
-				/*
-				 * Bei Case 1 muss nun nach dem erfolgereichen PW Check noch eine Assertion geholt werden.
-				 * Darum auch eine Challenge generieren.
-				 */
+
 				$_SESSION['challenge'] = $challenge = getChallenge();
 				
-				$responseText = "				
-				var x = document.createElement('script');
-				x.src = '../Client/test.js';
-				document.getElementsByTagName('head')[0].appendChild(x);
-				getAssertion('$challenge');				
-				";
+				$responseText = "getAssertion('$challenge');";
+				
+				//Alternative: redirect to getAssertion.php, aber dort noch prüfen ob PW Check okay war.
+				
 				break;
 			}
-			//Case 2 wird es gar nicht geben, da hier ja kein Passwort überprüft wird.
-			//Einem User mit Policy = 2 wird nach erfolgreichen Userlookup & der Prüfung nach Keys die getAssertion geschickt
-				
-				
+			//Case 2 existiert nicht, da Benutzer mit dieser Policy bereits nach dem Benutzercheck zu getAssertion.php geleitet wurden
+	
 			}
 		}	
 	else {

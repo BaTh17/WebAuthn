@@ -6,7 +6,12 @@
 <?php 
 
 echo '<p>Hallo INDEX.PHP</p>'; 
-echo '<p>I am running in bloody Microsoft Edge</p>'
+echo '<p>I am running in bloody Microsoft Edge</p>';
+
+		
+
+
+
 
 ?>
  </body>

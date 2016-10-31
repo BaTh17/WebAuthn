@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Hello-Check</title>
+<script src="webauthn.js"></script>
+
+</head>
+<body>
+
+Hello Support:<p id='hello'></p>
+STATUS2<p id='stat2'></p>
+
+
+
+<script>
+document.window.onload = signInWithPassword();
+
+function signInWithPassword() {
+    // If Windows Hello is supported and there is no existing credential, offer to register Windows Hello
+    console.log('call HelloCheckFunktion');
+    //window.webauthn prüft auf Windows Hello Support des Browsers?
+     if (!window.webauthn) {
+    	 console.log('Kein Polyfill script');
+    	 //document.getElementById('hello').innerHTML='Kein Windows Hello verfügbar';
+	}
+    
+     if (window.sessionStorage && (window.sessionStorage.getItem('credentialID'))) {
+    	 document.getElementById('hello').innerHTML='Windows Hello verfügbar';
+     }
+     else
+    	 document.getElementById('hello').innerHTML='Windows Hello nicht registriert';
+    
+    //Das hier wird aufgerufen wenn von einem Windows 10 Client ohne eingerichtetes Hello makeCredentials gemacht werden will.
+    //Klickt man in ihrem Sample mit Chrome auf den Button, geschieht gar nichts, der Error wird abgefangen (demo.js)
+    if (window.webauthn && !(window.sessionStorage && window.sessionStorage.getItem('credentialID'))) {
+        //window.location = 'fidoregister.html';
+    }
+    // Otherwise, go to the inbox
+    else {
+        //window.location = 'inbox.html';
+    } 
+}
+</script>
+
+</body>
+</html>

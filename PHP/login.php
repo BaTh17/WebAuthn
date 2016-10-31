@@ -6,7 +6,7 @@ session_start();
 $username =  $_SESSION['username'];
 $policy =  $_SESSION['policy'];
 
-echo "Active Policy: ".$policy;
+echo "Active Policy: ".$policy."<br><br>";
 echo "<script src='../Client/utils.js'></script> ";
 echo "<script src='../Client/webauthn.js'></script>";
 
@@ -25,14 +25,12 @@ $pwCode = "
 		
 <div>
 Enter your password: <br><input type='text' size='30' id='pwInput'><br>
-<button id='pwButton' onclick='checkPW()'>Check PW</button>
+<button id='pwButton' onclick='checkPW()'>check and proceed</button>
 </div>
 		
 ";
 
-$passwordless = "
-		
-		";
+//$passwordless = "";
 
 echo "<script src='../Client/utils.js'></script> ";
 
@@ -55,6 +53,8 @@ else {
 
 
 echo "<p id='pwState'></p><br>username:". $username;
+echo "<br><p id='assertionState'></p>";
+
 
 
 
