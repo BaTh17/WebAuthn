@@ -54,7 +54,6 @@ class utility {
 		$isActive = -1;
 		$sql = "SELECT * FROM  INTO PT_USER ('USERID','POLICYID','AKTIV') VALUES ($userid,'$policy',$isActive) * FROM $tableName";
 		$rs = $db->executeSQL($sql,true);
-		
 	}
 	
 	/**
@@ -106,6 +105,21 @@ class utility {
 		$rs = $db->executeSQL($usersSQL);
 		if($rs){
 			return $rs;
+		}else{
+			return false;
+		}
+	}
+	
+	/**
+	 * TODO TESTEN
+	 * Get inforation about the given user
+	 */
+	function getUseridFromUsername($username){
+		$usersSQL = "SELECT USERID FROM WF_USER WHERE NAME = '$username'";
+		$db = new $db;
+		$rs = $db->executeSQL($usersSQL);
+		if($rs){
+			return $rs[0]['USERID'];
 		}else{
 			return false;
 		}
@@ -219,11 +233,46 @@ class utility {
 	/**
 	 * @return: boolean
 	 * Es werden die vom Client übertragenen Credentials in der DB gespeichert
+	 * USERID KEYVALUE KEYIDENTIFIER von Tabelle PUBLICKEYS
 	 */
 	function saveCredentials($username, $id, $pubKey) {
-	
-		return true;
-	
+		utility::addLog('save credentials, Username = '.$username.' und KEYIDENTIFIER = '.$id.' und $KEYVALUE = '.$pubKey.'');
+		
+		//Username zu USERID wandeln
+		$userid = utility::getUseridFromUsername($username);
+		
+		
+		$db = new db();
+		$isActive = -1;
+		
+		//hat es bereits einen Eintrag? dann updaten
+		$sql = "SELECT * FROM PUBLICKEYS WHERE USERID = $userid AND KEYVALUE = '$pubKey' AND KEYIDENTIFIER = '$id' AND AKTIV = $isActive ";
+		$rs = $db->executeSQL($sql,true);
+		//TODO
+		//print_r(__METHOD__.__LINE__);
+		//print_r($rs);
+		
+		if($rs){
+			utility::addLog('This Credential exists already! Abort.');
+			$sql = "UPDATE PT_USER SET POLICY') VALUES ($userid,'$policy',$isActive)";
+		}else{
+			utility::addLog('New Credential, insert it');
+			$sql = "INSERT INTO PUBLICKEYS ('USERID','KEYVALUE','KEYIDENTIFIER', AKTIV) VALUES ($userid,'$pubKey','$id',$isActive)";
+		}
+		
+		$rs = $db->executeSQL($sql,true);
+		$htmlOutput = '';
+		//Build HTML Table around result
+		//print_r($rs);
+		
+		//select for check if the credential now exists
+		$sql = "SELECT * FROM PT_USER WHERE USERID = $userid AND POLICY = '$policy' AND AKTIV = $isActive";
+		$credExists = $db->executeSQL($sql,true);
+		if($credExists){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	
@@ -232,7 +281,6 @@ class utility {
 	 * @return string
 	 */
 	function getChallenge() {
-	
 		return md5(mt_rand(12,12));
 	}
 	
@@ -292,13 +340,14 @@ class utility {
 	 * @param unknown $value
 	 * @return string
 	 */
-	function createSelect($tableName,$id, $value){
+	function createSelect($tableName,$id, $value, $rs = false){
 		utility::addLog('erstelle Select zu: '.$tableName);
-		$db = new db();
 		
-		$sql = "SELECT $id, $value FROM $tableName";
-//print_r($sql);
-		$rs = $db->executeSQL($sql,true);
+		if(!is_array($rs)){
+			$db = new db();	
+			$sql = "SELECT $id, $value FROM $tableName";
+			$rs = $db->executeSQL($sql,true);
+		}
 	//print_r($rs);
 		if($rs){
 //print_r($rs);
@@ -322,6 +371,35 @@ class utility {
 	
 	function getWindowsHelloStatus(){
 		//TODO
+		utility::addLog('hole WindowsHelloStatus');
+		$db = new db();
+		$tableName = 'SETTINGS';
+		$id = 'WINDOWS_HELLO_STATUS';
+		$sql = "SELECT $id FROM $tableName";
+print_r($sql);
+		$rs = $db->executeSQL($sql,true);
+print_r($rs);
+		if($rs){
+			return $rs[0];
+		}else{
+			return 'oops, nothing found';
+		}
+	}
+	
+	/**
+	 * Returns a Selectbox with all the available policies for selection
+	 * 0 = Password only
+	 * 1 = 2-FA
+	 * 2 = Passwordless
+	 */
+	function createSelectPolicy($tableName, $id, $value)
+	{
+		$rs = array(
+				array( $id => 0, $value => 'Password only'),
+				array( $id => 1, $value => '2-FA'),
+				array( $id => 2, $value => 'Passwordless'),
+		);
+		$result = utility::createSelect($tableName, $id, $value, $rs);
 	}
 	
 }//end utility class

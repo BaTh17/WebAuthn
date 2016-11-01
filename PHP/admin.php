@@ -59,7 +59,8 @@ echo '
 
 echo '		<span>Policy erstellen:</span>';
 utility::createSelect('WF_USER','USERID','FULLNAME');
-utility::createSelect('PT_USER','USERID','POLICY');
+//utility::createSelect('PT_USER','USERID','POLICY');
+utility::createSelectPolicy('PT_USER','USERID','POLICY');
 
 echo '
 		<input id="createPolicy" type="button" value="createPolicy" onclick="return createPolicy()" />
@@ -87,7 +88,7 @@ utility::createTable('WF_USER');
 //utility::addLog('WF_USER Table erstellt');
 
 
-echo '  
+echo '  <h2>Settingstabelle</h2>
 		<span>Windows Hello Status:</span>
 		<input id="changeWindowsHelloStatus" type="button" value="changeWindowsHelloStatus()" onclick="return changeWindowsHelloStatus()" />
 		';
