@@ -18,6 +18,11 @@ class utility {
 		if($response['createPolicy'] == 1 && isset($response['userid']) && isset($response['policyid']) ){
 			utility::changePolicy($response['userid'],$response['policyid']);
 		}
+		
+		if($response['changeWindowsHelloStatus'] == 1 ){
+			
+		}
+		
 
 	
 	}
@@ -299,7 +304,7 @@ class utility {
 //print_r($rs);
 		if($rs){
 			$htmlOutputTable .= '
-				<table id=table_"'.$tableName.'" style="width:100%;border=1">
+				<table id="table_'.$tableName.'" style="width:100%;border=1">
 					';
 //print_r($rs);
 			$i = 1;
@@ -307,7 +312,7 @@ class utility {
 			foreach($rs as $rowKey => $rowValue)
 			{
 				//print_r($rs);
-				$htmlOutput .= '<tr id='.$rowKey.'>';
+				$htmlOutput .= '<tr id="'.$rowKey.'">';
 				
 				foreach($rowValue as $columnKey => $columnValue)
 				{
@@ -315,7 +320,7 @@ class utility {
 					if($i === 1){
 						$htmlOutputHeads .= '<th>'.$columnKey.'</th>';
 					}
-					$htmlOutput .= '<td id='.$columnKey.'>'.$columnValue.'</td>';
+					$htmlOutput .= '<td id="'.$columnKey.'">'.$columnValue.'</td>';
 				}
 						
 				$htmlOutput .= '<tr>';
@@ -370,17 +375,14 @@ class utility {
 	}
 	
 	function getWindowsHelloStatus(){
-		//TODO
 		utility::addLog('hole WindowsHelloStatus');
 		$db = new db();
 		$tableName = 'SETTINGS';
 		$id = 'WINDOWS_HELLO_STATUS';
 		$sql = "SELECT $id FROM $tableName";
-print_r($sql);
 		$rs = $db->executeSQL($sql,true);
-print_r($rs);
 		if($rs){
-			return $rs[0];
+			return $rs[0][$id];
 		}else{
 			return 'oops, nothing found';
 		}

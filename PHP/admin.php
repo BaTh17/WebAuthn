@@ -16,14 +16,14 @@ if($_REQUEST['resetLog']=1){
 utility::addLog('Beginne mit Laden der Admin maske');
 
 
-utility::catchResponse($_REQUEST);
+//utility::catchResponse($_REQUEST);
 
 //header("Location: ".$_SERVER['PHP_SELF'].'page=1');
 
 //definitions
 $pageTitle = 'admin.php';
 
-echo '<html>
+echo '<!DOCTYPE html>
 <head>
 <title>'.$pageTitle.'</title>
 		<link rel="stylesheet" href="../CSS/default.css" type="text/css">
@@ -38,11 +38,23 @@ echo '<html>
 		alert(Varpolicy);
 		//TODO TODO TODO
 		var getFullstring = VarStart.concat();
-		alert(?createPolicy=1&userid=Varuserid&policyid=Varpolicy);
+		//alert(?createPolicy=1&userid=Varuserid&policyid=Varpolicy);
 		//id=select_'.$tableName.'_'.$id.'
 			window.location.href = "'.$_SERVER['PHP_SELF'].'?createPolicy=1&userid=Varuserid&policyid=Varpolicy";    
 		
 		}
+					
+		function changeWindowsHelloStatus()
+		{
+			alert("calling me");
+			//window.location.href = "'.$_SERVER['PHP_SELF'].'?changeWindowsHelloStatus=1";    
+		}
+					
+		 function myFunction() {
+    document.getElementById("demo").innerHTML = "Hello World";
+}
+					
+					
 		</script>
 </head>
 <body>';
@@ -74,8 +86,8 @@ echo '
 <div id="Benutzertabelle (WF_USER)">
 <h2>Benutzertabelle</h2><input id=getUsers value="Anzeige neu laden" />
 				<form action="utility.php" method="post" > 
-<input id=getUsersLabel value="getUser" disabled=disabled /><input id=getUsers value="" /></br>
-<input id=getUsersLabel value="setPolicy" disabled=disabled /><input id=getUsers value="" /></br>
+<input id=getUsersLabel value="getUser" disabled=disabled /><input id=getUsers value="" /><br />
+<input id=getUsersLabel value="setPolicy" disabled=disabled /><input id=getUsers value="" /><br />
 </form>
 		
 </div>
@@ -90,11 +102,15 @@ utility::createTable('WF_USER');
 
 echo '  <h2>Settingstabelle</h2>
 		<span>Windows Hello Status:</span>
-		<input id="changeWindowsHelloStatus" type="button" value="changeWindowsHelloStatus()" onclick="return changeWindowsHelloStatus()" />
+		<input id="changeWindowsHelloStatus" type="button" value="changeWindowsHelloStatus()" onclick="changeWindowsHelloStatus()" />
+		<button onclick="myFunction()">Click me</button>
+
+		<p id="demo"></p>
+		
 		';
 //loads the benutzertabelle
 echo(utility::getWindowsHelloStatus());
-
+utility::createTable('SETTINGS');
 
 
 //test.php
@@ -111,9 +127,9 @@ if($_SESSION['log']){
 	foreach($_SESSION['log'] as $log){
 		echo '<tr><td>';
 		echo $log;
-		echo '</tr></td>';
+		echo '</td></tr>';
 	}
-	echo '<table>';
+	echo '</table>';
 }else{
 	echo 'no log found!';
 }
