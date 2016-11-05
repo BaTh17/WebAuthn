@@ -45,6 +45,7 @@ if($policy == 0 || $policy == 1) {
 	
 }
 
+//Entfernen: Denn hier kommt man gar nie rein
 else {
 	echo "Passwordless is active. Call of getAssertion:<br>";
 	echo "<script>hello()</script>";

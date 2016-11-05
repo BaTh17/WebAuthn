@@ -1,10 +1,12 @@
 "use strict";
 
-// Editor's draft of spec at https://w3c.github.io/webauthn/#api
-
-// Falls es das Objekt schon gibt, wird dieses dem navigator.authentication
-// variable links zugewiesen
-// und sonst wird mit der Funktion eines gebaut.
+/**
+ * Polyfill file aligned with the editor's draft of spec at https://w3c.github.io/webauthn/#api 
+ * published by Microsoft on the 25.08. Afterward modified by FS.
+ * src: https://github.com/adrianba/fido-snippets/blob/master/polyfill/webauthn.js
+ * added function to read out indexedDB 
+ * @author FS
+ */
 
 navigator.authentication = navigator.authentication || (function () {
 	console.log("BUILD Authentication Objekt");
@@ -129,7 +131,10 @@ navigator.authentication = navigator.authentication || (function () {
     function makeCredential(accountInfo, cryptoParams, attestChallenge, options) { //attestChallenge ist optional, brauchen wir nicht
       	
     	console.log("makeCrednetial in webauthn.js was called");
-		var acct = 	{rpDisplayName: accountInfo.rpDisplayName,userDisplayName: accountInfo.displayName};
+    	var challenge = "test";
+    	console.log("Challenge test");
+    	
+		var acct = 	{rpDisplayName: accountInfo.rpDisplayName,userDisplayName: accountInfo.displayName,userId: accountInfo.userId};
 		var params = [];
 		var i;	
 		
@@ -273,7 +278,6 @@ navigator.authentication = navigator.authentication || (function () {
         getAssertion: getAssertion,
         
     };
-}// Closing von Funktionsdefinition der navigator.authentication || (function
-	// () { <----
+}// Closing von Funktionsdefinition der navigator.authentication || (function() { <----
 () // ist dazu da die Funktion gleich auszuführen
 );

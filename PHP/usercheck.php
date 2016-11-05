@@ -20,18 +20,26 @@ else {
 		$policy = $_SESSION['policy'] = getPolicy($username);
 		$_SESSION['username'] = $username;
 		
+		/*die UserId: Die Unique ID für einen Account.
+		 *damit wir mit unserem Konzept weiterfahren können darf die im Moment noch nicht unique sein.
+		 *Grund in Doku beschrieben, wegen Gerätewechsel würde das problematisch werden
+		 */
+		$userId = getChallenge();
+		
 		//In DB nun prüfen, ob überhaupt Keys für den User bestehen
 		$userHasKeys = $_SESSION['PKeys'] = hasKeys($username);
 		
 		//Wenn der existierende User keine Keys hat, diese aber benötigt
 		if(!$userHasKeys && ($policy==1 || $policy ==2)) { //Wenn 
 			$responseStatus = '202 Accepted';
-			$responseText = 'User'.$username. ' OK, aber es existieren keine Keys...';
+			$message = "OK. But no registered keys";
+			//$responseText = 'User'.$username. ' OK. No registered keys.';
+			$responseText = json_encode(array("message" => $message, "user" => $username, "userId" => $userId, "policy" => $policy));
 		}
 		
 		else { 
 		$responseStatus = '200 OK';
-		$responseText = json_encode(array("user" => $username, "policy" => $policy)); 
+		$responseText = json_encode(array("user" => $username, "userId" => $userId, "policy" => $policy)); 
 		//$responseText = 'User'.$username.' OK, forwarding...'; 
 		}
 			
@@ -39,7 +47,7 @@ else {
 			
 	else {
 		$responseStatus = '401 Bad Request';
-		$responseText = 'Username falsch';
+		$responseText = 'unknown username';
 	}
 }
 
