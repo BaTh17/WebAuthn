@@ -6,7 +6,8 @@
 *
 * Returniert den Public Key als String der zu dieser KeyID in der DB abgelegt wurde.
 */
-require_once(utility.php);
+require_once('utility.php');
+
 
 function getPublicKey($username, $keyID){
 	return utility::getPublicKey($username, $keyID);
