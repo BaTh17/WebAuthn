@@ -33,9 +33,6 @@ function makeCredentials(username, userId) {
 				
 		var params = "credentials="+JSON.stringify(result);
 		sendCredentials(params,"../PHP/processCreds.php");
-		
-//		var idToServer = JSON.stringify(result.credential.id);
-//		var keyToServer = JSON.stringify(result.publicKey.n);
 
 		console.log("Credentials erstellt. Eintrag in der Indexed DB gemacht. Folgendes Objekt wurde an den Server übertragen: "+JSON.stringify(result))
 				
