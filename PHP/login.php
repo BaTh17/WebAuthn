@@ -53,7 +53,7 @@ else {
 }
 
 
-echo "<p id='pwState'></p><br>username:". $username;
+echo "<p id='pwState'></p><br>username:". $username. " and policy: ".$policy;
 echo "<br><p id='assertionState'></p>";
 
 

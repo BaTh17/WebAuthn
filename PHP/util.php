@@ -10,7 +10,9 @@ require_once('utility.php');
 
 
 function getPublicKey($username, $keyID){
-	return utility::getPublicKey($username, $keyID);
+	
+	return "c20ad4d76fe97759aa27a0c99bff6710";
+	//return utility::getPublicKey($username, $keyID);
 
 	//return "1";
 
@@ -57,16 +59,14 @@ function checkPW($username, $pw) {
  * 2 = Passwordless
  */
 function getPolicy($username) {
-	return utility::getPolicy($username);
+	//return utility::getPolicyFromUser($username, true);
 
-	//returnieren der Policy des Users - vorher nochmals überprüfen ob es ihn gibt:
-
-	// 	if($username=="schf")
-		// 		return 0;
-		// 	if($username=="tscm")
-			// 		return 1;
-			// 	if($username=="hello")
-				// 		return 2;
+		if($username=="schf")
+				return 0;
+			if($username=="tscm")
+					return 1;
+				if($username=="hello")
+						return 2;
 
 
 }
@@ -79,14 +79,14 @@ function getPolicy($username) {
  */
 function hasKeys($username) {
 
-	return utility::hasKeys($username);
+	//return utility::hasKeys($username);
 
 	// 	if($username=="schf")
 		// 		return true;
 		// 	if($username=="tscm")
 			// 		return false;
-			// 	if($username=="hello")
-				// 		return true;
+				if($username=="hello")
+						return true;
 				// 	else
 					// 		return false;
 }

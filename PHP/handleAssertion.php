@@ -1,11 +1,13 @@
 <?php
 session_start();
+$modulus = 1;
+
 
 require_once('util.php');
 require('Crypt\RSA.php');
 
 $responseText = "empty";
-
+$username = $_SESSION['username'];
 
 /* Korrekten HTTP Status Code reintun*/
 if(!isset($_POST['assertion'])) {
@@ -52,7 +54,7 @@ else {
 	//Restliche Assertion (->Signatur) überprüfen
 	if(validateAssertion($c,$a,$s)) {
 		$responseStatus = '200 OK';
-		$responseText = "Validierung erfolgreich. Leite weiter zum Webflow";
+		$responseText = "Validierung erfolgreich. Leite weiter zum Webflow. Modulus: ".$modulus;
 	}
 	else {
 		$responseStatus = '400 Bad Request';
@@ -74,7 +76,7 @@ function validateAssertion($c,$a,$s) {
 	
 	//LOAD PUBLIC KEY
 	$rsa = new Crypt_RSA();
-	$rsa = buildPubKey("1", $rsa);
+	$rsa = buildPubKey("c20ad4d76fe97759aa27a0c99bff6710", $rsa);
 	
 	//Vorbereiten der Validierung
 	$rsa->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
@@ -90,12 +92,16 @@ function validateAssertion($c,$a,$s) {
 
 function buildPubKey($id, $rsa) {
 
-	/*Key mit ID aus der DB holen.
-	$pKey64 getPublicKey($username, $keyID) returns PubKey string, base64 URL encodiert
-	*/
+	global $modulus;
+	//global $username;
+	$username = "hello";
 	
-	//Aktuelles Mockup
-	$pKey64 = "yyJIgh65o1lELLFa5rgVdn8acEC3yGMa0Pp34-FPP2hFZ2YHLsQnOaOSi_Iwd-ePvEYLcUFq73_JwRzXbUgMFYSrCeZES53JBPWwPLx_iEFtGctyWa6eLub0PPo5B5Mp4WGO0YkmmmUPS58iVBJXtbk7zXs6Zrqx15Mh977DyhTrAijbOldpAwT0g_CyyI5HFh0mvlcwU3rPwiHBIdcYPe7419ElCko8oRrB6UpRR-ZRkHxHSJIXoQf6CakbbiT4PJ3teQa4JtTVh2dNTvLrA8jjbZxo-NFGrailQT2blax__56eJui6sQlA0sotJABu4h7FS2JNeq-AsR3rpyf-Hw";
+	// Mockup
+	//$pKey64 = "4K5_6m8Lq-VQ5JfyDafJGU4-Jk5hCdSUFum_gGU7AZUFbPjeViY1NZLZTHWhFL-UCzhUuimMgC5KlE8Ixm5rVUbLe7FsBR8YAPIDbF5OBtZiM46HCBRASqLgRAfg-Vh3Oo9KBZj-kGWSq9MNnTXR-ErokajymsuJqn3C_Od9aKk3qe_KDZmspgTx12_GXgFmxZaVS7ajLEeZ_gNpQjQ8pbUSMRc1e5dzIofZt6_4VqgekwDwEdrSnDEPtNMBIO6gQq5sN-bHCeLLxggYFHNYxXbWxPHIyOxrnUyAIhNPQ21Wt6ttKYJ4NTr_cW7pMQZPaGte48L2YbPtuanHT0iDaQ";
+	
+	//NOK:
+	$pKey64 = util.php::getPublicKey($username,$id);
+	
 	$n = rfc4648_base64_url_decode($pKey64);
 
 	$e64 = "AQAB"; //ist statisch (Exponent)
