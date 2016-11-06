@@ -76,7 +76,7 @@ function validateAssertion($c,$a,$s) {
 	
 	//LOAD PUBLIC KEY
 	$rsa = new Crypt_RSA();
-	$rsa = buildPubKey("c20ad4d76fe97759aa27a0c99bff6710", $rsa);
+	$rsa = buildPubKey($id, $rsa);
 	
 	//Vorbereiten der Validierung
 	$rsa->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
@@ -96,10 +96,6 @@ function buildPubKey($id, $rsa) {
 	//global $username;
 	$username = "hello";
 	
-	// Mockup
-	//$pKey64 = "4K5_6m8Lq-VQ5JfyDafJGU4-Jk5hCdSUFum_gGU7AZUFbPjeViY1NZLZTHWhFL-UCzhUuimMgC5KlE8Ixm5rVUbLe7FsBR8YAPIDbF5OBtZiM46HCBRASqLgRAfg-Vh3Oo9KBZj-kGWSq9MNnTXR-ErokajymsuJqn3C_Od9aKk3qe_KDZmspgTx12_GXgFmxZaVS7ajLEeZ_gNpQjQ8pbUSMRc1e5dzIofZt6_4VqgekwDwEdrSnDEPtNMBIO6gQq5sN-bHCeLLxggYFHNYxXbWxPHIyOxrnUyAIhNPQ21Wt6ttKYJ4NTr_cW7pMQZPaGte48L2YbPtuanHT0iDaQ";
-	
-	//NOK:
 	$pKey64 = util.php::getPublicKey($username,$id);
 	
 	$n = rfc4648_base64_url_decode($pKey64);

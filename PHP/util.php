@@ -11,8 +11,8 @@ require_once('utility.php');
 
 function getPublicKey($username, $keyID){
 	
-	return "c20ad4d76fe97759aa27a0c99bff6710";
-	//return utility::getPublicKey($username, $keyID);
+	//return "4K5_6m8Lq-VQ5JfyDafJGU4-Jk5hCdSUFum_gGU7AZUFbPjeViY1NZLZTHWhFL-UCzhUuimMgC5KlE8Ixm5rVUbLe7FsBR8YAPIDbF5OBtZiM46HCBRASqLgRAfg-Vh3Oo9KBZj-kGWSq9MNnTXR-ErokajymsuJqn3C_Od9aKk3qe_KDZmspgTx12_GXgFmxZaVS7ajLEeZ_gNpQjQ8pbUSMRc1e5dzIofZt6_4VqgekwDwEdrSnDEPtNMBIO6gQq5sN-bHCeLLxggYFHNYxXbWxPHIyOxrnUyAIhNPQ21Wt6ttKYJ4NTr_cW7pMQZPaGte48L2YbPtuanHT0iDaQ";
+	return utility::getPublicKey($username, $keyID);
 
 	//return "1";
 
@@ -83,8 +83,8 @@ function hasKeys($username) {
 
 	// 	if($username=="schf")
 		// 		return true;
-		// 	if($username=="tscm")
-			// 		return false;
+			if($username=="tscm")
+					return false;
 				if($username=="hello")
 						return true;
 				// 	else
