@@ -24,7 +24,7 @@ else {
 		 *damit wir mit unserem Konzept weiterfahren können darf die im Moment noch nicht unique sein.
 		 *Grund in Doku beschrieben, wegen Gerätewechsel würde das problematisch werden
 		 */
-		$userId = getChallenge(); //damit es randomized ist
+		$userId = md5(openssl_random_pseudo_bytes(8)); //damit es randomized ist
 		
 		//In DB nun prüfen, ob überhaupt Keys für den User bestehen
 		$userHasKeys = $_SESSION['PKeys'] = hasKeys($username);
