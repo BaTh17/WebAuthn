@@ -1,10 +1,28 @@
-<html>
+<?php 
+
+//redirection if Windows Hello is not active
+require_once('utility.php');
+$checkHelloIsActive = utility::getWindowsHelloStatus();
+//var_dump($checkHelloIsActive);
+if(!$checkHelloIsActive){
+//header("Location: http://localhost/phpmyadmin/");
+
+$path_parts = pathinfo($_SERVER['PHP_SELF']);
+$redirectUrl = $path_parts['dirname'].'/originalWebflowStartPage.php';
+
+header("Location: http://localhost$redirectUrl");
+
+}
+
+echo '<html>
 <head>
 <title>Log-In to the FIVE Webflow</title>
 </head>
 <body>
+		';
+//var_Dump($_SERVER['PHP_SELF']);
 
-<?php 
+
 
 echo "<script src='../Client/utils.js'></script>";
 echo "<script src='../Client/webauthn.js'></script>";

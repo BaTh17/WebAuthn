@@ -1,6 +1,5 @@
 <?php
 
-
 /**
 * Here are all functions for the serverside, that are used in different files of the thesis project.
 * If you want to enable these functions, use require_once('utility.php'); in the first lines of your php
@@ -10,7 +9,7 @@
 class utility {
 	
 	/**
-	 * 
+	 * react to all get- or post-information
 	 * @param unknown $response
 	 */
 	function catchResponse($response)
@@ -23,13 +22,9 @@ class utility {
 			utility::changePolicy($response['userid'],$response['policyid']);
 		}
 		
-		
 		if($response['changeWindowsHelloStatus'] == 1 ){
 			utility::addLog('called  changeWindowsHelloStatus');
 		}
-		
-
-	
 	}
 	
 	
@@ -72,8 +67,12 @@ class utility {
 	 * @param {boolean} $wholeEntry, if false, only return the policyid value
 	 * @return  {array} $rs
 	 */
-	function getPolicyFromUser($userid,$wholeEntry = true)
+	function getPolicyFromUser($userid,$wholeEntry = true, $isUsername = false)
 	{
+		if($isUsername){
+			$userid = utility::getUseridFromUsername($userid);
+		}
+		
 		utility::addLog('Aufruf getPolicyFromUser() mit USERID = '.$userid.'');
 		$db = new db();
 		$isActive = -1;
@@ -124,7 +123,7 @@ class utility {
 	 */
 	function addLog($log)
 	{
-		if(!is_array($_SESSION['log'])){
+		if( $_SESSION['log'] OR !is_array($_SESSION['log'])){
 			utility::resetLog();
 		}
 		//print_r(debug_backtrace()['1']['function']);
@@ -265,12 +264,16 @@ class utility {
 		
 		//get userid
 		$userid = utility::getUseridFromUsername($username);
-		
+	//print_r($userid);
 		//check userid
-		$rs = utility::getPolicyFromUser($userid);
-		
+		$rs = utility::getCredentials($userid);
+	//print_r($rs);
 		if($rs){
-			return true;
+			if($rs[0]){
+				return true;
+			}else{
+				return false;
+			}
 		}
 		return false;
 		
@@ -333,6 +336,14 @@ class utility {
 	}
 	
 	
+	/**
+	 * getCredentials depending on userid, keyId, keyvalue or a combination of these
+	 * but the function needs at least one correct value
+	 * @param {string} $userid
+	 * @param {string} $keyIdentifier
+	 * @param {string} $pubKey
+	 * @return {boolean|array|boolean}
+	 */
 	function getCredentials($userid = false,$keyIdentifier = false,$pubKey = false)
 	{
 		$db = new db();
@@ -343,17 +354,30 @@ class utility {
 			return false;
 		}
 		
-		$sql = "SELECT * FROM PUBLICKEYS WHERE USERID = $userid AND KEYVALUE = '$pubKey' AND KEYIDENTIFIER = '$keyIdentifier' AND AKTIV = $isActive";
-		//print_r($sql);
+		$sqlWhere = '';
+		
+		if($userid){
+			$sqlWhere .= " AND USERID = $userid ";
+		}
+		if($pubKey){
+			$sqlWhere .= " AND KEYVALUE = '$pubKey' ";
+		}
+		if($keyIdentifier){
+			$sqlWhere .= " AND KEYIDENTIFIER = '$keyIdentifier' ";
+		}
+		
+		$sql = "SELECT * FROM PUBLICKEYS WHERE AKTIV = $isActive  $sqlWhere";
+	//	print_r($sql);
 		$rs = $db->executeSQL($sql,true);
 		return $rs;
-	//	print_r($rs);
+	//print_r($rs);
 		if($rs){
 			return $rs;
 		}else{
 			return array();
 		}
 	}
+	
 	
 	/**
 	 * deletes a credential with matches a given information
@@ -398,6 +422,7 @@ class utility {
 	 */
 	function getChallenge() {
 		return md5(mt_rand(12,12));
+		//return md5(openssl_random_pseudo_bytes(16));
 	}
 	
 	/**
@@ -485,6 +510,11 @@ class utility {
 		return $htmlOutputFinal;
 	}
 	
+	/**
+	 * get the current state of WINDOWS_HELLO_STATUS
+	 * @param {void}
+	 * @return string} value of WINDOWS_HELLO_STATUS
+	 */
 	function getWindowsHelloStatus(){
 		utility::addLog('hole WindowsHelloStatus');
 		$db = new db();
@@ -499,27 +529,31 @@ class utility {
 		}
 	}
 	
-	
-	function setWindowsHelloStatus(){
+	/**
+	 * Toggles the state of WINDOWS_HELLO_STATUS in table SETTINGS
+	 * @param {void}
+	 * @return {void}
+	 */
+	function setWindowsHelloStatus()
+	{
 		
 		//get Old value
 		$oldValue = utility::getWindowsHelloStatus();
 		
 		//set new value
+		if($oldValue){
+			$newValue = 0;
+		}else{
+			$newValue = 1;
+		}
 		
 		//update value in db
-		
-		utility::addLog('setze WindowsHelloStatus');
+		utility::addLog('setze WindowsHelloStatus:'.$newValue.' der alte Wert war: '.$oldValue);
 		$db = new db();
 		$tableName = 'SETTINGS';
 		$id = 'WINDOWS_HELLO_STATUS';
-		$sql = "SELECT $id FROM $tableName";
-		$rs = $db->executeSQL($sql,true);
-		if($rs){
-			return $rs[0][$id];
-		}else{
-			return 'oops, nothing found';
-		}
+		$sql = "UPDATE $tableName SET $id = $newValue";
+		$db->executeSQL($sql,true);
 	}
 	
 	
@@ -531,17 +565,18 @@ class utility {
 	 */
 	function createSelectPolicy($tableName, $id, $value)
 	{
-		$rs = utility::getPolicy();
+		$rs = utility::getPolicyList();
 		$result = utility::createSelect($tableName, $id, $value, $rs);
 	}
 	
 	
 	/**
 	 * Get all policys
-	 * @param void
+	 * @param {void}
 	 * @retrun {array}
 	 */
-	function getPolicy(){
+	function getPolicyList()
+	{
 		$rs = array(
 				array( $id => 0, $value => 'Password only'),
 				array( $id => 1, $value => '2-FA'),
@@ -558,7 +593,8 @@ class utility {
 	 * @param {string} $wholeEntry
 	 * @return {mixed|boolean|string} string KEYVALUE per default or an array
 	 */
-	function getPublicKey($username, $keyID,$wholeEntry = false){
+	function getPublicKey($username, $keyID,$wholeEntry = false)
+	{
 		utility::addLog('Aufruf getPublicKey() mit $username = '.$username.' und $keyID = '.$keyID.'');
 		$userid = utility::getUseridFromUsername($username);
 		
@@ -583,11 +619,6 @@ class utility {
 			return false;
 		}
 	}
-	
-	
-	
-	
-	
 	
 }//end utility class
 
@@ -617,7 +648,7 @@ class db{
 		//utility::addLog(__METHOD__.' : Verbindungsaufbau mit dbconnect() gestartet');
 		//connect to mysql DB
 		$host="localhost";
-		$user="webflow";
+		$user="webflow1";
 		$password="1234";
 		$database="thesis";
 		$connection = mysqli_connect($host,$user,$password,$database);

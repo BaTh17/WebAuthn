@@ -1,0 +1,11 @@
+var oc_debug=false;
+var oc_isadmin=false;
+var oc_webroot="";
+var oc_appswebroots={"files":"/apps/files","activity":"/apps/activity","documents":"/apps/documents","files_locking":"/apps/files_locking","files_pdfviewer":"/apps/files_pdfviewer","files_sharing":"/apps/files_sharing","files_texteditor":"/apps/files_texteditor","files_trashbin":"/apps/files_trashbin","files_versions":"/apps/files_versions","files_videoviewer":"/apps/files_videoviewer","firstrunwizard":"/apps/firstrunwizard","gallery":"/apps/gallery","provisioning_api":"/apps/provisioning_api","storagecharts2":"/apps/storagecharts2","templateeditor":"/apps/templateeditor"};
+var datepickerFormatDate="dd.MM.yy";
+var dayNames=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+var monthNames=["Januar","Februar","M\u00e4rz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+var firstDay=1;
+var oc_config={"session_lifetime":"1440","session_keepalive":true,"version":"8.1.3.0","versionstring":"8.1.3","enable_avatars":true};
+var oc_appconfig={"core":{"defaultExpireDateEnabled":true,"defaultExpireDate":7,"defaultExpireDateEnforced":false,"enforcePasswordForPublicLink":false,"sharingDisabledForUser":false,"resharingAllowed":true,"remoteShareAllowed":true,"federatedCloudShareDoc":"https:\/\/doc.owncloud.org\/server\/8.1\/go.php?to=user-sharing-federated"}};
+var oc_defaults={"entity":"ownCloud","name":"ownCloud","title":"ownCloud","baseUrl":"https:\/\/owncloud.org","syncClientUrl":"https:\/\/owncloud.org\/sync-clients\/","docBaseUrl":"https:\/\/doc.owncloud.org","slogan":"Web-Dienste unter Deiner Kontrolle","logoClaim":"","shortFooter":"<a href=\"https:\/\/owncloud.org\" target=\"_blank\" rel=\"noreferrer\">ownCloud<\/a> \u2013 Web-Dienste unter Deiner Kontrolle","longFooter":"<a href=\"https:\/\/owncloud.org\" target=\"_blank\" rel=\"noreferrer\">ownCloud<\/a> \u2013 Web-Dienste unter Deiner Kontrolle"};

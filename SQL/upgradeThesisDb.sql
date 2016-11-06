@@ -1,14 +1,14 @@
 -- For MYSQL Installation, you can run this script without changes
 -- For MSSQL, replace "" with "GO" to execute the lines before going to the next code block
-USE THESIS;
-DROP TABLE IF EXISTS PUBLICKEYS;
-DROP TABLE IF EXISTS PT_USER;
-DROP TABLE IF EXISTS WF_USER;
 DROP DATABASE IF EXISTS THESIS;
 
 
 -- create Database THESIS
 CREATE DATABASE IF NOT EXISTS THESIS;
+
+-- TODO Create a User entry with webflow and 1234 with global rights for local testing
+GRANT USAGE ON *.* TO webflow1@localhost IDENTIFIED BY '1234';
+GRANT ALL PRIVILEGES ON *.* TO webflow1@localhost;
 
 
 USE THESIS;
