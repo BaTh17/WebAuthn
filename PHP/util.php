@@ -10,6 +10,7 @@ require_once(utility.php);
 
 function getPublicKey($username, $keyID){
 	return utility::getPublicKey($username, $keyID);
+	
 	//return "1";
 	
 }
