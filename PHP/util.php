@@ -6,10 +6,11 @@
  * 
  * Returniert den Public Key als String der zu dieser KeyID in der DB abgelegt wurde.
  */
+require_once(utility.php);
 
 function getPublicKey($username, $keyID){
-	
-	return "1";
+	return utility::getPublicKey($username, $keyID);
+	//return "1";
 	
 }
 
@@ -20,12 +21,13 @@ function getPublicKey($username, $keyID){
  */
 function checkUsername($username) {
 
+	return utility::checkUsername($username);
 	//User exists and is activ
 	
-	if($username=="schf" || $username=="tscm" || $username =="hello") 
-		return true;
-	else 
-		return false;
+// 	if($username=="schf" || $username=="tscm" || $username =="hello") 
+// 		return true;
+// 	else 
+// 		return false;
 	
 }
 
@@ -34,15 +36,16 @@ function checkUsername($username) {
  * Return: boolean
  * 
  */
-
 function checkPW($username, $pw) {
-	if($username=="schf" && $pw=="test")
-		return true;
-	if($username=="tscm" && $pw=="test")
-		return true;
+	return utility::checkPW($username, $pw);
 	
-	else
-		return false;
+// 	if($username=="schf" && $pw=="test")
+// 		return true;
+// 	if($username=="tscm" && $pw=="test")
+// 		return true;
+	
+// 	else
+// 		return false;
 }
 
 /**
@@ -52,15 +55,16 @@ function checkPW($username, $pw) {
  * 2 = Passwordless
  */
 function getPolicy($username) {
+	return utility::getPolicy($username);
 	
 	//returnieren der Policy des Users - vorher nochmals überprüfen ob es ihn gibt:
 	
-	if($username=="schf")
-		return 0;
-	if($username=="tscm")
-		return 1;
-	if($username=="hello")
-		return 2;
+// 	if($username=="schf")
+// 		return 0;
+// 	if($username=="tscm")
+// 		return 1;
+// 	if($username=="hello")
+// 		return 2;
 
 	
 }
@@ -73,14 +77,16 @@ function getPolicy($username) {
  */
 function hasKeys($username) {
 	
-	if($username=="schf")
-		return true;
-	if($username=="tscm")
-		return false;
-	if($username=="hello")
-		return true;
-	else
-		return false;
+	return utility::hasKeys($username);
+	
+// 	if($username=="schf")
+// 		return true;
+// 	if($username=="tscm")
+// 		return false;
+// 	if($username=="hello")
+// 		return true;
+// 	else
+// 		return false;
 }
 
 /**
@@ -92,14 +98,17 @@ function hasKeys($username) {
  * Das ist aber okay, da ich das in der Verifizierung dekodiere.
  */
 function saveCredentials($username, $id, $pubKey) {
+	return utility::saveCredentials($username, $id, $pubKey);
 
-return true;
+	
+	//return true;
 
 }
 
 function getChallenge() {
+	return utility::getChallenge();
 	
-	return md5(openssl_random_pseudo_bytes(16));
+	//return md5(openssl_random_pseudo_bytes(16));
 }
 
 

@@ -1,5 +1,11 @@
 -- For MYSQL Installation, you can run this script without changes
 -- For MSSQL, replace "" with "GO" to execute the lines before going to the next code block
+USE THESIS;
+DROP TABLE IF EXISTS PUBLICKEYS;
+DROP TABLE IF EXISTS PT_USER;
+DROP TABLE IF EXISTS WF_USER;
+DROP DATABASE IF EXISTS THESIS;
+
 
 -- create Database THESIS
 CREATE DATABASE IF NOT EXISTS THESIS;
@@ -43,6 +49,7 @@ CREATE TABLE IF NOT EXISTS PUBLICKEYS (
   KEYID int(11) NOT NULL AUTO_INCREMENT,
   USERID int(11) NOT NULL,
   KEYVALUE TEXT NOT NULL,
+  KEYIDENTIFIER TEXT NOT NULL,
   METADATA1 text,
   METADATA2 text,
   METADATA3 text,
@@ -79,24 +86,6 @@ INSERT INTO PT_USER ( PTID, USERID,POLICY,TESTVALUE1,TESTVALUE2,TESTVALUE3,TESTV
 (3, 4, '2', 'ist five1 mit Passwordless', NULL,NULL,NULL,NULL,now(), now(), -1),
 (4, 2, '0', 'ist schf mit password only', NULL,NULL,NULL,NULL,now(), now(), -1),
 (6, 5, '2', 'ist test1 mit Passwordless', NULL,NULL,NULL,NULL,now(), now(), -1);
-
-/*
- *   USERID int(11) NOT NULL,
-  UID int(11) NOT NULL,
-  POLICY text NOT NULL,
-  TESTVALUE1 text,
-  TESTVALUE2 text,
-  TESTVALUE3 text,
-  TESTVALUE4 text,
-  TESTVALUE5 text,
-  CREATED int(11)  ,
-  CHANGED int(11)  ,
-  AKTIV int(11)
-*/
-
--- Insert User
-
-
 
 -- Activate Windows hello
 INSERT INTO SETTINGS SET WINDOWS_HELLO_STATUS = 1;

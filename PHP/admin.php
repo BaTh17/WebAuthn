@@ -1,4 +1,9 @@
 <?php 
+
+/**
+ * the administratior mask to view and regulate the policies
+ * @autor MT
+ */
 //includes
 if(!isset($_SESSION['log'])){
 	session_start();
@@ -16,7 +21,7 @@ if($_REQUEST['resetLog']=1){
 utility::addLog('Beginne mit Laden der Admin maske');
 
 
-//utility::catchResponse($_REQUEST);
+utility::catchResponse($_REQUEST);
 
 //header("Location: ".$_SERVER['PHP_SELF'].'page=1');
 
@@ -46,13 +51,10 @@ echo '<!DOCTYPE html>
 					
 		function changeWindowsHelloStatus()
 		{
-			alert("calling me");
-			//window.location.href = "'.$_SERVER['PHP_SELF'].'?changeWindowsHelloStatus=1";    
+			//alert("calling me");
+			window.location.href = "'.$_SERVER['PHP_SELF'].'?changeWindowsHelloStatus=1";    
 		}
 					
-		 function myFunction() {
-    document.getElementById("demo").innerHTML = "Hello World";
-}
 					
 					
 		</script>
@@ -103,7 +105,6 @@ utility::createTable('WF_USER');
 echo '  <h2>Settingstabelle</h2>
 		<span>Windows Hello Status:</span>
 		<input id="changeWindowsHelloStatus" type="button" value="changeWindowsHelloStatus()" onclick="changeWindowsHelloStatus()" />
-		<button onclick="myFunction()">Click me</button>
 
 		<p id="demo"></p>
 		
@@ -120,6 +121,7 @@ require_once('test.php');
 
 
 //print LogTabelle
+echo '<div id="logTable">';
 utility::addLog('WF_USER Table anzeigen');
 echo '<h2>LOG</h2>';
 if($_SESSION['log']){
