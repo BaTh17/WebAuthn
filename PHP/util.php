@@ -80,7 +80,7 @@ function hasKeys($username) {
 	return utility::hasKeys($username);
 
 	// 	if($username=="schf")
-<<<<<<< HEAD
+
 		// 		return true;
 			if($username=="tscm")
 					return true;
@@ -88,7 +88,6 @@ function hasKeys($username) {
 						return true;
 				// 	else
 					// 		return false;
-=======
 	// 		return true;
 	// 	if($username=="tscm")
 	// 		return false;
@@ -96,7 +95,7 @@ function hasKeys($username) {
 	//		return true;
 	// 	else
 	// 		return false;
->>>>>>> branch 'master' of https://github.com/BaTh17/WebAuthn.git
+
 }
 
 /**
