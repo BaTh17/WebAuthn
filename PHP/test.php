@@ -48,6 +48,8 @@ class test{
 		test::test_checkUser();
 		test::test_getPolicyFromUser();
 		test::test_credentials();
+		test::test_hasKeys();
+		
 	}
 
 	/**
@@ -157,8 +159,8 @@ class test{
 		$htmlIsFalse = test::htmlIsFalse();
 		
 		$username = 'schf';
-		$id = '123123123123';
-		$pubKey = 'TEST-2453456453-4g5h5345h-54h45h-45-6456-TEST';
+		$id = '1231233123123';
+		$pubKey = 'TEST-24533456453-4g5h5345h-54h45h-45-6456-TEST';
 		
 		$userid = utility::getUseridFromUsername($username);
 		
@@ -186,6 +188,50 @@ class test{
 			echo 'Nothing found after deleteCredentials , this is: '.$htmlIsCorrect.'<br />';
 		}
 		
+	}
+	
+	function test_hasKeys()
+	{
+		echo 'Start with Check: '.__METHOD__.'<br />';
+		
+		$htmlIsCorrect = test::htmlIsCorrect();
+		$htmlIsFalse = test::htmlIsFalse();
+		
+		$username = 'tscm';
+		$id = '12312322223123';
+		$pubKey = 'TEST-24533111113-4g5h5345h-54h45h-45-6456-TEST';
+		$userid = utility::getUseridFromUsername($username);
+		
+		echo 'Check: hasKeys: $username = '.$username.' <br />';
+		$check = utility::hasKeys($username);
+		//print_r($check);
+		if($check){
+			echo 'Check: hasKeys at the start: $username = '.$username.' but got result $check = '.$check.'  , this is: '.$htmlIsFalse.'  <br />';
+		}else{
+			echo 'Check: hasKeys at the start: $username = '.$username.' got result $check = '.$check.'  , this is: '.$htmlIsCorrect.' <br />';
+		}
+		
+		
+		utility::saveCredentials($username, $id, $pubKey);
+		
+		$check = utility::hasKeys($username);
+		//print_r($check);
+		if($check){
+			echo 'Check: hasKeys after saveCredentials: $username = '.$username.' got result $check = '.$check.'  , this is: '.$htmlIsCorrect.' <br />';
+		}else{
+			echo 'Check: hasKeys after saveCredentials: $username = '.$username.' but got result $check = '.$check.'  , this is: '.$htmlIsFalse.'  <br />';
+		}
+		
+		utility::deleteCredentials($userid, $id, $pubKey);
+		
+		$check = utility::hasKeys($username);
+		//print_r($check);
+		if($check){
+			echo 'Check: hasKeys after deleteCredentials: $username = '.$username.' but got result $check = '.$check.'  , this is: '.$htmlIsFalse.'  <br />';
+		}else{
+			echo 'Check: hasKeys after deleteCredentials: $username = '.$username.' got result $check = '.$check.'  , this is: '.$htmlIsCorrect.' <br />';
+		}
+	
 	}
 
 
