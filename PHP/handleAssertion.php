@@ -70,7 +70,7 @@ else {
 	
 function validateAssertion($c,$a,$s) {
 	
-	
+	global $id;
 	//HASH DATA
 	$hash = new Crypt_Hash('sha256');
 	$h = $hash->hash($c); //$c welches als { "challenge" : "c232...." } vorliegt wird gehasht und danach konkateniert (unten mit $a.$h)
