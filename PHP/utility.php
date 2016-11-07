@@ -121,11 +121,12 @@ class utility {
 	 * @param  {string}
 	 * @retrun void
 	 */
+	
 	function addLog($log)
 	{
-		if( $_SESSION['log'] OR !is_array($_SESSION['log'])){
-			utility::resetLog();
-		}
+		//if( $_SESSION['log'] OR !is_array($_SESSION['log'])){
+			//utility::resetLog();
+		//}
 		//print_r(debug_backtrace()['1']['function']);
 		//print_r(debug_backtrace());
 		$a = debug_backtrace();
@@ -140,7 +141,7 @@ class utility {
 		
 		
 		//print_r($c);
-		array_push($_SESSION['log'],$c.' : '.$log);
+		//array_push($_SESSION['log'],$c.' : '.$log);
 	}
 	
 	/**
@@ -648,7 +649,7 @@ class db{
 		//utility::addLog(__METHOD__.' : Verbindungsaufbau mit dbconnect() gestartet');
 		//connect to mysql DB
 		$host="localhost";
-		$user="webflow1";
+		$user="webflow";
 		$password="1234";
 		$database="thesis";
 		$connection = mysqli_connect($host,$user,$password,$database);

@@ -57,14 +57,14 @@ function checkPW($username, $pw) {
  * 2 = Passwordless
  */
 function getPolicy($username) {
-	return utility::getPolicyFromUser($username, true, true);
+	//return utility::getPolicyFromUser($username, true, true);
 
-	// 		if($username=="schf")
-		// 				return 0;
-		// 			if($username=="tscm")
-			// 					return 1;
-			// 				if($username=="hello")
-				// 						return 2;
+			if($username=="schf")
+						return 0;
+					if($username=="tscm")
+								return 1;
+							if($username=="hello")
+										return 2;
 
 
 }
@@ -77,7 +77,7 @@ function getPolicy($username) {
  */
 function hasKeys($username) {
 
-	return utility::hasKeys($username);
+	//return utility::hasKeys($username);
 
 	// 	if($username=="schf")
 
