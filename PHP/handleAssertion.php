@@ -1,7 +1,7 @@
 <?php
 session_start();
 $modulus = 1;
-
+$id = "";
 
 require_once('util.php');
 require('Crypt\RSA.php');
@@ -69,6 +69,7 @@ else {
 /* Validieren der Assertion */
 	
 function validateAssertion($c,$a,$s) {
+	
 	
 	//HASH DATA
 	$hash = new Crypt_Hash('sha256');
