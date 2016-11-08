@@ -607,14 +607,14 @@ class utility {
 		
 		$db = new db();
 		$isActive = -1;
-		$sql = "SELECT * FROM PUBLICKEYS WHERE USERID = $userid AND KEYIDENTIFIER = '$keyID' AND AKTIV = $isActive ";
+		$sql = "SELECT * FROM PUBLICKEYS WHERE USERID = $userid AND KEYVALUE = '$keyID' AND AKTIV = $isActive ";
 		$rs = $db->executeSQL($sql,true);
 		
 		if($rs){
 			if($wholeEntry){
 				return $rs[0];
 			}else{
-				return $rs[0]['KEYVALUE'];
+				return $rs[0]['KEYIDENTIFIER'];
 			}
 		}else{
 			return false;

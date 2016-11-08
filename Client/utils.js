@@ -163,13 +163,12 @@ function checkUsername(params, url) {
 				console.log("User hat Policy: "+response.policy);
 			
 				//handle the policy: 0/1 requires the submission of the users password, 2 redirects directly to the page where you'll get an assertion
-					if(response.policy == 0 || response.policy == 1)
+					if(response.policy === 0 || response.policy === 1)
 						window.location = "../PHP/login.php";
-					else
-						{
-						Console.log("REDIRECTION TO GET ASSERTION");
-						//window.location = "../PHP/getAssertion.php";
-						}
+					
+					else {console.log("Hallo"); window.location = "../PHP/getAssertion.php";}
+						
+					
 						
 	  		});
 	 }

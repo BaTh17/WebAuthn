@@ -77,14 +77,14 @@ function getPolicy($username) {
  */
 function hasKeys($username) {
 
-	//return utility::hasKeys($username);
+	return utility::hasKeys($username);
 
-	if($username=="schf")
-			return true;
-			if($username=="tscm")
-					return true;
-				if($username=="hello")
-						return true;
+// 	if($username=="schf")
+// 			return true;
+// 			if($username=="tscm")
+// 					return true;
+// 				if($username=="hello")
+// 						return true;
 
 }
 
