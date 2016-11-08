@@ -146,11 +146,15 @@ function checkUsername(params, url) {
 	  			console.log(credList); // prints out the content of our indexedDB: An array with (various) objects like [{"type":"FIDO_2_0","id":"4BDCC1AF-3169-45CD-A97A-5EDAD7BCCFD2"}]
 			
 				// check whether there are keys in it which we can use for later assertions
-				if (response.policy != 0 && typeof credList == 'undefined' || credList.length < 1) {
-		
+				if (response.policy !== 0 && (typeof credList == 'undefined' || credList.length < 1)) {
+					console.log('IndexedCheck DONE');
 					document.getElementById('status').innerHTML = "In der IndexDB wurden keine Key-ID's gefunden. Es muss neues Material erstellt werden.<br>"+
 		    			"<div id='makeCredButton'><br>"+
 		    			'<button id="makeCredButtonID" onclick="makeCredentials(\'' + response.user + '\' , \'' + response.userId + '\')">Make Credentials</button></div>'; 
+					
+					//Hier muss noch ein Return rein, weil wenn jemand mit Policy 2 sich an einer Station ohne Indexed DB anmeldet kommt zwar kurz die Meldung oben,
+					//aber da die Funktion weiter abgearbeitet wird, würde die Weiterleitung zu getAssertion gleich Aktiv werden.
+					return;
 				}
 				
 				else
@@ -162,7 +166,11 @@ function checkUsername(params, url) {
 					if(response.policy == 0 || response.policy == 1)
 						window.location = "../PHP/login.php";
 					else
-						window.location = "../PHP/getAssertion.php";
+						{
+						Console.log("REDIRECTION TO GET ASSERTION");
+						//window.location = "../PHP/getAssertion.php";
+						}
+						
 	  		});
 	 }
 	    

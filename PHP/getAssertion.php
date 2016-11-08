@@ -9,7 +9,12 @@ echo "<script src='../Client/utils.js'></script> ";
 echo "<script src='../Client/webauthn.js'></script>";
 
 echo 'Challenge: '.$challenge;
+echo 'Username:'.$_SESSION['username'];
+echo 'Policy:'.$_SESSION['policy'];
+
 echo "<br><p id='assertionState'></p>"; //hier kommt wie bei der login.php Seite das Resultat des Assertion Checks rein
+
+
 
 $getAssertionCode = "<html><body><br><p id='status'></p><br>		
 						<script>

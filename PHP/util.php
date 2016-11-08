@@ -79,22 +79,12 @@ function hasKeys($username) {
 
 	//return utility::hasKeys($username);
 
-	// 	if($username=="schf")
-
-		// 		return true;
+	if($username=="schf")
+			return true;
 			if($username=="tscm")
 					return true;
 				if($username=="hello")
 						return true;
-				// 	else
-					// 		return false;
-	// 		return true;
-	// 	if($username=="tscm")
-	// 		return false;
-	//if($username=="hello")
-	//		return true;
-	// 	else
-	// 		return false;
 
 }
 

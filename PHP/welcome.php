@@ -22,74 +22,74 @@ echo '<html>
 		';
 //var_Dump($_SERVER['PHP_SELF']);
 
-echo '
+// echo '
 		
-		<link rel="stylesheet" href="Five_Login-Dateien/styles.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/header.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/mobile.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/icons.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/fonts.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/apps.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/fixes.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/multiselect.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/jquery-ui.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/jquery-ui-fixes.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/jquery-tipsy.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/jquery.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/share.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/versions.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/style.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/mediaelementplayer.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/colorbox.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/firstrunwizard.css" media="screen">
-					<link rel="stylesheet" href="Five_Login-Dateien/slideshow.css" media="screen">
-							<script src="Five_Login-Dateien/oc.js"></script>
-					<script src="Five_Login-Dateien/jquery_002.js"></script>
-					<script src="Five_Login-Dateien/jquery-migrate.js"></script>
-					<script src="Five_Login-Dateien/jquery-ui.js"></script>
-					<script src="Five_Login-Dateien/underscore.js"></script>
-					<script src="Five_Login-Dateien/moment-with-locales.js"></script>
-					<script src="Five_Login-Dateien/handlebars.js"></script>
-					<script src="Five_Login-Dateien/md5.js"></script>
-					<script src="Five_Login-Dateien/placeholders.js"></script>
-					<script src="Five_Login-Dateien/jquery-tipsy.js"></script>
-					<script src="Five_Login-Dateien/compatibility.js"></script>
-					<script src="Five_Login-Dateien/jquery.js"></script>
-					<script src="Five_Login-Dateien/oc-dialogs.js"></script>
-					<script src="Five_Login-Dateien/js.js"></script>
-					<script src="Five_Login-Dateien/l10n.js"></script>
-					<script src="Five_Login-Dateien/de.js"></script>
-					<script src="Five_Login-Dateien/octemplate.js"></script>
-					<script src="Five_Login-Dateien/eventsource.js"></script>
-					<script src="Five_Login-Dateien/config.js"></script>
-					<script src="Five_Login-Dateien/search.js"></script>
-					<script src="Five_Login-Dateien/oc-requesttoken.js"></script>
-					<script src="Five_Login-Dateien/apps.js"></script>
-					<script src="Five_Login-Dateien/snap.js"></script>
-					<script src="Five_Login-Dateien/placeholder.js"></script>
-					<script src="Five_Login-Dateien/jquery_003.js"></script>
-					<script src="Five_Login-Dateien/avatar.js"></script>
-					<script src="Five_Login-Dateien/share.js"></script>
-					<script src="Five_Login-Dateien/de_002.js"></script>
-					<script src="Five_Login-Dateien/share_002.js"></script>
-					<script src="Five_Login-Dateien/external.js"></script>
-					<script src="Five_Login-Dateien/de_003.js"></script>
-					<script src="Five_Login-Dateien/versions.js"></script>
-					<script src="Five_Login-Dateien/previewplugin.js"></script>
-					<script src="Five_Login-Dateien/viewer.js"></script>
-					<script src="Five_Login-Dateien/de_005.js"></script>
-					<script src="Five_Login-Dateien/jquery_004.js"></script>
-					<script src="Five_Login-Dateien/firstrunwizard.js"></script>
-					<script src="Five_Login-Dateien/de_004.js"></script>
-					<script src="Five_Login-Dateien/jquery_005.js"></script>
-					<script src="Five_Login-Dateien/slideshow.js"></script>
-					<script src="Five_Login-Dateien/public.js"></script>
-					<script src="Five_Login-Dateien/jstz.js"></script>
-					<script src="Five_Login-Dateien/visitortimezone.js"></script>
-					<script src="Five_Login-Dateien/lostpassword.js"></script>
+// 		<link rel="stylesheet" href="Five_Login-Dateien/styles.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/header.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/mobile.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/icons.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/fonts.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/apps.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/fixes.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/multiselect.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/jquery-ui.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/jquery-ui-fixes.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/jquery-tipsy.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/jquery.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/share.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/versions.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/style.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/mediaelementplayer.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/colorbox.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/firstrunwizard.css" media="screen">
+// 					<link rel="stylesheet" href="Five_Login-Dateien/slideshow.css" media="screen">
+// 							<script src="Five_Login-Dateien/oc.js"></script>
+// 					<script src="Five_Login-Dateien/jquery_002.js"></script>
+// 					<script src="Five_Login-Dateien/jquery-migrate.js"></script>
+// 					<script src="Five_Login-Dateien/jquery-ui.js"></script>
+// 					<script src="Five_Login-Dateien/underscore.js"></script>
+// 					<script src="Five_Login-Dateien/moment-with-locales.js"></script>
+// 					<script src="Five_Login-Dateien/handlebars.js"></script>
+// 					<script src="Five_Login-Dateien/md5.js"></script>
+// 					<script src="Five_Login-Dateien/placeholders.js"></script>
+// 					<script src="Five_Login-Dateien/jquery-tipsy.js"></script>
+// 					<script src="Five_Login-Dateien/compatibility.js"></script>
+// 					<script src="Five_Login-Dateien/jquery.js"></script>
+// 					<script src="Five_Login-Dateien/oc-dialogs.js"></script>
+// 					<script src="Five_Login-Dateien/js.js"></script>
+// 					<script src="Five_Login-Dateien/l10n.js"></script>
+// 					<script src="Five_Login-Dateien/de.js"></script>
+// 					<script src="Five_Login-Dateien/octemplate.js"></script>
+// 					<script src="Five_Login-Dateien/eventsource.js"></script>
+// 					<script src="Five_Login-Dateien/config.js"></script>
+// 					<script src="Five_Login-Dateien/search.js"></script>
+// 					<script src="Five_Login-Dateien/oc-requesttoken.js"></script>
+// 					<script src="Five_Login-Dateien/apps.js"></script>
+// 					<script src="Five_Login-Dateien/snap.js"></script>
+// 					<script src="Five_Login-Dateien/placeholder.js"></script>
+// 					<script src="Five_Login-Dateien/jquery_003.js"></script>
+// 					<script src="Five_Login-Dateien/avatar.js"></script>
+// 					<script src="Five_Login-Dateien/share.js"></script>
+// 					<script src="Five_Login-Dateien/de_002.js"></script>
+// 					<script src="Five_Login-Dateien/share_002.js"></script>
+// 					<script src="Five_Login-Dateien/external.js"></script>
+// 					<script src="Five_Login-Dateien/de_003.js"></script>
+// 					<script src="Five_Login-Dateien/versions.js"></script>
+// 					<script src="Five_Login-Dateien/previewplugin.js"></script>
+// 					<script src="Five_Login-Dateien/viewer.js"></script>
+// 					<script src="Five_Login-Dateien/de_005.js"></script>
+// 					<script src="Five_Login-Dateien/jquery_004.js"></script>
+// 					<script src="Five_Login-Dateien/firstrunwizard.js"></script>
+// 					<script src="Five_Login-Dateien/de_004.js"></script>
+// 					<script src="Five_Login-Dateien/jquery_005.js"></script>
+// 					<script src="Five_Login-Dateien/slideshow.js"></script>
+// 					<script src="Five_Login-Dateien/public.js"></script>
+// 					<script src="Five_Login-Dateien/jstz.js"></script>
+// 					<script src="Five_Login-Dateien/visitortimezone.js"></script>
+// 					<script src="Five_Login-Dateien/lostpassword.js"></script>
 		
 		
-		';
+// 		';
 
 echo "<script src='../Client/utils.js'></script>";
 echo "<script src='../Client/webauthn.js'></script>";

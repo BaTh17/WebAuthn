@@ -97,10 +97,7 @@ function buildPubKey($id, $rsa) {
 	global $username;
 	global $id;
 	
-	//$username = "hello";
-	
-	//$pKey64 = utility::getPublicKey($username,$id);
-	$pKey64 = "sic0zFOt54jxKD84uxpY-cR7SBnAHOFb0FU4A1W2AEKshNAK8GBidtyrKEpc-U7v_BCe5eyeuGmSX9c9hyYaa29XzbYfRZ7ziHUp3kCT-V00QWJ995N32Rls6nAliORXjTM8Z3WmzlIjhkEGNkgRQtEzXCznO0xPgjqgliLj0Kh9B6xOYp-GbFacSxM1q2sE4kHWQasfgSPjjRc5rPfAJv1KX1t3AWKQ7pGl4PJ-Mjp7hd8taJpmcNXFMJaAKpc_FsEotUMTEMDFUShiH0Fqm0g91vDPc_UZNqj41-4ui7r8Cldm35zo6QQjOcZeYxjB2dGcfpI_hrq2g_j_aBKyDQ";
+	$pKey64 = util::getPublicKey($username,$id);
 	$n = rfc4648_base64_url_decode($pKey64);
 
 	$e64 = "AQAB"; //ist statisch (Exponent)
