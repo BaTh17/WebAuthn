@@ -88,9 +88,20 @@ function getAssertion(challenge) {
 	navigator.authentication.getAssertion(challenge).then(function(assertion) {
 		console.log('Assertion created');
 		/*function call for AJAX - direct call with anonymous function didn't work*/
+		
+		/*Manipulation der Assertion um sicherzustellen, dass die Validierung korrekt ist:*/
+		/*
+		console.log(Object.values(assertion));
+		var rogueAssertion = JSON.stringify(assertion);
+		rogueAssertion = JSON.parse(rogueAssertion);
+		console.log("manipulating...");
+		rogueAssertion.clientData="gibberish";
+		console.log("Vergleich Original und manipulierte Assertion: "+JSON.stringify(assertion) + "  "+ JSON.stringify(rogueAssertion));
+		*/
 		sendAssertion(JSON.stringify(assertion));
 	});
 }
+
 
 /**
  * Takes newly created credentials and sends them to the server by AJAX call.
