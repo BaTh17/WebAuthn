@@ -1,5 +1,4 @@
 -- For MYSQL Installation, you can run this script without changes
--- For MSSQL, replace "" with "GO" to execute the lines before going to the next code block
 DROP DATABASE IF EXISTS THESIS;
 
 
