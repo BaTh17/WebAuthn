@@ -24,7 +24,8 @@ else {
 		 *damit wir mit unserem Konzept weiterfahren können darf die im Moment noch nicht unique sein.
 		 *Grund in Doku beschrieben, wegen Gerätewechsel würde das problematisch werden
 		 */
-		$userId = md5(openssl_random_pseudo_bytes(8)); //damit es randomized ist
+		//$userId = md5(openssl_random_pseudo_bytes(8)); //damit es randomized ist
+		$userId = md5(mt_rand(0,100000)); // openssl_random_pseudo_bytes() is not useable for PHP 5.2
 		
 		//In DB nun prüfen, ob überhaupt Keys für den User bestehen
 		$userHasKeys = $_SESSION['PKeys'] = hasKeys($username);

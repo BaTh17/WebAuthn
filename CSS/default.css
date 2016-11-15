@@ -1,13 +1,9 @@
-body{
-    font-family:verdana, sans-serif;
-    background-color: #82c0f2;
-}
 table{
     border: 1px solid black;
 }
 td, tr {
 	font-size:small;
-    background-color: #beddf7;
+    background-color: #82c0f2;
 }
 th {
 	font-weight:bold;
@@ -22,17 +18,18 @@ th {
 */
 
 body {
-	background-color: #ffffff;
+    font-family:verdana, sans-serif;
+    background-color: #82c0f2;
 	font-weight: normal;
-	font-size: .8em;
+	font-size: 1.6em;
 	line-height: 1.6em;
 	font-family: 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif;
 	color: #ffffff;
 	height: auto;
 
 
-
-	text-align: center;
+/* was 35537a to 1d2d44 */
+	text-align: left;
 	background: #1d2d44; /* Old browsers */
 	background: -moz-linear-gradient(top, #35537a 0%, #1d2d44 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#35537a), color-stop(100%,#1d2d44)); /* Chrome,Safari4+ */
@@ -41,4 +38,99 @@ body {
 	background: -ms-linear-gradient(top, #35537a 0%,#1d2d44 100%); /* IE10+ */
 	background: linear-gradient(top, #35537a 0%,#1d2d44 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35537a', endColorstr='#1d2d44',GradientType=0 ); /* IE6-9 */
+	
+}
+
+.gradient {
+
+  /* can be treated like a fallback */
+  background-color: #1d2d44;
+
+  /* will be "on top", if browser supports it */
+  background-image: linear-gradient(#B7CFE0, #1d2d44);
+
+  /* these will reset other properties, like background-position, but it does know what you mean */
+  background: #1d2d44;
+  background: linear-gradient(#35537a, #1d2d44);
+
+}
+
+.rounded {
+	border: 1px solid #ccc;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	-moz-box-shadow: 2px 2px 3px #666;
+	-webkit-box-shadow: 2px 2px 3px #666;
+	box-shadow: 2px 2px 3px #666;
+	font-size: 24px;
+	padding: 4px 7px 7px 7px;
+	outline: 0;
+	-webkit-appearance: none;
+}
+
+rounded:focus {
+	border-color: #339933;
+}
+
+div.centerBox {
+	margin-left: 30%;
+	width: 30%;
+	/*background-color:red; */
+	text-align: left;
+}
+
+.svg {
+	margin-left:10px;
+	padding:10px;
+	text-align:center;
+	background-color:white;
+}
+
+button {
+	background:#8da9cd;
+	width: 100%;
+}
+
+.logo{
+	/*src="Five_Login-Dateien/logo.png";
+	background-image: url("../PHP/Five_Login-Dateien/logo.png");
+	background-repeat: no-repeat;*/
+	width: auto;
+	height: auto; 
+	text-align: center;
+	margin-left: 150px;
+	padding: 5px;
+}
+
+.message{
+	background-color: #8da9cd;
+	clear: both;
+}
+
+.label {
+	font-weight: bold;
+}
+
+.titel {
+	font-weight: bold;
+	font-size: 2.4em;
+}
+
+.heading {
+	font-weight: bold;
+	font-size: 1.9em;
+}
+
+.icon {
+	margin-left:10px;
+	padding:10px;
+	text-align:center;
+	width: 16px;
+	height: 16px;
+}
+
+.user_icon(){
+	background-image: url("avatar.png");
+	background-repeat: no-repeat;
 }

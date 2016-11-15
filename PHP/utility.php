@@ -422,7 +422,7 @@ class utility {
 	 * 
 	 */
 	function getChallenge() {
-		return md5(mt_rand(12,12));
+		return md5(mt_rand(0,100000));
 		//return md5(openssl_random_pseudo_bytes(16));
 	}
 	
