@@ -8,6 +8,23 @@
 */
 class utility {
 	
+	
+	/**
+	 * Set configuration dependig on the use case
+	 * @param number $configSetting
+	 */
+	function getConfiguration($configSetting = 1){
+		$localTesting = 1;
+		$webflowDemo = 2;
+		if($configSetting == $webflowDemo){
+			$_SESSION['redirectToAfterSuccess'] = 'https://www.5webflow.ch/category/allgemein/';
+		}else
+		{
+			//Default is local testing
+			$_SESSION['redirectToAfterSuccess'] = 'https://www.5webflow.ch/category/allgemein/';
+		}
+	}
+	
 	/**
 	 * react to all get- or post-information
 	 * @param unknown $response

@@ -6,10 +6,12 @@ session_start();
 $username =  $_SESSION['username'];
 $policy =  $_SESSION['policy'];
 
+getConfiguration();
+$webflowPageAfterSuccess = $_SESSION['redirectToAfterSuccess'];
 
 if(!isset($_POST['password'])) {
 	$responseStatus = '401 Bad Request';
-	$responseText = 'Anfrage erhält kein Passwort';
+	$responseText = 'Call does not contain a password';
 }
 
 $password = $_POST['password'];
@@ -27,7 +29,7 @@ $password = $_POST['password'];
 		//Weil vielleicht noch neue Policies dazu kommen mit switch arbeiten
 		switch($policy) {
 			case 0: {
-				$responseText = "window.location = 'https://www.5webflow.ch/category/allgemein/';";
+				$responseText = "window.location = ".$webflowPageAfterSuccess.";";
 				break;
 			}
 			case 1: {
@@ -46,7 +48,7 @@ $password = $_POST['password'];
 		}	
 	else {
 		$responseStatus = '401 Bad Request';
-		$responseText = 'Falsches PW';
+		$responseText = 'Wrong password';
 		
 }
 		

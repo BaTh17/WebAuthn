@@ -3,12 +3,11 @@ require_once('util.php');
 
 session_start();
 
+
+getConfiguration();
 $username =  $_SESSION['username'];
 $policy =  $_SESSION['policy'];
 
-echo "Active Policy: ".$policy."<br><br>";
-echo "<script src='../Client/utils.js'></script> ";
-echo "<script src='../Client/webauthn.js'></script>";
 
 
 /*
@@ -21,43 +20,62 @@ echo "<script src='../Client/webauthn.js'></script>";
  */
 $keys = $_SESSION['PKeys']; 
 
-$pwCode = "
-		
-<div>
-Enter your password: <br><input type='text' size='30' id='pwInput'><br>
-<button id='pwButton' onclick='checkPW()'>check and proceed</button>
-</div>
-		
-";
-
-//$passwordless = "";
-
+$pageTitle = 'Login - Page';
+echo '<!DOCTYPE html>
+<head>
+<title>'.$pageTitle.'</title>
+</head>
+<body>
+		';
 echo "<script src='../Client/utils.js'></script> ";
+echo "<script src='../Client/webauthn.js'></script>";
+echo '<link rel="stylesheet" href="../CSS/default.css" type="text/css">';
+
+echo '<div class="titel" >'.$pageTitle.'</div>';
+echo '<div class="centerBox">';
+
+
+
+echo "
+		<div class='heading' >Known information:</div><br />
+		<div class='label float' style='clear:both;' >username:  </div>". $username." <br />
+		<div class='label float' >active policy: </div>".$policy."
+		<div class='clear'></div><br />
+		";
 
 /*
  * Je nach dem welche Policy für den Benutzer aktiv ist, wird der ReturnString zusammengebaut.
  * Bei 2 wird direkt die getAssertion Funktion aufgerufen
  */
+$pwCode = "
+<div>
+<img class='icon' alt='' src='../CSS/key_white.png' >
+Enter your password: <input class='rounded' type='text' id='pwInput' autofocus /><br />
+<button id='pwButton' class='rounded' onclick='checkPW()'>check password and proceed</button>
+</div>
+";
 
+//check, if pw is needed
 if($policy == 0 || $policy == 1) {
-	
 	echo $pwCode;
-	
 }
 
 //Entfernen: Denn hier kommt man gar nie rein
 else {
-	echo "Passwordless is active. Call of getAssertion:<br>";
+	echo "Passwordless is active. Call of getAssertion:<br />";
 	echo "<script>hello()</script>";
 	
 }
 
 
-echo "<p id='pwState'></p><br>username:". $username. " and policy: ".$policy;
-echo "<br><p id='assertionState'></p>";
+echo "<p id='pwState'></p><br />
+	";
+echo "<br />
+		<p id='assertionState'></p>";
 
+echo '</div>'; // from centerBox div
 
-
-
-	
+echo '
+</body>
+</html>';
 ?>

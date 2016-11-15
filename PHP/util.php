@@ -110,5 +110,13 @@ function getChallenge() {
 	//return md5(openssl_random_pseudo_bytes(16));
 }
 
+/**
+ * Get configuration into SESSION variables
+ * @param {int} $configSetting
+ * @return {void}
+ */
+function getConfiguration($configSetting = 1) {
+	return utility::getConfiguration($configSetting);
+}
 
 ?>

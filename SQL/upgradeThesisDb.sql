@@ -69,12 +69,12 @@ CREATE TABLE IF NOT EXISTS SETTINGS (
 
 
 INSERT INTO WF_USER ( USERID, NAME,FULLNAME,USERPASSWORD,EMAILADDRESS,RESET_PASSWORD,AKTIV ) VALUES
-(1, 'tscm', 'Marcel Tschanz', 'test', 'matscha7@gmail.com', 0, -1),
-(2, 'schf', 'Fabian Schwab', 'test', 'fjschwab@outlook.com', 0, -1),
-(3, 'five', 'FIVE', 'test', 'matscha7@gmail.com', 0, -1),
-(4, 'five1', 'FIVE_1', 'test', 'matscha7@gmail.com', 0, -1),
-(5, 'test1', 'Tester_1', 'test', 'matscha7@gmail.com', 0, -1),
-(6, 'hello', 'helloUser', 'test', 'matscha7@gmail.com', 0, -1);
+(1, 'tscm', 'Marcel Tschanz', '123456', 'matscha7@gmail.com', 0, -1),
+(2, 'schf', 'Fabian Schwab', '123456', 'fjschwab@outlook.com', 0, -1),
+(3, 'five', 'FIVE', '123456', 'matscha7@gmail.com', 0, -1),
+(4, 'five1', 'FIVE_1', '123456', 'matscha7@gmail.com', 0, -1),
+(5, 'test1', 'Tester_1', '123456', 'matscha7@gmail.com', 0, -1),
+(6, 'hello', 'helloUser', '123456', 'matscha7@gmail.com', 0, -1);
 
 -- 0 = Password only
 -- 1 = 2-FA

@@ -54,7 +54,7 @@ function makeCredentials(username, userId) {
 			console.log("Einträge in der Indexed DB: "+credList);
 		});
 		
-		document.getElementById('status').innerHTML = "Keymaterial wurde erstellt. Bitte geben Sie erneut ihren Benutzernamen an."
+		document.getElementById('status').innerHTML = "Key material was created. Please confirm your username again."
 	    
 	    
 	}).catch(function(reason) {
@@ -65,7 +65,7 @@ function makeCredentials(username, userId) {
             //showSetupWindowsHelloDialog(true);
             console.log('Windows Hello failed (' + reason.message + ').');
             document.getElementById('status').innerHTML =  
-            	'Windows Hello wurde noch nicht eingerichtet. Bitte nachholen. <br><br><button id="helloSetupOK" onclick="makeCredentials(\'' + username + '\' , \'' + userId + '\')">Done and Done</button>';
+            	'Windows Hello is not jet established. Please activate it:<br><br><button id="helloSetupOK" onclick="makeCredentials(\'' + username + '\' , \'' + userId + '\')">Done and Done</button>';
    
 		}
         else {
@@ -119,7 +119,7 @@ function sendCredentials(params, url) {
 	      console.log(xmlhttp.responseText);
 	    
 	    else if (xmlhttp.status === 401)
-	    	document.getElementById('status').innerHTML = "Übertragung an den Server fehlgeschlagen. Fehler: "+xmlhttp.responseText;
+	    	document.getElementById('status').innerHTML = "Transmission to the server failed. error: "+xmlhttp.responseText;
 	
 	}
 	  xmlhttp.open("POST", url, true);
@@ -159,7 +159,7 @@ function checkUsername(params, url) {
 				// check whether there are keys in it which we can use for later assertions
 				if (response.policy !== 0 && (typeof credList == 'undefined' || credList.length < 1)) {
 					console.log('IndexedCheck DONE');
-					document.getElementById('status').innerHTML = "In der IndexDB wurden keine Key-ID's gefunden. Es muss neues Material erstellt werden.<br>"+
+					document.getElementById('status').innerHTML = "No key-IDs were found in the IndexedDB. New key material has to be created.<br>"+
 		    			"<div id='makeCredButton'><br>"+
 		    			'<button id="makeCredButtonID" onclick="makeCredentials(\'' + response.user + '\' , \'' + response.userId + '\')">Make Credentials</button></div>'; 
 					
@@ -186,7 +186,7 @@ function checkUsername(params, url) {
 	    
 	    //if the usercheck has failed you'll get the error code 401 back
 	    else if (xmlhttp.readyState === 4 && xmlhttp.status === 401) {
-	    	document.getElementById('status').innerHTML = "wrong username"; 
+	    	document.getElementById('status').innerHTML = "username not found"; 
 		    }
 	    
 	    //if the usercheck has been successful but there are no keys on the server, you'll get code 202 back
@@ -194,7 +194,9 @@ function checkUsername(params, url) {
 	    	
 		    var response = JSON.parse(xmlhttp.responseText);
 		    
-		    document.getElementById('status').innerHTML = "Für den Benutzer: "+response.user + " mit userId: " + response.userId + " wurde die Policy 1 oder 2 aktiviert, aber es sind noch keine Public Keys auf dem Server vorhanden." +
+		    document.getElementById('status').innerHTML = "The user: "+response.user + " with userId: " + response.userId + "" +
+		    		" has policy 1 or 2 active, but no public keys were found on the server. Please create Credentials. " +
+
 		    "<br>"+
 	    			"<div id='makeCredButton'><br>"+
 	    			'<button id="makeCredButtonID" onclick="makeCredentials(\'' + response.user + '\' , \'' + response.userId + '\')">Make Credentials</button> ' +
@@ -232,7 +234,7 @@ function checkPW(){
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 	    
 	     eval(xmlhttp.responseText);
-	     document.getElementById('pwState').innerHTML = "PASWORT OK"; 
+	     document.getElementById('pwState').innerHTML = "passwort was correct"; 
 	      
 	    }
 	    
@@ -271,12 +273,12 @@ function sendAssertion(assertion){
 		  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 	    	console.log("User erfolgreich authentisiert (Validation OK) mit Status: "+xmlhttp.status+ "\n" + "Responsetext: "+xmlhttp.responseText);
-	    	document.getElementById('assertionState').innerHTML = "ASSERTION ERFOLGREICH VALIDIERT";
+	    	document.getElementById('assertionState').innerHTML = "assertion was successfully validated.";
 	    }
 	    
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 400) {
 	    	console.log("Status: "+xmlhttp.readyState + " Validierung der Assertion fehlgeschlagen.  Responsetext: "+ xmlhttp.responseText);
-	    	 document.getElementById('assertionState').innerHTML = "Validierung fehlgeschlagen."; 
+	    	 document.getElementById('assertionState').innerHTML = "validation failed."; 
 	    }
 	    
 	    else {

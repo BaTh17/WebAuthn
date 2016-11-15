@@ -21,8 +21,8 @@ body {
     font-family:verdana, sans-serif;
     background-color: #82c0f2;
 	font-weight: normal;
-	font-size: 1.6em;
-	line-height: 1.6em;
+	font-size: 1.4em;
+	line-height: 1.4em;
 	font-family: 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif;
 	color: #ffffff;
 	height: auto;
@@ -110,6 +110,7 @@ button {
 
 .label {
 	font-weight: bold;
+	width: 190px;
 }
 
 .titel {
@@ -123,8 +124,8 @@ button {
 }
 
 .icon {
-	margin-left:10px;
-	padding:10px;
+	margin-left:0px;
+	padding:0px;
 	text-align:center;
 	width: 16px;
 	height: 16px;
@@ -133,4 +134,12 @@ button {
 .user_icon(){
 	background-image: url("avatar.png");
 	background-repeat: no-repeat;
+}
+
+.float{
+	float: left;
+}
+
+.clear {
+	clear: left;
 }
