@@ -50,7 +50,7 @@ echo "
 $pwCode = "
 <div>
 <img class='icon' alt='' src='../CSS/key_white.png' >
-Enter your password: <input class='rounded' type='text' id='pwInput' autofocus /><br />
+Enter your password: <input class='rounded' type='text' id='pwInput' onKeydown='Javascript: if (event.keyCode == 13) checkPW()'  autofocus /><br />
 <button id='pwButton' class='rounded' onclick='checkPW()'>check password and proceed</button>
 </div>
 ";

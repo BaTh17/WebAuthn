@@ -8,10 +8,10 @@ $checkHelloIsActive = utility::getWindowsHelloStatus();
 if(!$checkHelloIsActive){
 //header("Location: http://localhost/phpmyadmin/");
 
-$path_parts = pathinfo($_SERVER['PHP_SELF']);
-$redirectUrl = $path_parts['dirname'].'/originalWebflowStartPage.php';
+//$path_parts = pathinfo($_SERVER['PHP_SELF']);
+//$redirectUrl = $path_parts['dirname'].'/originalWebflowStartPage.php';
 
-header("Location: http://localhost$redirectUrl");
+//header("Location: http://localhost$redirectUrl");
 
 }
 //id="body-login"
@@ -39,21 +39,22 @@ echo '<span class="label">Operating System: </span>
 			if((navigator.appVersion.indexOf("Windows NT 10.0")) > -1) document.write("Windows 10");
 		</script>
 		<br />';
-echo "<div id='browserInfo'></div>";
+echo "<span class='label'>Web Browser: </span>
+		<div id='browserInfo' class='' style='width:1200px;'></div>
+";
 
 echo "
-		<span class='label'>Web Browser: </span>
-	<script>
-		alert('hallo wofeh');
-		if(window.navigator.userAgent.indexOf('Edge') > -1){
-			document.write('You use Microsoft Edge, Windows Hello login is possible.');
 		
+	<script>
+		if(window.navigator.userAgent.indexOf('Edge') > -1){
+			document.write('Microsoft Edge: Windows Hello login is possible.');
 		}
 		else {
-			document.getElementById('browserInfo').innerHTML = 'You do not use the Microsoft Edge Browser. Please use it to access the Windows Hello features.<br>';
+			document.getElementById('browserInfo').innerHTML = 'You do not use the Microsoft Edge Browser. Please use it to access the Windows Hello features.<br />';
 			var elem = document.getElementById('userAndLogin');
 			elem.parentElement.removeChild(elem);
 		}
+		
 		
 	</script>
 		<br />
@@ -66,7 +67,7 @@ echo '
 		<br />
 		<img class="icon" alt="" src="../CSS/user_white.png" >
 		Username: 
-		<input type="text" id="userNameInput" class="rounded" autofocus />
+		<input type="text" id="userNameInput" class="rounded" onKeydown="Javascript: if (event.keyCode == 13) login()"  autofocus />
 		<br />
 		<br /><div><div class="label">Status message: </div><div id="status" class="message"></div></div>
 		<br />

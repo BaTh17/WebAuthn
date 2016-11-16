@@ -16,12 +16,19 @@ class utility {
 	function getConfiguration($configSetting = 1){
 		$localTesting = 1;
 		$webflowDemo = 2;
+		
+		if( !isset($_SESSION['redirectToAfterSuccess'])){
+			$_SESSION['redirectToAfterSuccess'] = '';
+		}
+		
 		if($configSetting == $webflowDemo){
-			$_SESSION['redirectToAfterSuccess'] = 'https://www.5webflow.ch/category/allgemein/';
+			//$_SESSION['redirectToAfterSuccess'] = 'https://www.5webflow.ch/category/allgemein/';
+			$_SESSION['redirectToAfterSuccess'] = 'https://www.5webflow.ch/exec/webflow/Application/Aufgabenliste/';
 		}else
 		{
 			//Default is local testing
-			$_SESSION['redirectToAfterSuccess'] = 'https://www.5webflow.ch/category/allgemein/';
+			//$_SESSION['redirectToAfterSuccess'] = 'https://www.5webflow.ch/category/allgemein/';
+			$_SESSION['redirectToAfterSuccess'] ="../PHP/originalWebflowStartPage.php";
 		}
 	}
 	
@@ -41,6 +48,7 @@ class utility {
 		
 		if($response['changeWindowsHelloStatus'] == 1 ){
 			utility::addLog('called  changeWindowsHelloStatus');
+			utility::setWindowsHelloStatus();
 		}
 	}
 	
@@ -156,9 +164,11 @@ class utility {
 		$lastSign = '\\';
 		$c = substr(strrchr ( $b['file'],$lastSign),1);
 		
-		
+		if( !is_array($_SESSION['log']) ){
+			$_SESSION['log'] = array();
+		}
 		//print_r($c);
-		//array_push($_SESSION['log'],$c.' : '.$log);
+		array_push($_SESSION['log'],$c.' : '.$log);
 	}
 	
 	/**
@@ -176,7 +186,7 @@ class utility {
 
 
 	/**
-	 * Get inforation about the given username
+	 * Get information about the given username
 	 * @param {string} $userInfo
 	 * @param {int} $infoValue
 	 * @return {array|boolean}
@@ -195,7 +205,7 @@ class utility {
 	
 	/**
 	 * TODO TESTEN
-	 * Get inforation about the given user
+	 * Get Userid from the given username
 	 */
 	function getUseridFromUsername($username)
 	{
@@ -223,7 +233,7 @@ class utility {
 	/**
 	 * check if 
 	 *  - the user exists
-	 *  - is activ
+	 *  - is active
 	 * boolean
 	 */
 	function checkUsername($username)
@@ -564,9 +574,9 @@ class utility {
 		}else{
 			$newValue = 1;
 		}
-		
+//var_dump($oldValue);
 		//update value in db
-		utility::addLog('setze WindowsHelloStatus:'.$newValue.' der alte Wert war: '.$oldValue);
+		utility::addLog('setze WindowsHelloStatus: '.$newValue.' der alte Wert war: '.$oldValue);
 		$db = new db();
 		$tableName = 'SETTINGS';
 		$id = 'WINDOWS_HELLO_STATUS';

@@ -220,11 +220,16 @@ function checkUsername(params, url) {
  * @returns: {void}
  */
 
-function checkPW(){
+function checkPW(urlRedirection){
 
 	var pw = document.getElementById("pwInput").value;
 	var params = "password="+pw;
 	var url = "../PHP/pwCheck.php";
+	
+	if (typeof urlRedirection === "undefined" || urlRedirection === null) { 
+		urlRedirection = "../PHP/originalWebflowStartPage.php"; 
+		////urlRedirection = '<?php echo $_SESSION["redirectToAfterSuccess"]; ?>';
+	  }
 		
 	xmlhttp = new XMLHttpRequest();
 	 
@@ -233,15 +238,15 @@ function checkPW(){
 		//if password check has been successfull you'll be redirected to the appropriate page (Webflow or assertion page)  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 	    
-	     eval(xmlhttp.responseText);
-	     document.getElementById('pwState').innerHTML = "passwort was correct"; 
-	      
-	    }
-	    
-	    else if (xmlhttp.status === 401) {
-	    	
+	    	//eval(xmlhttp.responseText);
+	     	document.getElementById('pwState').innerHTML = "passwort was correct: "+xmlhttp.responseText; 
+	     	//window.location = "+ xmlhttp.responseText +";
+	     	//eval(xmlhttp.responseText);
+	     	
+	     	window.location = urlRedirection;
+	     	//window.location = "../PHP/originalWebflowStartPage.php";
+	    }else if (xmlhttp.status === 401) {
 	    	document.getElementById('pwState').innerHTML = "wrong password"; 
-	    	
 		}  
 	}
 	
@@ -270,20 +275,20 @@ function sendAssertion(assertion){
 	xmlhttp = new XMLHttpRequest();
 
 	  xmlhttp.onreadystatechange = function () {
-		  
+		  document.getElementById('assertionStateInfo').innerHTML = "readyState: "+ xmlhttp.readyState +" and http status: "+ xmlhttp.status;
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 	    	console.log("User erfolgreich authentisiert (Validation OK) mit Status: "+xmlhttp.status+ "\n" + "Responsetext: "+xmlhttp.responseText);
-	    	document.getElementById('assertionState').innerHTML = "assertion was successfully validated.";
-	    }
-	    
-	    if (xmlhttp.readyState === 4 && xmlhttp.status === 400) {
+	    	document.getElementById('assertionState').innerHTML = "Assertion was successfully validated.";
+	    	//TODO is it really ok to redirect here? TSCM TODO TODO
+	    	window.location = "../PHP/originalWebflowStartPage.php";
+	    	
+	    }else if (xmlhttp.readyState === 4 && xmlhttp.status === 400) {
 	    	console.log("Status: "+xmlhttp.readyState + " Validierung der Assertion fehlgeschlagen.  Responsetext: "+ xmlhttp.responseText);
 	    	 document.getElementById('assertionState').innerHTML = "validation failed."; 
-	    }
-	    
-	    else {
+	    } else {
 	    	console.log("Change in State:"+xmlhttp.readyState);
-		    }  
+	    	 
+		}  
 	}
 	
 	  xmlhttp.open("POST", url, true);

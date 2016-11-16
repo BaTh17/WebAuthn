@@ -17,13 +17,13 @@ if(!isset($_SESSION['log'])){
 
 
 //generate titel html
-$pageTitle = 'test.php';
+$pageTitle = 'Test - Page';
 echo '<!DOCTYPE html>
 <head>
 <title>'.$pageTitle.'</title>
 		<link rel="stylesheet" href="../CSS/default.css" type="text/css">
 <body>
-<h1>'.$pageTitle.'</h1>
+<div class="heading">'.$pageTitle.'</div>
 		
 ';
 
@@ -58,7 +58,7 @@ class test{
 	 * @return {string}
 	 */
 	function htmlIsCorrect(){
-		return '<span style="color:green;font-weight:normal;">Correct</span>';
+		return '<span class="isCorrect">Correct</span>';
 	}
 	
 	/**
@@ -67,7 +67,7 @@ class test{
 	 * @return {string}
 	 */
 	function htmlIsFalse(){
-		return '<span style="color:red;font-weight:bold;">False</span>';
+		return '<span class="isFalse">False</span>';
 	}
 
 	
@@ -201,6 +201,8 @@ class test{
 		$id = '12312322223123';
 		$pubKey = 'TEST-24533111113-4g5h5345h-54h45h-45-6456-TEST';
 		$userid = utility::getUseridFromUsername($username);
+		
+		utility::deleteCredentials($userid);
 		
 		echo 'Check: hasKeys: $username = '.$username.' <br />';
 		$check = utility::hasKeys($username);

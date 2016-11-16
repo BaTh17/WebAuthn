@@ -26,7 +26,7 @@ utility::catchResponse($_REQUEST);
 //header("Location: ".$_SERVER['PHP_SELF'].'page=1');
 
 //definitions
-$pageTitle = 'admin.php';
+$pageTitle = 'Admin - Page';
 
 echo '<!DOCTYPE html>
 <head>
@@ -60,7 +60,7 @@ echo '<!DOCTYPE html>
 		</script>
 </head>
 <body>';
-echo '<h1>Das ist die Page: '.$pageTitle.'</h1><br />';
+echo '<div class="titel">'.$pageTitle.'</div><br />';
 
 
 $db = new db;
@@ -77,7 +77,7 @@ utility::createSelect('WF_USER','USERID','FULLNAME');
 utility::createSelectPolicy('PT_USER','USERID','POLICY');
 
 echo '
-		<input id="createPolicy" type="button" value="createPolicy" onclick="return createPolicy()" />
+		<input id="createPolicy" type="button" class="rounded button" value="createPolicy" onclick="return createPolicy()" />
 		';
 //loads the benutzertabelle
 utility::createTable('PT_USER');
@@ -86,14 +86,14 @@ utility::createTable('PT_USER');
 //html Benutzertabelle
 echo '
 <div id="Benutzertabelle (WF_USER)">
-<h2>Benutzertabelle</h2><input id=getUsers value="Anzeige neu laden" />
+<div class="heading">Benutzertabelle</div><input id=getUsers value="Anzeige neu laden" />
 				<form action="utility.php" method="post" > 
 <input id=getUsersLabel value="getUser" disabled=disabled /><input id=getUsers value="" /><br />
 <input id=getUsersLabel value="setPolicy" disabled=disabled /><input id=getUsers value="" /><br />
 </form>
 		
 </div>
-		';
+';
 
 
 
@@ -102,20 +102,18 @@ utility::createTable('WF_USER');
 //utility::addLog('WF_USER Table erstellt');
 
 
-echo '  <h2>Settingstabelle</h2>
+echo '  <div class="heading">Settingstabelle</div>
 		<span>Windows Hello Status:</span>
-		<input id="changeWindowsHelloStatus" type="button" value="changeWindowsHelloStatus()" onclick="changeWindowsHelloStatus()" />
+		<input id="changeWindowsHelloStatus" type="button" class="rounded button" value="changeWindowsHelloStatus()" onclick="changeWindowsHelloStatus()" />
 
 		<p id="demo"></p>
 		
 		';
 //loads the benutzertabelle
-echo(utility::getWindowsHelloStatus());
 utility::createTable('SETTINGS');
 
 
 //test.php
-echo '<h2>Test.php</h2>';
 require_once('test.php');
 
 
@@ -123,7 +121,7 @@ require_once('test.php');
 //print LogTabelle
 echo '<div id="logTable">';
 utility::addLog('WF_USER Table anzeigen');
-echo '<h2>LOG</h2>';
+echo '<div class="heading">LOG</div>';
 if($_SESSION['log']){
 	echo '<table>';
 	foreach($_SESSION['log'] as $log){

@@ -30,6 +30,7 @@ $password = $_POST['password'];
 		switch($policy) {
 			case 0: {
 				$responseText = "window.location = ".$webflowPageAfterSuccess.";";
+				
 				break;
 			}
 			case 1: {
