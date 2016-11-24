@@ -80,7 +80,7 @@ echo '
 		<input id="createPolicy" type="button" class="rounded button" value="createPolicy" onclick="return createPolicy()" />
 		';
 //loads the benutzertabelle
-utility::createTable('PT_USER');
+print_r(utility::createTable('PT_USER'));
 
 
 //html Benutzertabelle
@@ -98,7 +98,7 @@ echo '
 
 
 //loads the benutzertabelle
-utility::createTable('WF_USER');
+print_r(utility::createTable('WF_USER'));
 //utility::addLog('WF_USER Table erstellt');
 
 
@@ -110,7 +110,7 @@ echo '  <div class="heading">Settingstabelle</div>
 		
 		';
 //loads the benutzertabelle
-utility::createTable('SETTINGS');
+print_r(utility::createTable('SETTINGS'));
 
 
 //test.php
