@@ -1,17 +1,32 @@
 <?php
-include_once ("db.php");
+
+$localTesting = 1;
+$webflowDemo = 2;
+_plugin_utility::getConfiguration($webflowDemo);
+if($_SESSION['importWebflowClasses']){
+include_once ($__configObject->DocumentRoot . "/modules/BerkeWebflowConnection/connect.conf.php");
+include_once ($__configObject->DocumentRoot . "/" . WebAppAPI::GetVar ( "sysvar", "AppPlugin" ) . "/KrediWF/common/common.lib.php");
+include_once ($__configObject->DocumentRoot . "/" . WebAppAPI::GetVar ( "sysvar", "AppPlugin" ) . "/KrediWF/common/language.lib.php");
+include_once ($__configObject->DocumentRoot . "/" . WebAppAPI::GetVar ( "sysvar", "AppPlugin" ) . "/KrediWF/common/db.lib.php");
+}
+
+
+
 /**
 * Here are all functions for the serverside, that are used in different files of the thesis project.
 * If you want to enable these functions, use require_once('utility.php'); in the first lines of your php
 * script.
-* because of the webflow installation, we have to use the classname prefix '_plugin_'
+* because of the webflow installation, wie have to use the classname prefix '_plugin_'
 * @autor MT
 */
 class _plugin_utility {
 
+	function test(){
+		return 'utietit tyestt 234';
+	}
 	
 	/**
-	 * Set configuration depending on the use case
+	 * Set configuration dependig on the use case
 	 * @param number $configSetting
 	 */
 	function getConfiguration($configSetting = 1){
@@ -23,12 +38,16 @@ class _plugin_utility {
 		}
 		
 		if($configSetting == $webflowDemo){
+			$_SESSION['useWebflowConfig'] = true;
+			$_SESSION['importWebflowClasses'] = true;
 			//$_SESSION['redirectToAfterSuccess'] = 'https://www.5webflow.ch/category/allgemein/';
 			$_SESSION['redirectToAfterSuccess'] = 'https://www.5webflow.ch/exec/webflow/Application/Aufgabenliste/';
 		}else
 		{
 			//Default is local testing
 			//$_SESSION['redirectToAfterSuccess'] = 'https://www.5webflow.ch/category/allgemein/';
+			$_SESSION['useWebflowConfig'] = false;
+			$_SESSION['importWebflowClasses'] = false;
 			$_SESSION['redirectToAfterSuccess'] ="../PHP/originalWebflowStartPage.php";
 		}
 	}
@@ -62,7 +81,12 @@ class _plugin_utility {
 	function changePolicy($userid,$policy)
 	{
 		_plugin_utility::addLog('change Policy, Userid = '.$userid.' und Policy = '.$policy.'');
-		$db = new db();
+		if(isWebflowInstallation){
+			$db = new db();
+		}else{
+			$db = new _plugin_db();
+		}
+		
 		$isActive = -1;
 		
 		//hat es bereits einen Eintrag? dann updaten
@@ -100,7 +124,11 @@ class _plugin_utility {
 		}
 		
 		_plugin_utility::addLog('Aufruf getPolicyFromUser() mit USERID = '.$userid.'');
-		$db = new db();
+		if(isWebflowInstallation){
+			$db = new db();
+		}else{
+			$db = new _plugin_db();
+		}
 		$isActive = -1;
 		$sql = "SELECT * FROM PT_USER WHERE USERID = $userid AND AKTIV = $isActive";
 		$rs = $db->executeSQL($sql,true);
@@ -125,7 +153,11 @@ class _plugin_utility {
 	function getUseridFromPtid($ptid,$wholeEntry = true)
 	{
 		_plugin_utility::addLog('Aufruf getUseridFromPtid() mit PTID = '.$ptid.'');
-		$db = new db();
+		if(isWebflowInstallation){
+			$db = new db();
+		}else{
+			$db = new _plugin_db();
+		}
 		$isActive = -1;
 		$sql = "SELECT * FROM PT_USER WHERE PTID = $ptid AND AKTIV = $isActive";
 		$rs = $db->executeSQL($sql,true);
@@ -185,6 +217,15 @@ class _plugin_utility {
 		$_SESSION['log']=array();
 	}
 
+	
+	function loadDb(){
+		if(isWebflowInstallation){
+			$db = new db();
+		}else{
+			$db = new _plugin_db();
+		}
+		return $db;
+	}
 
 	/**
 	 * Get information about the given username
@@ -195,7 +236,7 @@ class _plugin_utility {
 	function getWfUser($username, $infoValue = 1)
 	{
 		$usersSQL = "SELECT * FROM WF_USER WHERE NAME = '$username'";
-		$db = new db;
+		$db = _plugin_utility::loadDb();
 		$rs = $db->executeSQL($usersSQL);
 		if($rs){
 			return $rs;
@@ -211,7 +252,7 @@ class _plugin_utility {
 	function getUseridFromUsername($username)
 	{
 		$usersSQL = "SELECT USERID FROM WF_USER WHERE NAME = '$username'";
-		$db = new db;
+		$db = _plugin_utility::loadDb();
 		$rs = $db->executeSQL($usersSQL);
 		if($rs){
 			return $rs[0]['USERID'];
@@ -241,7 +282,7 @@ class _plugin_utility {
 	{
 		$isActive = -1;
 		$sql = "SELECT * FROM WF_USER WHERE NAME = '$username' AND AKTIV = $isActive";
-		$db = new db;
+		$db = _plugin_utility::loadDb();
 		$rs = $db->executeSQL($sql);
 		if($rs){
 			return true;
@@ -333,7 +374,7 @@ class _plugin_utility {
 		//Username zu USERID wandeln
 		$userid = _plugin_utility::getUseridFromUsername($username);
 		
-		$db = new db();
+		$db = _plugin_utility::loadDb();
 		$isActive = -1;
 		$timeNow = time();
 
@@ -375,7 +416,7 @@ class _plugin_utility {
 	 */
 	function getCredentials($userid = false,$keyIdentifier = false,$pubKey = false)
 	{
-		$db = new db();
+		$db = _plugin_utility::loadDb();
 		$isActive = -1;
 		_plugin_utility::addLog('getCredentials, $userid = '.$userid.' und $keyIdentifier = '.$keyIdentifier.' und $$pubKey = '.$pubKey.'');
 		if($userid === false AND $pubKey === false AND $keyIdentifier === false){
@@ -419,7 +460,7 @@ class _plugin_utility {
 	 */
 	function deleteCredentials($userid = false,$keyIdentifier = false,$pubKey = false){
 		$isActive = -1;
-		$db = new db();
+		$db = _plugin_utility::loadDb();
 		_plugin_utility::addLog('deleteCredentials, $userid = '.$userid.' und $keyIdentifier = '.$keyIdentifier.' und $pubKey = '.$pubKey.'');
 		if($userid === false AND $pubKey === false AND $keyIdentifier === false){
 			_plugin_utility::addLog('getCredentials wurde ohne parameter aufgerufen');
@@ -456,20 +497,30 @@ class _plugin_utility {
 	
 	/**
 	 * erstellt eine Tabelle, param muss der Tabellenname sein
-	 * @param string Tabellenname z.B. 'WF_USER'
+	 * @param string Tabellenname z.B. 'WF_USER'. If you add "|COLUMNNAME" the selection is limited to this colun
 	 */
-	function createTable($tableName)
+	function createTable($param)
 	{
+
+		list($tableName,$select) = explode('|',$param);
+		
+		if( trim($select) != '' ){
+			$select = $select;
+		}else{
+			$select = '*';
+		}
+		
 		_plugin_utility::addLog('erstelle Tabelle: '.$tableName);
-		$db = new db();
-		$sql = "SELECT * FROM $tableName";
+		$db = _plugin_utility::loadDb();
+		$sql = "SELECT $select FROM $tableName";
 		$rs = $db->executeSQL($sql,true);
+
 		$htmlOutput = '';
 		//Build HTML Table around result
 //print_r($rs);
 		if($rs){
 			$htmlOutputTable .= '
-				<table id="table_'.$tableName.'" style="width:100%;border=1">
+				<table id="table_'.$tableName.'" style="width:100%;">
 					';
 //print_r($rs);
 			$i = 1;
@@ -499,7 +550,8 @@ class _plugin_utility {
 		}
 
 		$htmlOutputFinal = $htmlOutputTable.$htmlOutputHeads.$htmlOutput;
-		print_r($htmlOutputFinal);
+		
+		
 		return $htmlOutputFinal;
 	}
 	
@@ -514,7 +566,7 @@ class _plugin_utility {
 		_plugin_utility::addLog('erstelle Select zu: '.$tableName);
 		
 		if(!is_array($rs)){
-			$db = new db();	
+			$db = _plugin_utility::loadDb();
 			$sql = "SELECT $id, $value FROM $tableName";
 			$rs = $db->executeSQL($sql,true);
 		}
@@ -535,7 +587,7 @@ class _plugin_utility {
 			}
 			$htmlOutputFinal .='</select>';				
 		}
-		print_r($htmlOutputFinal);
+		//print_r($htmlOutputFinal);
 		return $htmlOutputFinal;
 	}
 	
@@ -546,7 +598,7 @@ class _plugin_utility {
 	 */
 	function getWindowsHelloStatus(){
 		_plugin_utility::addLog('hole WindowsHelloStatus');
-		$db = new db();
+		$db = _plugin_utility::loadDb();
 		$tableName = 'SETTINGS';
 		$id = 'WINDOWS_HELLO_STATUS';
 		$sql = "SELECT $id FROM $tableName";
@@ -578,7 +630,7 @@ class _plugin_utility {
 //var_dump($oldValue);
 		//update value in db
 		_plugin_utility::addLog('setze WindowsHelloStatus: '.$newValue.' der alte Wert war: '.$oldValue);
-		$db = new db();
+		$db = _plugin_utility::loadDb();
 		$tableName = 'SETTINGS';
 		$id = 'WINDOWS_HELLO_STATUS';
 		$sql = "UPDATE $tableName SET $id = $newValue";
@@ -633,7 +685,7 @@ class _plugin_utility {
 			return false;
 		}
 		
-		$db = new db();
+		$db = _plugin_utility::loadDb();
 		$isActive = -1;
 		$sql = "SELECT * FROM PUBLICKEYS WHERE USERID = $userid AND KEYVALUE = '$keyID' AND AKTIV = $isActive ";
 		$rs = $db->executeSQL($sql,true);
@@ -650,3 +702,98 @@ class _plugin_utility {
 	}
 	
 }//end utility class
+
+
+class _plugin_db{
+	
+	public $Datasource;
+	public $connection = NULL;
+	
+	/**
+	 * Constructor for the database connection
+	 *
+	 * @param {void}
+	 * @return {object} database
+	 */
+	public function __construct() {
+		return self::dbconnect();
+	}
+	
+	
+	/**
+	 * build a connection with db for local testing purpose
+	 * @param {void}
+	 * @return {object} database
+	 */
+	function dbconnect(){
+		//_plugin_utility::addLog(__METHOD__.' : Verbindungsaufbau mit dbconnect() gestartet');
+		//connect to mysql DB
+		$host="localhost";
+		$user="webflow";
+		$password="1234";
+		$database="thesis";
+		$connection = mysqli_connect($host,$user,$password,$database);
+	
+		if ( $connection )
+		{
+			//_plugin_utility::addLog(__METHOD__.' : Verbindung erfolgreich.');
+		}else{
+			_plugin_utility::addLog('keine Verbindung möglich:');
+			_plugin_utility::addLog(''.mysqli_error());
+			//die('keine Verbindung möglich: ' . mysqli_error());
+		}
+	
+		if ($connection->connect_error) {
+			_plugin_utility::addLog('Connection failed:');
+			_plugin_utility::addLog($connection->connect_error);
+		}
+	
+		//set charset
+		mysqli_set_charset($connection, 'utf8');
+
+		return $connection;
+	}
+	
+	/**
+	 * Executes the given sql. similar like in the production call from FIVE Webflow,
+	 * so the real one could be used.
+	 * Führt das mitgegebene SQL aus. Orientiert sich vom Aufruf her am FIVE Webflow,
+	 * damit die Funktionen gleich genutzt werden können.
+	 * @param string $sql
+	 * @param boolean $asArray
+	 * @return {array|boolean}
+	 */
+	function executeSQL($sql, $asArray=false){
+		$db = _plugin_utility::loadDb();
+		$connection = $db->dbconnect();
+		
+		// make difference between object and array return type like in production, not used in poc
+		if($asArray){
+			$result = $connection->query($sql);
+		}else{
+			$result = $connection->query($sql);
+		}
+		if($result){
+			if($result === false OR $result === true){
+				return $result; 
+			}
+			
+			if ($result->num_rows > 0) {
+				$resultArray = array();
+				while($row = $result->fetch_assoc()) {
+					$resultArray[] = $row;
+					//echo "USERID: " . $row["USERID"]. " - NAME: " . $row["NAME"]. " - FULLNAME: " . $row["FULLNAME"]. "<br>";
+				}
+				return $resultArray;
+			} else {
+				return array();
+				//echo "Sorry, 0 results found";
+			}
+		}else{
+			return array();
+			//echo "Sorry, 0 results found";
+		}
+		
+	}
+	
+}//end class _plugin_db
