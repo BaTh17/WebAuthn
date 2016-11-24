@@ -12,18 +12,18 @@ require_once('utility.php');
 function getPublicKey($username, $keyID){
 
 	//return "c20ad4d76fe97759aa27a0c99bff6710";
-	return utility::getPublicKey($username, $keyID);
+	return _plugin_utility::getPublicKey($username, $keyID);
 
 }
 
 
 /**
- * überprüfen ob ein Benutzername in der DB existiert oder ev. gesperrt ist.
+ * Ã¼berprÃ¼fen ob ein Benutzername in der DB existiert oder ev. gesperrt ist.
  * Return: boolean
  */
 function checkUsername($username) {
 
-	return utility::checkUsername($username);
+	return _plugin_utility::checkUsername($username);
 	//User exists and is activ
 
 	// 	if($username=="schf" || $username=="tscm" || $username =="hello")
@@ -34,12 +34,12 @@ function checkUsername($username) {
 }
 
 /**
- * checkPassword() - PW vom Benutzer überprüfen
+ * checkPassword() - PW vom Benutzer Ã¼berprÃ¼fen
  * Return: boolean
  *
  */
 function checkPW($username, $pw) {
-	return utility::checkPW($username, $pw);
+	return _plugin_utility::checkPW($username, $pw);
 
 	// 	if($username=="schf" && $pw=="test")
 	// 		return true;
@@ -70,14 +70,14 @@ function getPolicy($username) {
 }
 
 /**
- * Prüfen ob für einen mitgegebenen Benutzername Public Keys in der Tabelle gespeichert sind
+ * PrÃ¼fen ob fÃ¼r einen mitgegebenen Benutzername Public Keys in der Tabelle gespeichert sind
  * TSCM: 20161016 umbenennt auf hasKeys() , entspricht eher dem, was gemacht wird
  * Return: boolean
  *
  */
 function hasKeys($username) {
 
-	return utility::hasKeys($username);
+	return _plugin_utility::hasKeys($username);
 
 // 	if($username=="schf")
 // 			return true;
@@ -90,14 +90,14 @@ function hasKeys($username) {
 
 /**
  * @return: boolean
- * Es werden die vom Client übertragenen Credentials in der DB gespeichert
- * Im Moment wäre das der $usernamen, die Key/Cred-ID und der Public Key
+ * Es werden die vom Client Ã¼bertragenen Credentials in der DB gespeichert
+ * Im Moment wÃ¤re das der $usernamen, die Key/Cred-ID und der Public Key
  *
- * Alle Parameter werden als Strings übergeben. Der Public Key ist hier Base64URL encodiert.
+ * Alle Parameter werden als Strings Ã¼bergeben. Der Public Key ist hier Base64URL encodiert.
  * Das ist aber okay, da ich das in der Verifizierung dekodiere.
  */
 function saveCredentials($username, $id, $pubKey) {
-	return utility::saveCredentials($username, $id, $pubKey);
+	return _plugin_utility::saveCredentials($username, $id, $pubKey);
 
 
 	//return true;
@@ -105,7 +105,7 @@ function saveCredentials($username, $id, $pubKey) {
 }
 
 function getChallenge() {
-	return utility::getChallenge();
+	return _plugin_utility::getChallenge();
 
 	//return md5(openssl_random_pseudo_bytes(16));
 }
@@ -116,7 +116,7 @@ function getChallenge() {
  * @return {void}
  */
 function getConfiguration($configSetting = 1) {
-	return utility::getConfiguration($configSetting);
+	return _plugin_utility::getConfiguration($configSetting);
 }
 
 ?>
