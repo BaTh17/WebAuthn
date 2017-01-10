@@ -81,7 +81,7 @@ GO
 
 --WF_USER erstellen, wenn sie nicht existiert
 INSERT INTO WF_USER ([NAME], FULLNAME, USERPASSWORD, PWISENCRYPTED, DEFAULTLANGUAGE, EMAILADDRESS, MANDANTID, MITARBEITERNUMMER, EMAILBENACHRICHTIGUNG, DOKUMENTOEFFNEN, RESET_PASSWORD, SKIPTHROUGHTASKS, DESIGN_NUMMER, AKTIV, SHOW_NOTES, HIDE_SHOW_SETTINGS, AUFGABENLISTE_COOKIE, AUTHKEY, MINIMENU, SHOW_ACCOUNTING) 
-SELECT 'tscm', 'Marcel Tschanz', '123456', 0, 'DE', 'matscha7@gmail.com', '55', 'tscm', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
+SELECT 'tscm', 'Marcel Tschanz', '123456', 0, 'DE', 'test@fivetest.com', '55', 'tscm', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
 WHERE NOT EXISTS (SELECT *
 FROM WF_USER
 WHERE NAME = 'tscm');
@@ -89,7 +89,7 @@ GO
 
 --WF_USER erstellen, wenn sie nicht existiert
 INSERT INTO WF_USER ([NAME], FULLNAME, USERPASSWORD, PWISENCRYPTED, DEFAULTLANGUAGE, EMAILADDRESS, MANDANTID, MITARBEITERNUMMER, EMAILBENACHRICHTIGUNG, DOKUMENTOEFFNEN, RESET_PASSWORD, SKIPTHROUGHTASKS, DESIGN_NUMMER, AKTIV, SHOW_NOTES, HIDE_SHOW_SETTINGS, AUFGABENLISTE_COOKIE, AUTHKEY, MINIMENU, SHOW_ACCOUNTING) 
-SELECT 'schf', 'Fabian Schwab', '123456', 0, 'DE', 'fjschwab@outlook.com', '55', 'schf', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
+SELECT 'schf', 'Fabian Schwab', '123456', 0, 'DE', 'test@fivetest.com', '55', 'schf', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
 WHERE NOT EXISTS (SELECT *
 FROM WF_USER
 WHERE NAME = 'schf');
@@ -97,7 +97,7 @@ GO
 
 --WF_USER erstellen, wenn sie nicht existiert
 INSERT INTO WF_USER ([NAME], FULLNAME, USERPASSWORD, PWISENCRYPTED, DEFAULTLANGUAGE, EMAILADDRESS, MANDANTID, MITARBEITERNUMMER, EMAILBENACHRICHTIGUNG, DOKUMENTOEFFNEN, RESET_PASSWORD, SKIPTHROUGHTASKS, DESIGN_NUMMER, AKTIV, SHOW_NOTES, HIDE_SHOW_SETTINGS, AUFGABENLISTE_COOKIE, AUTHKEY, MINIMENU, SHOW_ACCOUNTING) 
-SELECT 'five', 'FIVE', '123456', 0, 'DE', 'matscha7@gmail.com', '55', 'five', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
+SELECT 'five', 'FIVE', '123456', 0, 'DE', 'test@fivetest.com', '55', 'five', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
 WHERE NOT EXISTS (SELECT *
 FROM WF_USER
 WHERE NAME = 'five');
@@ -105,7 +105,7 @@ GO
 
 --WF_USER erstellen, wenn sie nicht existiert
 INSERT INTO WF_USER ([NAME], FULLNAME, USERPASSWORD, PWISENCRYPTED, DEFAULTLANGUAGE, EMAILADDRESS, MANDANTID, MITARBEITERNUMMER, EMAILBENACHRICHTIGUNG, DOKUMENTOEFFNEN, RESET_PASSWORD, SKIPTHROUGHTASKS, DESIGN_NUMMER, AKTIV, SHOW_NOTES, HIDE_SHOW_SETTINGS, AUFGABENLISTE_COOKIE, AUTHKEY, MINIMENU, SHOW_ACCOUNTING) 
-SELECT 'five1', 'FIVE_1', '123456', 0, 'DE', 'matscha7@gmail.com', '55', 'five1', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
+SELECT 'five1', 'FIVE_1', '123456', 0, 'DE', 'test@fivetest.com', '55', 'five1', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
 WHERE NOT EXISTS (SELECT *
 FROM WF_USER
 WHERE NAME = 'five1');
@@ -113,7 +113,7 @@ GO
 
 --WF_USER erstellen, wenn sie nicht existiert
 INSERT INTO WF_USER ([NAME], FULLNAME, USERPASSWORD, PWISENCRYPTED, DEFAULTLANGUAGE, EMAILADDRESS, MANDANTID, MITARBEITERNUMMER, EMAILBENACHRICHTIGUNG, DOKUMENTOEFFNEN, RESET_PASSWORD, SKIPTHROUGHTASKS, DESIGN_NUMMER, AKTIV, SHOW_NOTES, HIDE_SHOW_SETTINGS, AUFGABENLISTE_COOKIE, AUTHKEY, MINIMENU, SHOW_ACCOUNTING) 
-SELECT 'test1', 'FIVE_1', '123456', 0, 'DE', 'matscha7@gmail.com', '55', 'test1', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
+SELECT 'test1', 'FIVE_1', '123456', 0, 'DE', 'test@fivetest.com', '55', 'test1', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
 WHERE NOT EXISTS (SELECT *
 FROM WF_USER
 WHERE NAME = 'test1');
@@ -121,7 +121,7 @@ GO
 
 --WF_USER erstellen, wenn sie nicht existiert
 INSERT INTO WF_USER ([NAME], FULLNAME, USERPASSWORD, PWISENCRYPTED, DEFAULTLANGUAGE, EMAILADDRESS, MANDANTID, MITARBEITERNUMMER, EMAILBENACHRICHTIGUNG, DOKUMENTOEFFNEN, RESET_PASSWORD, SKIPTHROUGHTASKS, DESIGN_NUMMER, AKTIV, SHOW_NOTES, HIDE_SHOW_SETTINGS, AUFGABENLISTE_COOKIE, AUTHKEY, MINIMENU, SHOW_ACCOUNTING) 
-SELECT 'hello', 'helloUser', '123456', 0, 'DE', 'matscha7@gmail.com', '55', 'hello', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
+SELECT 'hello', 'helloUser', '123456', 0, 'DE', 'test@fivetest.com', '55', 'hello', 0, 0, 0, 0, 0, -1, 0, 0, '', '                                ', 0, 0
 WHERE NOT EXISTS (SELECT *
 FROM WF_USER
 WHERE NAME = 'hello');
@@ -153,6 +153,7 @@ INSERT INTO PT_USER ( PTID, USERID,POLICY,TESTVALUE1,TESTVALUE2,TESTVALUE3,TESTV
 (2, @five, '1', 'ist five ist2-FA', NULL,NULL,NULL,NULL,DATEDIFF(s, '1970-01-01 00:00:00', GETDATE()), DATEDIFF(s, '1970-01-01 00:00:00', GETDATE()), -1),
 (3, @five1, '2', 'ist five1 mit Passwordless', NULL,NULL,NULL,NULL,DATEDIFF(s, '1970-01-01 00:00:00', GETDATE()), DATEDIFF(s, '1970-01-01 00:00:00', GETDATE()), -1),
 (4, @schf, '0', 'ist schf mit password only', NULL,NULL,NULL,NULL,DATEDIFF(s, '1970-01-01 00:00:00', GETDATE()), DATEDIFF(s, '1970-01-01 00:00:00', GETDATE()), -1),
+(5, @hello, '2', 'ist hello mit password only', NULL,NULL,NULL,NULL,DATEDIFF(s, '1970-01-01 00:00:00', GETDATE()), DATEDIFF(s, '1970-01-01 00:00:00', GETDATE()), -1),
 (6, @test1, '2', 'ist test1 mit Passwordless', NULL,NULL,NULL,NULL,DATEDIFF(s, '1970-01-01 00:00:00', GETDATE()), DATEDIFF(s, '1970-01-01 00:00:00', GETDATE()), -1);
 SET IDENTITY_INSERT PT_USER OFF
 
