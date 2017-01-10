@@ -5,7 +5,7 @@ DROP DATABASE IF EXISTS THESIS;
 -- create Database THESIS
 CREATE DATABASE IF NOT EXISTS THESIS;
 
--- TODO Create a User entry with webflow and 1234 with global rights for local testing
+-- Create a User entry with webflow and 1234 with global rights for local testing
 GRANT USAGE ON *.* TO webflow1@localhost IDENTIFIED BY '1234';
 GRANT ALL PRIVILEGES ON *.* TO webflow1@localhost;
 
@@ -69,12 +69,12 @@ CREATE TABLE IF NOT EXISTS SETTINGS (
 
 
 INSERT INTO WF_USER ( USERID, NAME,FULLNAME,USERPASSWORD,EMAILADDRESS,RESET_PASSWORD,AKTIV ) VALUES
-(1, 'tscm', 'Marcel Tschanz', '123456', 'matscha7@gmail.com', 0, -1),
-(2, 'schf', 'Fabian Schwab', '123456', 'fjschwab@outlook.com', 0, -1),
-(3, 'five', 'FIVE', '123456', 'matscha7@gmail.com', 0, -1),
-(4, 'five1', 'FIVE_1', '123456', 'matscha7@gmail.com', 0, -1),
-(5, 'test1', 'Tester_1', '123456', 'matscha7@gmail.com', 0, -1),
-(6, 'hello', 'helloUser', '123456', 'matscha7@gmail.com', 0, -1);
+(1, 'tscm', 'Marcel Tschanz', '123456', 'test@fivetest.com', 0, -1),
+(2, 'schf', 'Fabian Schwab', '123456', 'test@fivetest.com', 0, -1),
+(3, 'five', 'FIVE', '123456', 'test@fivetest.com', 0, -1),
+(4, 'five1', 'FIVE_1', '123456', 'test@fivetest.com', 0, -1),
+(5, 'test1', 'Tester_1', '123456', 'test@fivetest.com', 0, -1),
+(6, 'hello', 'helloUser', '123456', 'test@fivetest.com', 0, -1);
 
 -- 0 = Password only
 -- 1 = 2-FA
@@ -84,12 +84,8 @@ INSERT INTO PT_USER ( PTID, USERID,POLICY,TESTVALUE1,TESTVALUE2,TESTVALUE3,TESTV
 (2, 3, '1', 'ist five ist2-FA', NULL,NULL,NULL,NULL,now(), now(), -1),
 (3, 4, '2', 'ist five1 mit Passwordless', NULL,NULL,NULL,NULL,now(), now(), -1),
 (4, 2, '0', 'ist schf mit password only', NULL,NULL,NULL,NULL,now(), now(), -1),
-(6, 5, '2', 'ist test1 mit Passwordless', NULL,NULL,NULL,NULL,now(), now(), -1);
+(5, 5, '2', 'ist test1 mit Passwordless', NULL,NULL,NULL,NULL,now(), now(), -1),
+(6, 6, '2', 'ist hello mit Passwordless', NULL,NULL,NULL,NULL,now(), now(), -1);
 
 -- Activate Windows hello
 INSERT INTO SETTINGS SET WINDOWS_HELLO_STATUS = 1;
-
-
-
-
-
