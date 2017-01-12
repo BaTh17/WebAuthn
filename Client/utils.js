@@ -10,7 +10,6 @@
  * @param: {void}
  * @returns: {void}
  */
-
 function login(){
 	var username = document.getElementById("userNameInput").value;
 	var params = "username="+username;
@@ -54,7 +53,7 @@ function makeCredentials(username, userId) {
 			console.log("Einträge in der Indexed DB: "+credList);
 		});
 		
-		document.getElementById('status').innerHTML = "Key material was created. Please confirm your username again."
+		document.getElementById('status').innerHTML = "Key material was created. Please try to log in with your username."
 	    
 	    
 	}).catch(function(reason) {
@@ -62,10 +61,9 @@ function makeCredentials(username, userId) {
         // Windows Hello isn't setup, show dialog explaining how to set it up
         console.log(reason.message);
 		if (reason.message === 'NotSupportedError') {
-            //showSetupWindowsHelloDialog(true);
             console.log('Windows Hello failed (' + reason.message + ').');
             document.getElementById('status').innerHTML =  
-            	'Windows Hello is not jet established. Please activate it:<br><br><button id="helloSetupOK" onclick="makeCredentials(\'' + username + '\' , \'' + userId + '\')">Done and Done</button>';
+            	'Windows Hello is not yet established. Please activate it:<br><br><button id="helloSetupOK" class="rounded button" onclick="makeCredentials(\'' + username + '\' , \'' + userId + '\')">Done</button>';
    
 		}
         else {
@@ -83,8 +81,7 @@ function makeCredentials(username, userId) {
  * @param: {string} challenge
  * @returns: {MSAssertion} assertion
  */
-
-function getAssertion(challenge) {
+function getAssertion(challenge, successUrl, userName) {
 	navigator.authentication.getAssertion(challenge).then(function(assertion) {
 		console.log('Assertion created');
 		/*function call for AJAX - direct call with anonymous function didn't work*/
@@ -98,8 +95,30 @@ function getAssertion(challenge) {
 		rogueAssertion.clientData="gibberish";
 		console.log("Vergleich Original und manipulierte Assertion: "+JSON.stringify(assertion) + "  "+ JSON.stringify(rogueAssertion));
 		*/
-		sendAssertion(JSON.stringify(assertion));
-	});
+		sendAssertion(JSON.stringify(assertion),successUrl, userName);
+		console.log(JSON.stringify(assertion));
+	}).catch(function(reason) {
+
+		if (reason.message === 'NotSupportedError') {
+            //showSetupWindowsHelloDialog(true);
+            console.log('Windows Hello failed (' + reason.message + ').');
+            document.write('<body><p><b>Windows Hello has not been configured so far</b><br><p>Please follow these steps in order to use <b>Windows Hello<b> authentication in this web application.<br><br>'+
+            		'<link rel="stylesheet" href="../CSS/default.css" type="text/css">' +
+            		'<div><ol type="1">' + 
+            		'<li>Access Settings</li>' +
+            		'<li>Select Accounts</li>' +
+            		'<li>Select Sign-in options</li>' +
+            		'<li>Set Up Windows Hello by clicking on its button or create a PIN when Hello is not available on your device.</li></ol><div></body>'+
+            		'<button class="button rounded" onClick="javascript:window.location.href=\'welcome.php\'">OK & Sign-In</button>'
+            
+            );
+   
+		}
+        else {
+        	console.log('other problems: '+reason.message);
+        }
+        
+    });
 }
 
 
@@ -108,7 +127,6 @@ function getAssertion(challenge) {
  * @param: {string} params, url
  * @returns: {void}
  */
-
 function sendCredentials(params, url) {
 	
 	xmlhttp = new XMLHttpRequest();
@@ -137,7 +155,6 @@ function sendCredentials(params, url) {
  * @param: {string} params, url
  * @returns: {void}
  */
-
 function checkUsername(params, url) {
 	
 	xmlhttp = new XMLHttpRequest();
@@ -161,7 +178,7 @@ function checkUsername(params, url) {
 					console.log('IndexedCheck DONE');
 					document.getElementById('status').innerHTML = "No key-IDs were found in the IndexedDB. New key material has to be created.<br>"+
 		    			"<div id='makeCredButton'><br>"+
-		    			'<button id="makeCredButtonID" onclick="makeCredentials(\'' + response.user + '\' , \'' + response.userId + '\')">Make Credentials</button></div>'; 
+		    			'<button id="makeCredButtonID" class="rounded button" onclick="makeCredentials(\'' + response.user + '\' , \'' + response.userId + '\')">Make Credentials</button></div>'; 
 					
 					//Hier muss noch ein Return rein, weil wenn jemand mit Policy 2 sich an einer Station ohne Indexed DB anmeldet kommt zwar kurz die Meldung oben,
 					//aber da die Funktion weiter abgearbeitet wird, würde die Weiterleitung zu getAssertion gleich Aktiv werden.
@@ -199,7 +216,7 @@ function checkUsername(params, url) {
 
 		    "<br>"+
 	    			"<div id='makeCredButton'><br>"+
-	    			'<button id="makeCredButtonID" onclick="makeCredentials(\'' + response.user + '\' , \'' + response.userId + '\')">Make Credentials</button> ' +
+	    			'<button id="makeCredButtonID" class="rounded button" onclick="makeCredentials(\'' + response.user + '\' , \'' + response.userId + '\')">Make Credentials</button> ' +
 	    			"<br><br><p id='helloState'></p></div>";	    	
 	    }
 	}
@@ -219,35 +236,29 @@ function checkUsername(params, url) {
  * @param: {void}
  * @returns: {void}
  */
-
-function checkPW(urlRedirection){
-
+function checkPW(urlRedirection,policy=0){
 	var pw = document.getElementById("pwInput").value;
 	var params = "password="+pw;
 	var url = "../PHP/pwCheck.php";
-	
-	if (typeof urlRedirection === "undefined" || urlRedirection === null) { 
+	if (typeof urlRedirection === "undefined" || urlRedirection === null) {
+		//fallback
 		urlRedirection = "../PHP/originalWebflowStartPage.php"; 
-		////urlRedirection = '<?php echo $_SESSION["redirectToAfterSuccess"]; ?>';
 	  }
-		
 	xmlhttp = new XMLHttpRequest();
 	 
 	  xmlhttp.onreadystatechange = function () {
-		  
+
 		//if password check has been successfull you'll be redirected to the appropriate page (Webflow or assertion page)  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-	    
-	    	//eval(xmlhttp.responseText);
-	     	document.getElementById('pwState').innerHTML = "passwort was correct: "+xmlhttp.responseText; 
-	     	//window.location = "+ xmlhttp.responseText +";
-	     	//eval(xmlhttp.responseText);
-	     	
-	     	window.location = urlRedirection;
-	     	//window.location = "../PHP/originalWebflowStartPage.php";
+	    	// no need to post  "+xmlhttp.responseText; 
+	     	document.getElementById('pwState').innerHTML = "passwort was correct";
+	     	//execute the responseText, that is the next action you have to  do via javascript
+	     	eval(xmlhttp.responseText);
 	    }else if (xmlhttp.status === 401) {
 	    	document.getElementById('pwState').innerHTML = "wrong password"; 
-		}  
+		} else{
+			//not an expected answer
+		}
 	}
 	
 	  xmlhttp.open("POST", url, true);
@@ -265,28 +276,29 @@ function checkPW(urlRedirection){
  * @param: {void}
  * @returns: {void}
  */
-
-function sendAssertion(assertion){ 
-	
+function sendAssertion(assertion,successUrl,userName){ 
 	console.log("übermitteln von: "+params);
 	var params = "assertion="+assertion;
 	var url = "../PHP/handleAssertion.php";
-		
+
 	xmlhttp = new XMLHttpRequest();
 
 	  xmlhttp.onreadystatechange = function () {
-		  document.getElementById('assertionStateInfo').innerHTML = "readyState: "+ xmlhttp.readyState +" and http status: "+ xmlhttp.status;
+		  
 	    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-	    	console.log("User erfolgreich authentisiert (Validation OK) mit Status: "+xmlhttp.status+ "\n" + "Responsetext: "+xmlhttp.responseText);
+	    	console.log("User erfolgreich authentisiert (Validation OK) mit Status: "+xmlhttp.status+ "\n" + "Responsetext: "+xmlhttp.responseText + "");
 	    	document.getElementById('assertionState').innerHTML = "Assertion was successfully validated.";
-	    	//TODO is it really ok to redirect here? TSCM TODO TODO
-	    	window.location = "../PHP/originalWebflowStartPage.php";
+
+	    	//redirect to utility to build the session, otherwise use window.location = "../PHP/originalWebflowStartPage.php";
+	    	var successUrlclean = successUrl.replace(/\//g, "|");
+	    	window.location = "../PHP/utility.php?successUrl=" + successUrlclean + "&userName=" + userName + "";
 	    	
 	    }else if (xmlhttp.readyState === 4 && xmlhttp.status === 400) {
-	    	console.log("Status: "+xmlhttp.readyState + " Validierung der Assertion fehlgeschlagen.  Responsetext: "+ xmlhttp.responseText);
-	    	 document.getElementById('assertionState').innerHTML = "validation failed."; 
+	    	console.log("Status: "+xmlhttp.readyState + " Validierung der Assertion fehlgeschlagen.  Responsetext: "+ xmlhttp.responseText + "");
+	    	document.getElementById('assertionState').innerHTML = "validation failed: " + xmlhttp.responseText; 
 	    } else {
-	    	console.log("Change in State:"+xmlhttp.readyState);
+	    	console.log("Change in State :"+xmlhttp.readyState);
+	    	console.log("Responsetext: "+ xmlhttp.responseText);
 	    	 
 		}  
 	}
@@ -298,12 +310,3 @@ function sendAssertion(assertion){
 	  xmlhttp.send(params);
 
 }
-
-
-
-
-
-
-
-
-
