@@ -6,7 +6,6 @@ session_start();
 $username =  $_SESSION['username'];
 $policy =  $_SESSION['policy'];
 
-getConfiguration();
 $webflowPageAfterSuccess = $_SESSION['redirectToAfterSuccess'];
 
 if(!isset($_POST['password'])) {
@@ -15,43 +14,38 @@ if(!isset($_POST['password'])) {
 }
 
 $password = $_POST['password'];
-
-
 /*
- * Check von Passwort ob das korrekt ist.
- * Danach wird entschieden, ob direkt zum Webflow weitergeleitet wird
- * oder die getAssertion() Funktion aufgerufen wird
+ * Check if password is correct
+ * then, depending on policy, what is the next step: redirect to webflow or getAssertion
  */
-
 	if(checkPW($username, $password)) {
 		//OK
 		$responseStatus = '200 OK';
 		//Weil vielleicht noch neue Policies dazu kommen mit switch arbeiten
 		switch($policy) {
 			case 0: {
-				$responseText = "window.location = ".$webflowPageAfterSuccess.";";
+				_plugin_Authentication::doThesisLogin($username);
+				$responseText = "window.location = '".$webflowPageAfterSuccess."';";
 				
 				break;
 			}
 			case 1: {
-
 				$_SESSION['challenge'] = $challenge = getChallenge();
+
+				$responseText = "getAssertion('$challenge','$webflowPageAfterSuccess','$username');";
 				
-				$responseText = "getAssertion('$challenge');";
-				
-				//Alternative: redirect to getAssertion.php, aber dort noch prüfen ob PW Check okay war.
+				//alt: redirect to getAssertion.php, and check for password after hello was successful
 				
 				break;
 			}
-			//Case 2 existiert nicht, da Benutzer mit dieser Policy bereits nach dem Benutzercheck zu getAssertion.php geleitet wurden
-	
+			 //will not be reached in this prototyp
 			}
 		}	
 	else {
 		$responseStatus = '401 Bad Request';
 		$responseText = 'Wrong password';
 		
-}
+	}
 		
 header($_SERVER['SERVER_PROTOCOL'].' '.$responseStatus);
 header('Content-type: text/html; charset=utf-8');
