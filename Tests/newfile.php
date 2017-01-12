@@ -1,9 +1,4 @@
 <?php
-
-//set_include_path(get_include_path() . PATH_SEPARATOR . 'C:\xampp\php\pear\phpseclib');
-
-var_dump(get_include_path());
-
 require('Crypt\RSA.php');
 
 $rsa = new Crypt_RSA();
