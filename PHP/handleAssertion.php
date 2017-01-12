@@ -4,22 +4,22 @@ $modulus = 1;
 $id = "";
 
 require_once('util.php');
-require('Crypt\RSA.php');
+require_once('RSA.php');
+require_once('Hash.php');
 
 $responseText = "empty";
 $username = $_SESSION['username'];
 
-/* Korrekten HTTP Status Code reintun*/
+/* Antowort mit HTTP Status Code ohne Assertion*/
 if(!isset($_POST['assertion'])) {
 	$responseStatus = '401 Bad Request';
-	$responseText = 'Anfrage erhält keine Assertion';
+	$responseText = 'Anfrage ohne Assertion';
 }
 
-//D.h. eine Assertion wurde übermittelt, die wir jetzt überprüfen
+//we got an assertion, now check it
 else {
-	//Die übertragene Assertion wird als JSON empfangen und dann in ihre einzelnen Strings zerlegt:
-	//Eigentlich müsste hier noch immer eine Prüfung rein, um es von dem und dem Format ist, oder dann am Ende alle Werte auf undefined / empty prüfen?
-	
+	//we get the assertion as JSON string, split it to get the information
+	//in production, check the format of the given json object
 	$assertion = $_POST['assertion'];
 	$assertionJs = json_decode($assertion,true); //macht ein assoziatives Array aus der Assertion die als JSON daherkam
 	
@@ -29,7 +29,7 @@ else {
 	$type = $assertionJs['credential']['type'];
 	$id = $assertionJs['credential']['id']; //Assertion ID, aber gleichzeitig die ID zum hinterlegten PublicKey
 	
-	//ClientData (noch base64 encodiert): Enthält die Challenge
+	//ClientData (noch base64 encodiert): contains the challenge
 	$clientData = $assertionJs['clientData']; //clientData liegen nun vor als: ew0KCSJjaGFsbGVuZ2UiIDogImMyMGFkNGQ3NmZlOTc3NTlhYTI3YTBjOTliZmY2NzEwIg0KfQA
 	$c = rfc4648_base64_url_decode($clientData);//Danach liegt cData als { "challenge" : "c232...." }
 		
@@ -50,9 +50,9 @@ else {
 		$responseStatus = '400 Bad Request';
 		$responseText = 'Fehlerhafte Challenge';
 	}
-	
-	//Restliche Assertion (->Signatur) überprüfen
-	if(validateAssertion($c,$a,$s)) {
+
+	//check the rest of the assertion , e.g. the signature
+	if( validateAssertion($c,$a,$s) ) {
 		$responseStatus = '200 OK';
 		$responseText = "Validierung erfolgreich. Leite weiter zum Webflow. Modulus: ".$modulus;
 	}
@@ -74,7 +74,7 @@ function validateAssertion($c,$a,$s) {
 	//HASH DATA
 	$hash = new Crypt_Hash('sha256');
 	$h = $hash->hash($c); //$c welches als { "challenge" : "c232...." } vorliegt wird gehasht und danach konkateniert (unten mit $a.$h)
-	
+
 	//LOAD PUBLIC KEY
 	$rsa = new Crypt_RSA();
 	$rsa = buildPubKey($id, $rsa);
@@ -82,10 +82,9 @@ function validateAssertion($c,$a,$s) {
 	//Vorbereiten der Validierung
 	$rsa->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
 	$rsa->setHash('sha256');
-	
+
 	// Verify signature is correct for authnrData + hash: Das decrypted nun die Signatur und vergleich sie mit dem hash
 	$result = $rsa->verify($a . $h,$s);
-	
 	return $result;
 
 }
@@ -97,7 +96,7 @@ function buildPubKey($id, $rsa) {
 	global $username;
 	global $id;
 	
-	$pKey64 = utility::getPublicKey($username,$id);
+	$pKey64 = _plugin_utility::getPublicKey($username,$id);
 	//$pKey64 = "wL9gcQRxacDZ-JnG17b4jsxnNkrLmoL_4_yyqD3iEh5wlKrjmeSo0IPQVkfe0n8qGvGTCt2eY_o53Cw9OBLfUtnNtgfc7wTMNM1ZwbtZnTBJ-agn3v0nZEsnV9XVVfKk1Dymw7timzePgmiIQXfSocyFgptaRlllJunfWghKAHBrvPwCmHNRt4I8fHEBOrO2UDmu14SDg_79a26Kx0119ig979kvPxpoBLUF53jVjNc7DajojuJL9jReZlLK8vz3X11kSCqGU4lWAGR5MRVLpzerXN8YSJBQS358Ch0aW2kLQhigDDyuATrdIQzZWwk3fZ3j41EBltswBP-vIcPFcw";
 	$n = rfc4648_base64_url_decode($pKey64);
 
