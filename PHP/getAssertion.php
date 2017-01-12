@@ -8,10 +8,10 @@ require_once('util.php');
 session_start();
 
 $_SESSION['challenge'] = $challenge = getChallenge();
-
-
-//start html
+$webflowPageAfterSuccess = $_SESSION['redirectToAfterSuccess'];
+$userName = $_SESSION['username'];
 $pageTitle = 'getAssertion - Page';
+
 echo '<!DOCTYPE html>
 <head>
 <title>'.$pageTitle.'</title>
@@ -28,13 +28,13 @@ echo '<div class="label float">Challenge String: </div>'.$challenge.'<br />';
 echo '<div class="label float">Given Username: </div>'.$_SESSION['username'].'<br />';
 echo '<div class="label float">Used Policy: </div>'.$_SESSION['policy'].'<br />';
 echo "<div class='label float'>AssertionState Info: </div><div id='assertionStateInfo'></div><br />";
-echo "<p id='assertionState'></p>"; //hier kommt wie bei der login.php Seite das Resultat des Assertion Checks rein
+echo "<p id='assertionState'></p>"; // result check of getAssertion will be printed here
 
 
 $getAssertionCode = "<p id='status'></p><br />		
 						<script>
 						console.log('assertion-Call forciert von getAssertion.php');
-						getAssertion('$challenge');
+						getAssertion('$challenge','$webflowPageAfterSuccess','$userName');
 						</script>
 					";
 echo $getAssertionCode;
