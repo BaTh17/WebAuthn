@@ -13,8 +13,8 @@ IF EXISTS(
     WHERE Name      = N'WINDOWS_HELLO_STATUS'
       AND Object_ID = Object_ID(N'SETTINGS'))
 BEGIN
-    /* On Error: use the constraint name from the error message*/
-    ALTER TABLE SETTINGS DROP CONSTRAINT DF__SETTINGS__WINDOW__110B679F;
+    /* On Error: use the constraint name from the error message in the drop constraint statement 1 line below and uncomment it, rerun code*/
+    /*ALTER TABLE SETTINGS DROP CONSTRAINT DF__SETTINGS__WINDOW__110B679F;*/
     ALTER TABLE SETTINGS DROP COLUMN WINDOWS_HELLO_STATUS;
 END
 
