@@ -178,6 +178,12 @@ navigator.authentication = navigator.authentication || (function () {
 		});
     } // END of makeCredential
     
+	
+/**
+ * Auslesen aller Einträgem die in der indexedDB des Clients gespeichert sind
+ * @author FS
+ */
+ 
     function readDB() {
     	console.log("readDB called");
     	var credList = [];
@@ -218,7 +224,6 @@ navigator.authentication = navigator.authentication || (function () {
 
     function getAssertion(challenge, options) {
     	console.log("getAssertion has been called");
-    	
         var allowlist = options ? options.allowList : undefined; //wenn options gesetzt sind, wird der Variable allowlist der Wert options.allowList zugewiesen
 		console.log("allowlist ist :"+allowlist);  //Das kommt noch vor Eingabe des PINs
 		
@@ -248,8 +253,8 @@ navigator.authentication = navigator.authentication || (function () {
 					console.log("Returnierte Signature-ID ist: "+sig.id); //Signature-ID entspricht der Key ID
 					
 					console.log("Clientdata (B64): "+sig.signature.clientData);
-							console.log("Auhtnr (B64): "+sig.signature.authnrData);
-									console.log("Signatur (B64): "+sig.signature.signature);
+					console.log("Auhtnr (B64): "+sig.signature.authnrData);
+					console.log("Signatur (B64): "+sig.signature.signature);
 					
 					/* Dieses Objekt schicken wir an den Server. Es wird von msCredentials.getAssertion an getCredList und an getAssetion zurückgegeben  */
 					return Object.freeze({
