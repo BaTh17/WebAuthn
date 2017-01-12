@@ -20,8 +20,8 @@ echo '<!DOCTYPE html>
 		<link rel="stylesheet" href="../CSS/default.css" type="text/css">
 <body>
 <div class="titel" >'.$pageTitle.'</div>
-<p>Run these tests after installation to check if everything was set up correct.</p>
-<p>As soon as you change any value after a fresh installation some checks can return a nevative result because default values were expected.</p>
+<p>Run these tests after installation to check if everything was set up correctly.</p>
+<p>As soon as you change any value after a fresh installation some checks can return a negative result because default values were expected.</p>
 ';
 
 //call all tests
@@ -30,7 +30,7 @@ test::callAllTests();
 
 /**
  * the test class should provide all test cases and functions to check if the installation 
- * was successfull by testing most of the importent functions with
+ * was successful by testing most of the importent functions with
  * static values
  */
 class test{
