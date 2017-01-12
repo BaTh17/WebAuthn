@@ -2,6 +2,7 @@
 -- Deletes Column WINDOWS_HELLO_STATUS from SETTINGS Table if it exists
 -- Delete Table PUBLICKEYS if it exists
 -- Delete Table PT_USER if it exists
+-- Some of the users are already part of the webflow users, so the downgrade script doesn't delete them (dependencies with tasks)
 --
 -- Tested and works with SQL Server 2012
 USE FIVE_KREDIWF_DEMO;
