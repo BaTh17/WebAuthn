@@ -1,11 +1,11 @@
 <?php
 
 /**
+ * Mock Up File to enable coding without fully implementet utility-functions during our project
+ * commented parts are left intentionally
  * @param unknown $username
-* @param unknown $keyID
-*
-* Returniert den Public Key als String der zu dieser KeyID in der DB abgelegt wurde.
-*/
+ * @param unknown $keyID
+ */
 require_once('utility.php');
 
 
@@ -18,7 +18,7 @@ function getPublicKey($username, $keyID){
 
 
 /**
- * überprüfen ob ein Benutzername in der DB existiert oder ev. gesperrt ist.
+ * check username exists and is active
  * Return: boolean
  */
 function checkUsername($username) {
@@ -34,16 +34,16 @@ function checkUsername($username) {
 }
 
 /**
- * checkPassword() - PW vom Benutzer überprüfen
+ * checkPassword() - check PW of user
  * Return: boolean
  *
  */
 function checkPW($username, $pw) {
 	return _plugin_utility::checkPW($username, $pw);
 
-	// 	if($username=="schf" && $pw=="test")
+	// 	if($username=="schf" && $pw=="123456")
 	// 		return true;
-	// 	if($username=="tscm" && $pw=="test")
+	// 	if($username=="tscm" && $pw=="123456")
 	// 		return true;
 
 	// 	else
@@ -57,21 +57,19 @@ function checkPW($username, $pw) {
  * 2 = Passwordless
  */
 function getPolicy($username) {
-	//return utility::getPolicyFromUser($username, true, true);
+	return _plugin_utility::getPolicyFromUser($username, false, true);
 
-			if($username=="schf")
-						return 0;
-					if($username=="tscm")
-								return 1;
-							if($username=="hello")
-										return 2;
-
+//			if($username=="schf")
+//						return 0;
+//					if($username=="tscm")
+//								return 1;
+//							if($username=="hello")
+//										return 2;
 
 }
 
 /**
- * Prüfen ob für einen mitgegebenen Benutzername Public Keys in der Tabelle gespeichert sind
- * TSCM: 20161016 umbenennt auf hasKeys() , entspricht eher dem, was gemacht wird
+ * checks if user has keys registred
  * Return: boolean
  *
  */
@@ -89,24 +87,18 @@ function hasKeys($username) {
 }
 
 /**
- * @return: boolean
- * Es werden die vom Client übertragenen Credentials in der DB gespeichert
- * Im Moment wäre das der $usernamen, die Key/Cred-ID und der Public Key
- *
- * Alle Parameter werden als Strings übergeben. Der Public Key ist hier Base64URL encodiert.
- * Das ist aber okay, da ich das in der Verifizierung dekodiere.
+ * Save credentials of a username.
+ * @params {strings}
+ * @return boolean
+ * 
  */
 function saveCredentials($username, $id, $pubKey) {
 	return _plugin_utility::saveCredentials($username, $id, $pubKey);
-
-
 	//return true;
-
 }
 
 function getChallenge() {
 	return _plugin_utility::getChallenge();
-
 	//return md5(openssl_random_pseudo_bytes(16));
 }
 
