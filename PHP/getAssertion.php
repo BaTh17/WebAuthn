@@ -23,11 +23,16 @@ echo "<script src='../Client/webauthn.js'></script>";
 echo '<link rel="stylesheet" href="../CSS/default.css" type="text/css">';
 echo '<div class="titel" >'.$pageTitle.'</div>';
 echo '<div class="centerBox">';
-echo '<p class="heading" >Working with these values:</p>';
-echo '<div class="label float">Challenge String: </div>'.$challenge.'<br />';
-echo '<div class="label float">Given Username: </div>'.$_SESSION['username'].'<br />';
-echo '<div class="label float">Used Policy: </div>'.$_SESSION['policy'].'<br />';
-echo "<div class='label float'>AssertionState Info: </div><div id='assertionStateInfo'></div><br />";
+
+echo "
+		<p class='heading topPadding' >Working with these values:</p>
+		<table class='systemInfoTable systemInfoLayout'>
+		<tr tr class='systemInfoTable'><td class=' systemInfoTable systemInfoLabel label' >Challenge String: </td><td class='systemInfoTable systemInfoMessage'>".$challenge."</td></tr>
+		<tr tr class='systemInfoTable'><td class=' systemInfoTable systemInfoLabel label' >Given Username:</td><td class='systemInfoTable systemInfoMessage'>".$_SESSION['username']."</td></tr>
+		<tr tr class='systemInfoTable'><td class=' systemInfoTable systemInfoLabel label' >Used Policy:</td><td class='systemInfoTable systemInfoMessage'>".$_SESSION['policy']."</td></tr>
+		<tr tr class='systemInfoTable'><td class=' systemInfoTable systemInfoLabel label' >AssertionState Info: </td><td class='systemInfoTable systemInfoMessage' id='assertionStateInfo'></td></tr>
+		</table>
+		<br />";
 echo "<p id='assertionState'></p>"; // result check of getAssertion will be printed here
 
 
