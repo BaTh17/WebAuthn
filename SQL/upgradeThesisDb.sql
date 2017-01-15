@@ -6,8 +6,8 @@ DROP DATABASE IF EXISTS THESIS;
 CREATE DATABASE IF NOT EXISTS THESIS;
 
 -- Create a User entry with webflow and 1234 with global rights for local testing
-GRANT USAGE ON *.* TO webflow1@localhost IDENTIFIED BY '1234';
-GRANT ALL PRIVILEGES ON *.* TO webflow1@localhost;
+GRANT USAGE ON *.* TO webflow@localhost IDENTIFIED BY '1234';
+GRANT ALL PRIVILEGES ON *.* TO webflow@localhost;
 
 
 USE THESIS;
